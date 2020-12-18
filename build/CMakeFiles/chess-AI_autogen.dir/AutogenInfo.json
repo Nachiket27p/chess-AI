@@ -18,6 +18,11 @@
 			"EWIEGA46WW/moc_boardtile.cpp"
 		],
 		[
+			"/home/nachiket/Documents/qt5-workspace/chess-AI/rules.h",
+			"MU",
+			"EWIEGA46WW/moc_rules.cpp"
+		],
+		[
 			"/home/nachiket/Documents/qt5-workspace/chess-AI/theme.h",
 			"MU",
 			"EWIEGA46WW/moc_theme.cpp"
@@ -82,6 +87,7 @@
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp", "MU" ],
+		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],

@@ -244,6 +244,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+rules.o: rules.cpp.o
+
+.PHONY : rules.o
+
+# target to build an object file
+rules.cpp.o:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/rules.cpp.o
+.PHONY : rules.cpp.o
+
+rules.i: rules.cpp.i
+
+.PHONY : rules.i
+
+# target to preprocess a source file
+rules.cpp.i:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/rules.cpp.i
+.PHONY : rules.cpp.i
+
+rules.s: rules.cpp.s
+
+.PHONY : rules.s
+
+# target to generate assembly for a file
+rules.cpp.s:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/rules.cpp.s
+.PHONY : rules.cpp.s
+
 theme.o: theme.cpp.o
 
 .PHONY : theme.o
@@ -293,6 +320,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... rules.o"
+	@echo "... rules.i"
+	@echo "... rules.s"
 	@echo "... theme.o"
 	@echo "... theme.i"
 	@echo "... theme.s"

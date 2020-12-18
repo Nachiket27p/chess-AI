@@ -25,6 +25,8 @@ if(UNIX)
     theme.h
     boardtile.cpp
     boardtile.h
+    rules.cpp
+    rules.h
   )
 endif()
 
