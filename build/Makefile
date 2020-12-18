@@ -217,6 +217,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+theme.o: theme.cpp.o
+
+.PHONY : theme.o
+
+# target to build an object file
+theme.cpp.o:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/theme.cpp.o
+.PHONY : theme.cpp.o
+
+theme.i: theme.cpp.i
+
+.PHONY : theme.i
+
+# target to preprocess a source file
+theme.cpp.i:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/theme.cpp.i
+.PHONY : theme.cpp.i
+
+theme.s: theme.cpp.s
+
+.PHONY : theme.s
+
+# target to generate assembly for a file
+theme.cpp.s:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/theme.cpp.s
+.PHONY : theme.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -236,6 +263,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... theme.o"
+	@echo "... theme.i"
+	@echo "... theme.s"
 .PHONY : help
 
 

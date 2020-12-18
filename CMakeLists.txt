@@ -20,6 +20,9 @@ if(UNIX)
     board.cpp
     board.h
     board.ui
+    utils.h
+    theme.cpp
+    theme.h
   )
 endif()
 

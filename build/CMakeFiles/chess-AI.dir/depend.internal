@@ -355,3 +355,38 @@ CMakeFiles/chess-AI.dir/main.cpp.o
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qtwidgets-config.h
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qtwidgetsglobal.h
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qwidget.h
+CMakeFiles/chess-AI.dir/theme.cpp.o
+ /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp
+ /home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/QString
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qarraydata.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qatomic.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qatomic_bootstrap.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qatomic_cxx11.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qatomic_msvc.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qbasicatomic.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qbytearray.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qchar.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qcompilerdetection.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qconfig-bootstrapped.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qconfig.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qflags.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qgenericatomic.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qglobal.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qglobalstatic.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qlogging.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qmutex.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qnamespace.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qnumeric.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qprocessordetection.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qrefcount.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qstring.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qstringalgorithms.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qstringbuilder.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qstringliteral.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qstringview.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qsysinfo.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qsystemdetection.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qtcore-config.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qtypeinfo.h
+ /usr/include/x86_64-linux-gnu/qt5/QtCore/qversiontagging.h
