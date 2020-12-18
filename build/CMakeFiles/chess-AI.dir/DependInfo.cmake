@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp" "/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI.dir/board.cpp.o"
+  "/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp" "/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI.dir/boardtile.cpp.o"
   "/home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp" "/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o"
   "/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp" "/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI.dir/main.cpp.o"
   "/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp" "/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI.dir/theme.cpp.o"

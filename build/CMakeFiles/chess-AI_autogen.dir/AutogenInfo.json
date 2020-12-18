@@ -13,6 +13,11 @@
 			"EWIEGA46WW/moc_board.cpp"
 		],
 		[
+			"/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.h",
+			"MU",
+			"EWIEGA46WW/moc_boardtile.cpp"
+		],
+		[
 			"/home/nachiket/Documents/qt5-workspace/chess-AI/theme.h",
 			"MU",
 			"EWIEGA46WW/moc_theme.cpp"
@@ -75,6 +80,7 @@
 	"SOURCES" : 
 	[
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp", "MU" ],
+		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp", "MU" ]
 	],

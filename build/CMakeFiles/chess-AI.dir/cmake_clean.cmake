@@ -3,6 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/chess-AI_autogen.dir/ParseCache.txt"
   "chess-AI_autogen"
   "CMakeFiles/chess-AI.dir/board.cpp.o"
+  "CMakeFiles/chess-AI.dir/boardtile.cpp.o"
   "CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/chess-AI.dir/main.cpp.o"
   "CMakeFiles/chess-AI.dir/theme.cpp.o"

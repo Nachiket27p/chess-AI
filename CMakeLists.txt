@@ -23,6 +23,8 @@ if(UNIX)
     utils.h
     theme.cpp
     theme.h
+    boardtile.cpp
+    boardtile.h
   )
 endif()
 

@@ -18,5 +18,10 @@
   "directory": "/home/nachiket/Documents/qt5-workspace/chess-AI/build",
   "command": "/bin/g++-9  -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/nachiket/Documents/qt5-workspace/chess-AI/build -I/home/nachiket/Documents/qt5-workspace/chess-AI -I/home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++  -g   -fPIC -std=gnu++11 -o CMakeFiles/chess-AI.dir/theme.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp",
   "file": "/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp"
+},
+{
+  "directory": "/home/nachiket/Documents/qt5-workspace/chess-AI/build",
+  "command": "/bin/g++-9  -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/nachiket/Documents/qt5-workspace/chess-AI/build -I/home/nachiket/Documents/qt5-workspace/chess-AI -I/home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++  -g   -fPIC -std=gnu++11 -o CMakeFiles/chess-AI.dir/boardtile.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp",
+  "file": "/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp"
 }
 ]
