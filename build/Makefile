@@ -136,6 +136,33 @@ chess-AI_autogen/fast:
 	$(MAKE) -f CMakeFiles/chess-AI_autogen.dir/build.make CMakeFiles/chess-AI_autogen.dir/build
 .PHONY : chess-AI_autogen/fast
 
+board.o: board.cpp.o
+
+.PHONY : board.o
+
+# target to build an object file
+board.cpp.o:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/board.cpp.o
+.PHONY : board.cpp.o
+
+board.i: board.cpp.i
+
+.PHONY : board.i
+
+# target to preprocess a source file
+board.cpp.i:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/board.cpp.i
+.PHONY : board.cpp.i
+
+board.s: board.cpp.s
+
+.PHONY : board.s
+
+# target to generate assembly for a file
+board.cpp.s:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/board.cpp.s
+.PHONY : board.cpp.s
+
 chess-AI_autogen/mocs_compilation.o: chess-AI_autogen/mocs_compilation.cpp.o
 
 .PHONY : chess-AI_autogen/mocs_compilation.o
@@ -200,6 +227,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... chess-AI"
 	@echo "... chess-AI_autogen"
+	@echo "... board.o"
+	@echo "... board.i"
+	@echo "... board.s"
 	@echo "... chess-AI_autogen/mocs_compilation.o"
 	@echo "... chess-AI_autogen/mocs_compilation.i"
 	@echo "... chess-AI_autogen/mocs_compilation.s"

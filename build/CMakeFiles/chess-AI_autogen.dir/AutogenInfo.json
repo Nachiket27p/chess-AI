@@ -5,7 +5,14 @@
 	"CMAKE_CURRENT_SOURCE_DIR" : "/home/nachiket/Documents/qt5-workspace/chess-AI",
 	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
 	"CMAKE_SOURCE_DIR" : "/home/nachiket/Documents/qt5-workspace/chess-AI",
-	"HEADERS" : [],
+	"HEADERS" : 
+	[
+		[
+			"/home/nachiket/Documents/qt5-workspace/chess-AI/board.h",
+			"MU",
+			"EWIEGA46WW/moc_board.cpp"
+		]
+	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
 	"INCLUDE_DIR" : "/home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/include",
 	"MOC_COMPILATION_FILE" : "/home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp",
@@ -57,6 +64,7 @@
 	"SETTINGS_FILE" : "/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
