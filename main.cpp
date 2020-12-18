@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
 
     Board b;
     b.show();
+    b.checkResources();
 
     return a.exec();
 }

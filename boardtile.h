@@ -26,6 +26,19 @@ private:
     // static BoardTile object which keeps track of the piece piece seected
     static BoardTile *selectedTile;
 
+private:
+    /**
+     * @brief Used to check if the piece selected can move and if so which
+     * direction it can move in, calls the canMove function from the Rules class.
+     */
+    void enforceRules();
+
+    /**
+     * @brief Removes the highlights from the tiles once a different tile has
+     * been selcted. This is a helper to the 'enforceRules' function.
+     */
+    void unhighlightTiles();
+
 public:
     /**
      * @brief Construct a new Board Tile object. This class inherites the QLabel class.

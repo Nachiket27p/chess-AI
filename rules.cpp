@@ -4,11 +4,13 @@
 extern bool isWhiteTurn;
 extern Theme *currentTheme;
 
+Rules *Rules::instance = nullptr;
+
 Rules *Rules::getInstance()
 {
     if (!instance)
     {
-        instance = new Rules;
+        instance = new Rules();
     }
     return instance;
 }

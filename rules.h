@@ -15,17 +15,22 @@ extern int listIndex;
 class Rules
 {
 private:
+    // Used to keep single instance of this class
+    static Rules *instance;
+
     // Used internally to determine if a requested tile can move.
     bool okToMove;
 
-    // Used to keep single instance of this class
-    static Rules *instance;
+    //    // Used to keep track of which sides turn it is.
+    //    bool isWhiteTurn;
 
 private:
     /**
      * @brief Private constructor to keep only 1 instane of this calls.
      */
-    Rules();
+    Rules(){
+
+    };
 
 public:
     /**
