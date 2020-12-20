@@ -4,7 +4,7 @@
 #include "rules.h"
 
 // Get an instance of the rules class.
-Rules *game = game->getInstance();
+Rules *game;
 
 // Instantiate the private static variables
 BoardTile *BoardTile::selectedTile = nullptr;
@@ -20,6 +20,8 @@ void BoardTile::setPiece(const char symbol, bool isWhite)
     this->isWhite = isWhite;
     pieceSymbol = symbol;
     populateTile(symbol, isWhite);
+    // Get instance of the rules
+    game = game->getInstance();
 }
 
 void BoardTile::populateTile(const char symbol, bool isWhite)
@@ -127,7 +129,7 @@ void BoardTile::mousePressEvent(QMouseEvent *)
 
 void BoardTile::unhighlightTiles()
 {
-    for (int i = 0; i < listIndex; i++)
+    for (int i = 0; i < vmIdx; i++)
         board[validMoves[i] / 8][validMoves[i] & 7]->displayTileColor();
 }
 
@@ -163,15 +165,26 @@ void BoardTile::enforceRules()
     }
     else
     {
+        // if the same tile is clicked twice do unhighlight the possible moves
         if (tileNumber == selectedTile->getTileNumber())
         {
             selectedTile->displayTileColor();
             unhighlightTiles();
-            listIndex = 0;
+            vmIdx = 0;
             selected = 0;
+            return;
         }
 
-        for (int i = 0; i < listIndex; i++)
+        // if the piece being moved is the the king the update the king pointer
+        if(selectedTile->getPieceSymbol() == kingID)
+        {
+            game->setKingPos(selectedTile->getPieceColor(), this);
+        }
+
+
+        // perform the operations to move the piece
+        bool moveSuccess = false;
+        for (int i = 0; i < vmIdx; i++)
         {
             if (tileNumber == validMoves[i])
             {
@@ -181,14 +194,25 @@ void BoardTile::enforceRules()
                 populateTile(selectedTile->getPieceSymbol(), selectedTile->getPieceColor());
 
                 unhighlightTiles();
-                listIndex = 0;
-                isWhiteTurn = (isWhiteTurn + 1) & 1;
+                vmIdx = 0;
                 selected = 0;
-            }
-            else
-            {
-                selected = 1;
+                isWhiteTurn = (isWhiteTurn + 1) & 1;
+                moveSuccess = true;
+                break;
             }
         }
+
+
+
+        // If the move was not valid/successful then set the selected value back to 1
+        // to indicate that game state has returned to a position where the player has
+        // selected a piece.
+        if(!moveSuccess)
+        {
+            selected = 1;
+        }
+
+        // scan for check after a piece has moved
+        game->scanForCheck();
     }
 }

@@ -54,4 +54,7 @@ static const QString noPiecesDirMsg = "Could not locate \"pieces\" directory. Pl
     msgBox.setDefaultButton(QMessageBox::Ok);                         \
     RTNVAL = msgBox.exec();
 
+// checks if the variable is in bound
+#define WITHIN_BOUNDS(var) (((var) >= 0) && ((var) < 8))
+
 #endif // UTILS_H

@@ -5,7 +5,7 @@
 
 extern BoardTile *board[8][8];
 extern int validMoves[64];
-extern int listIndex;
+extern int vmIdx;
 
 /**
  * @brief The Rules class is a singleton class which is responsible for
@@ -21,15 +21,31 @@ private:
     // Used internally to determine if a requested tile can move.
     bool okToMove;
 
-    //    // Used to keep track of which sides turn it is.
-    //    bool isWhiteTurn;
+    // used to keep track of if there is a check.
+    bool isCheck;
+    int checkRow;
+    int checkCol;
+
+    // pointer always keep track of where the king piece is
+    BoardTile *blackKing;
+    BoardTile *whiteKing;
 
 private:
     /**
      * @brief Private constructor to keep only 1 instane of this calls.
      */
-    Rules(){
+    Rules()
+    {
+        okToMove = false;
+//        blackCheck = false;
+//        whiteCheck = false;
+        isCheck = false;
+        checkRow = -1;
+        checkCol = -1;
 
+        // set the initial postions of the kings
+        blackKing = board[0][4];
+        whiteKing = board[7][4];
     };
 
 public:
@@ -48,6 +64,17 @@ public:
      * @return false If the piece on the tile passed in cannot move.
      */
     bool canMove(BoardTile *tile);
+
+    /**
+     * @brief Used to update the position of the king if is is being moved.
+     * @param isWhite If the piece is white or black.
+     * @param newTile If The pointer to the new tile on which the king is located.
+     */
+    void setKingPos(bool isWhite, BoardTile *newTile);
+
+
+    void scanForCheck();
+
 
 private:
     /**
@@ -95,6 +122,8 @@ private:
      */
     bool enforceQueen(BoardTile *tile);
 
+    inline void enforceRBQHelper(int row, int col, int dr, int dc, bool *ok, BoardTile *tile);
+
     /**
      * @brief Private function which determines if the king can move.
      * 
@@ -109,6 +138,27 @@ private:
      * 
      */
     void highlightTiles();
+
+//    /**
+//     * @brief Determines if there is a check on the board currently and
+//     * ture/false accordingly.
+//     *
+//     * @param isWhite Indicates which color piece is being checked.
+//     * @return true If there is a check.
+//     * @return false If ther is no check.
+//     */
+//    inline bool isCheck(bool isWhite);
+
+    /**
+     * @brief setCheck Private helper function to set check.
+     */
+    inline void setCheck();
+
+    inline bool scanCheckHelper(int row, int col, int dx, int dy, char *checkPiece);
+
+    inline bool checkKnight(int row, int col);
+
+    inline bool checkTile(int row, int col, char pieceType);
 };
 
 #endif // RULES_H

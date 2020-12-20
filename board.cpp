@@ -7,7 +7,7 @@ Border *borders[4];
 Theme *currentTheme;
 
 int validMoves[64];
-int listIndex = 0;
+int vmIdx = 0;
 bool isWhiteTurn = true;
 
 Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
