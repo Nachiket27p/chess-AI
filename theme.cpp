@@ -44,6 +44,26 @@ void Theme::setTheme(themes selection)
         attackRGB[1] = 0;
         attackRGB[2] = 0;
         break;
+    case green:
+        darkBackgroundRGB[0] = 0;
+        darkBackgroundRGB[1] = 100;
+        darkBackgroundRGB[2] = 0;
+        lightBackgroundRGB[0] = 250;
+        lightBackgroundRGB[1] = 250;
+        lightBackgroundRGB[2] = 250;
+        hoverBackgroundRGB[0] = 150;
+        hoverBackgroundRGB[1] = 150;
+        hoverBackgroundRGB[2] = 150;
+        hoverWhitePieceRGB[0] = 250;
+        hoverWhitePieceRGB[1] = 250;
+        hoverWhitePieceRGB[2] = 250;
+        hoverBlackPieceRGB[0] = 0;
+        hoverBlackPieceRGB[1] = 0;
+        hoverBlackPieceRGB[2] = 0;
+        attackRGB[0] = 150;
+        attackRGB[1] = 0;
+        attackRGB[2] = 0;
+        break;
     default:
         break;
     }

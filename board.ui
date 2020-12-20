@@ -36,6 +36,7 @@
     </property>
     <addaction name="actionDefault"/>
     <addaction name="actionWood"/>
+    <addaction name="actionGreen"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -71,6 +72,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionGreen">
+   <property name="text">
+    <string>Green</string>
    </property>
   </action>
  </widget>

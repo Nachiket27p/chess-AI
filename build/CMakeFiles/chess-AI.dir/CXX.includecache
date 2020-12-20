@@ -68,6 +68,12 @@ QtCore/qmetatype.h
 EWIEGA46WW/moc_board.cpp
 /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/EWIEGA46WW/moc_board.cpp
 
+/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp
+QApplication
+-
+board.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/board.h
+
 /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp
 rules.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
@@ -77,6 +83,10 @@ utils.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
 boardtile.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.h
+
+/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp
+theme.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
 QString

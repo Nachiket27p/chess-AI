@@ -37,8 +37,8 @@ private:
     Rules()
     {
         okToMove = false;
-//        blackCheck = false;
-//        whiteCheck = false;
+        //        blackCheck = false;
+        //        whiteCheck = false;
         isCheck = false;
         checkRow = -1;
         checkCol = -1;
@@ -72,9 +72,7 @@ public:
      */
     void setKingPos(bool isWhite, BoardTile *newTile);
 
-
     void scanForCheck();
-
 
 private:
     /**
@@ -139,16 +137,6 @@ private:
      */
     void highlightTiles();
 
-//    /**
-//     * @brief Determines if there is a check on the board currently and
-//     * ture/false accordingly.
-//     *
-//     * @param isWhite Indicates which color piece is being checked.
-//     * @return true If there is a check.
-//     * @return false If ther is no check.
-//     */
-//    inline bool isCheck(bool isWhite);
-
     /**
      * @brief setCheck Private helper function to set check.
      */
@@ -159,6 +147,12 @@ private:
     inline bool checkKnight(int row, int col);
 
     inline bool checkTile(int row, int col, char pieceType);
+
+    inline bool addValidMove(int tileNumber, bool isKing=false);
+
+    inline bool addValidMoveKing(int row, int col, int tileNumber);
+
+//    void getAttackVector(int row, col, )
 };
 
 #endif // RULES_H

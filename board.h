@@ -54,6 +54,7 @@ private slots:
     void on_actionExit_triggered();
     void on_actionDefault_triggered();
     void on_actionWood_triggered();
+    void on_actionGreen_triggered();
 };
 
 /**

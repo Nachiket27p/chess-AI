@@ -27,7 +27,8 @@ public:
     enum themes
     {
         def,
-        wood
+        wood,
+        green
     };
 
     /**

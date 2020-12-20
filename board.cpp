@@ -148,3 +148,8 @@ void Board::on_actionWood_triggered()
 {
     updateTheme(Theme::wood);
 }
+
+void Board::on_actionGreen_triggered()
+{
+    updateTheme(Theme::green);
+}
