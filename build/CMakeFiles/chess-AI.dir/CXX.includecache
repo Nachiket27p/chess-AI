@@ -13,12 +13,20 @@ QtWidgets
 -
 boardtile.h
 ../boardtile.h
+piece.h
+../piece.h
 
 ../boardtile.h
 QLabel
 -
 theme.h
 ../theme.h
+piece.h
+../piece.h
+
+../piece.h
+QPixmap
+-
 
 ../theme.h
 QString
@@ -31,6 +39,8 @@ ui_board.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/ui_board.h
 utils.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
+rules.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/board.h
 QMainWindow
@@ -39,6 +49,8 @@ QtWidgets
 -
 boardtile.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.h
+piece.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp
 QMenu
@@ -55,6 +67,8 @@ QLabel
 -
 theme.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
+piece.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/EWIEGA46WW/moc_board.cpp
 board.h
@@ -74,11 +88,21 @@ QApplication
 board.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/board.h
 
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp
+piece.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
+
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
+QPixmap
+-
+
 /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp
 rules.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
 utils.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
+piece.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
 boardtile.h
@@ -2051,6 +2075,10 @@ qpaintdevice.h
 /usr/include/x86_64-linux-gnu/qt5/QtGui/QPaintDeviceWindow
 qpaintdevicewindow.h
 /usr/include/x86_64-linux-gnu/qt5/QtGui/qpaintdevicewindow.h
+
+/usr/include/x86_64-linux-gnu/qt5/QtGui/QPixmap
+qpixmap.h
+/usr/include/x86_64-linux-gnu/qt5/QtGui/qpixmap.h
 
 /usr/include/x86_64-linux-gnu/qt5/QtGui/QSurfaceFormat
 qsurfaceformat.h

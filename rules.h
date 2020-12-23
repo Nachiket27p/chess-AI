@@ -3,7 +3,7 @@
 
 #include "boardtile.h"
 
-extern BoardTile *board[8][8];
+extern BoardTile *grid[8][8];
 extern int validMoves[64];
 extern int vmIdx;
 
@@ -30,6 +30,10 @@ private:
     BoardTile *blackKing;
     BoardTile *whiteKing;
 
+    // two boards white and black
+    bool whiteAttacks[8][8] = {};
+    bool blackAttacks[8][8] = {};
+
 private:
     /**
      * @brief Private constructor to keep only 1 instane of this calls.
@@ -37,15 +41,22 @@ private:
     Rules()
     {
         okToMove = false;
-        //        blackCheck = false;
-        //        whiteCheck = false;
         isCheck = false;
         checkRow = -1;
         checkCol = -1;
 
         // set the initial postions of the kings
-        blackKing = board[0][4];
-        whiteKing = board[7][4];
+        blackKing = grid[0][4];
+        whiteKing = grid[7][4];
+
+        // initialize the attack board
+        for(int col = 0; col < 8; col++)
+        {
+            // the only places the pieces can attack at the beginning
+            // is the 1 row beyond the pawns
+            whiteAttacks[2][col] = 1;
+            blackAttacks[6][col] = 1;
+        }
     };
 
 public:
@@ -73,6 +84,8 @@ public:
     void setKingPos(bool isWhite, BoardTile *newTile);
 
     void scanForCheck();
+
+    void updateAttackBoard();
 
 private:
     /**
@@ -142,17 +155,22 @@ private:
      */
     inline void setCheck();
 
-    inline bool scanCheckHelper(int row, int col, int dx, int dy, char *checkPiece);
+    inline void addValidMove(int tileNumber, bool *ok);
+
+    inline void addValidMoveKing(int row, int col, int tileNumber, bool *ok);
+
+    inline void updateAttackBoardHelper(Piece *pieces[16], bool attackBoard[8][8], bool pieceColor);
+
+    inline void attackeRBQHelper(int row, int col, int dr, int dc, bool pieceColor, bool attackGrid[8][8]);
+
+    inline void locateCheckSource();
+
+    inline bool scanCheckHelper(int row, int col, int dr, int dc, char *checkPiece);
 
     inline bool checkKnight(int row, int col);
 
     inline bool checkTile(int row, int col, char pieceType);
 
-    inline bool addValidMove(int tileNumber, bool isKing=false);
-
-    inline bool addValidMoveKing(int row, int col, int tileNumber);
-
-//    void getAttackVector(int row, col, )
 };
 
 #endif // RULES_H

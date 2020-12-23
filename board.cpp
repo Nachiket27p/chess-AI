@@ -1,10 +1,14 @@
 #include "board.h"
 #include "ui_board.h"
 #include "utils.h"
+#include "rules.h"
 
-BoardTile *board[8][8];
+Piece *whitePieces[16];
+Piece *blackPieces[16];
+BoardTile *grid[8][8];
 Border *borders[4];
 Theme *currentTheme;
+Rules *game;
 
 int validMoves[64];
 int vmIdx = 0;
@@ -14,12 +18,64 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 {
     ui->setupUi(this);
 
-    initialize(board, this);
+    createPieces(whitePieces, blackPieces);
+
+    initializeGrid(grid, this);
+
+    initializePieces(grid, whitePieces, blackPieces);
+
+    game = game->getInstance();
 }
 
 Board::~Board()
 {
     delete ui;
+}
+
+
+void Board::createPieces(Piece *whitePieces[16], Piece *blackPieces[16])
+{
+    int col = 0;
+    int pidx = 0;
+    while(col < 8)
+    {
+        whitePieces[pidx] = new Piece(true, pawnID, col, 6, col , whitePath + "pawn_white.svg");
+        blackPieces[pidx] = new Piece(false, pawnID, col, 1, col, blackPath + "pawn_black.svg");
+        col++;
+        pidx++;
+    }
+    col = 0;
+
+    whitePieces[pidx] = new Piece(true, rookID, col, 7, col , whitePath + "rook_white.svg");
+    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + "rook_black.svg");
+    col++; pidx++;
+
+    whitePieces[pidx] = new Piece(true, knightID, col, 7, col , whitePath + "knight_white.svg");
+    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + "knight_black.svg");
+    col++; pidx++;
+
+    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col , whitePath + "bishop_white.svg");
+    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + "bishop_black.svg");
+    col++; pidx++;
+
+    whitePieces[pidx] = new Piece(true, queenID, col, 7, col , whitePath + "queen_white.svg");
+    blackPieces[pidx] = new Piece(false, queenID, col, 0, col, blackPath + "queen_black.svg");
+    col++; pidx++;
+
+    whitePieces[pidx] = new Piece(true, kingID, col, 7, col , whitePath + "king_white.svg");
+    blackPieces[pidx] = new Piece(false, kingID, col, 0, col, blackPath + "king_black.svg");
+    col++; pidx++;
+
+    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col , whitePath + "bishop_white.svg");
+    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + "bishop_black.svg");
+    col++; pidx++;
+
+    whitePieces[pidx] = new Piece(true, knightID, col, 7, col , whitePath + "knight_white.svg");
+    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + "knight_black.svg");
+    col++; pidx++;
+
+    whitePieces[pidx] = new Piece(true, rookID, col, 7, col , whitePath + "rook_white.svg");
+    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + "rook_black.svg");
 }
 
 bool Board::checkResources()
@@ -43,7 +99,7 @@ void Border::setOutline(int x, int y, bool vertical)
     setStyleSheet(QString("QLabel {background-color: rgb(45, 45, 45); color: black;}"));
 }
 
-void initialize(BoardTile *grid[8][8], QWidget *_parent)
+void Board::initializeGrid(BoardTile *grid[8][8], QWidget *_parent)
 {
     currentTheme = new Theme();
     currentTheme->setTheme(Theme::def);
@@ -70,38 +126,23 @@ void initialize(BoardTile *grid[8][8], QWidget *_parent)
         }
         y += 100;
     }
-
-    initializePieces(grid);
 }
 
-void initializePieces(BoardTile *grid[8][8])
+void Board::initializePieces(BoardTile *grid[8][8], Piece *whitePieces[16], Piece *blackPieces[16])
 {
-    // pawns
-    for (int col = 0; col < 8; col++)
+    int wr, wc, br, bc;
+    for(int i = 0; i < 16; i++)
     {
-        grid[1][col]->setPiece(pawnID, false);
-        grid[6][col]->setPiece(pawnID, true);
+        wr = whitePieces[i]->getRow();
+        wc = whitePieces[i]->getCol();
+        br = blackPieces[i]->getRow();
+        bc = blackPieces[i]->getCol();
+
+        grid[wr][wc]->setPiece(whitePieces[i]);
+        grid[wr][wc]->displayTile();
+        grid[br][bc]->setPiece(blackPieces[i]);
+        grid[br][bc]->displayTile();
     }
-
-    // black pieces
-    grid[0][0]->setPiece(rookID, false);
-    grid[0][1]->setPiece(knightID, false);
-    grid[0][2]->setPiece(bishopID, false);
-    grid[0][3]->setPiece(queenID, false);
-    grid[0][4]->setPiece(kingID, false);
-    grid[0][5]->setPiece(bishopID, false);
-    grid[0][6]->setPiece(knightID, false);
-    grid[0][7]->setPiece(rookID, false);
-
-    // white pieces
-    grid[7][0]->setPiece(rookID, true);
-    grid[7][1]->setPiece(knightID, true);
-    grid[7][2]->setPiece(bishopID, true);
-    grid[7][3]->setPiece(queenID, true);
-    grid[7][4]->setPiece(kingID, true);
-    grid[7][5]->setPiece(bishopID, true);
-    grid[7][6]->setPiece(knightID, true);
-    grid[7][7]->setPiece(rookID, true);
 }
 
 void Board::on_actionNew_Game_triggered()
@@ -116,11 +157,11 @@ void Board::on_actionNew_Game_triggered()
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++)
             {
-                if (board[i][j]->isOccupied())
-                    board[i][j]->removePiece();
+                if (grid[i][j]->isOccupied())
+                    grid[i][j]->removePiece();
             }
 
-        initializePieces(board);
+        initializePieces(grid, whitePieces, blackPieces);
     }
 }
 
@@ -130,7 +171,7 @@ void Board::updateTheme(Theme::themes selection)
 
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
-            board[i][j]->populateTile(board[i][j]->getPieceSymbol(), board[i][j]->getPieceColor());
+            grid[i][j]->displayTile();
 }
 
 void Board::on_actionExit_triggered()

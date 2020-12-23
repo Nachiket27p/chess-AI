@@ -4,7 +4,7 @@
 #include "rules.h"
 
 // Get an instance of the rules class.
-Rules *game;
+extern Rules *game;
 
 // Instantiate the private static variables
 BoardTile *BoardTile::selectedTile = nullptr;
@@ -14,64 +14,17 @@ int BoardTile::selected = 0;
 extern Theme *currentTheme;
 extern bool isWhiteTurn;
 
-void BoardTile::setPiece(const char symbol, bool isWhite)
+void BoardTile::setPiece(Piece* piece)
 {
-    occupied = true;
-    this->isWhite = isWhite;
-    pieceSymbol = symbol;
-    populateTile(symbol, isWhite);
-    // Get instance of the rules
-    game = game->getInstance();
+    this->piece = piece;
+    piece->updatePosition(row, col);
 }
 
-void BoardTile::populateTile(const char symbol, bool isWhite)
+void BoardTile::displayTile()
 {
-    pieceSymbol = symbol;
-
-    if (occupied)
+    if (piece != nullptr)
     {
-        switch (symbol)
-        {
-        case pawnID:
-            if (isWhite)
-                setPixmap(QPixmap(whitePath + "pawn_white.svg"));
-            else
-                setPixmap(QPixmap(blackPath + "pawn_black.svg"));
-            break;
-
-        case rookID:
-            if (isWhite)
-                setPixmap(QPixmap(whitePath + "rook_white.svg"));
-            else
-                setPixmap(QPixmap(blackPath + "rook_black.svg"));
-            break;
-        case knightID:
-            if (isWhite)
-                setPixmap(QPixmap(whitePath + "knight_white.svg"));
-            else
-                setPixmap(QPixmap(blackPath + "knight_black.svg"));
-            break;
-        case bishopID:
-            if (isWhite)
-                setPixmap(QPixmap(whitePath + "bishop_white.svg"));
-            else
-                setPixmap(QPixmap(blackPath + "bishop_black.svg"));
-            break;
-        case kingID:
-            if (isWhite)
-                setPixmap(QPixmap(whitePath + "king_white.svg"));
-            else
-                setPixmap(QPixmap(blackPath + "king_black.svg"));
-            break;
-        case queenID:
-            if (isWhite)
-                setPixmap(QPixmap(whitePath + "queen_white.svg"));
-            else
-                setPixmap(QPixmap(blackPath + "queen_black.svg"));
-            break;
-        default:
-            break;
-        }
+        setPixmap(*piece->getIcon());
     }
     else
     {
@@ -85,40 +38,50 @@ void BoardTile::displayTileColor()
 {
     if (isDarkTile)
     {
-        if (isWhite)
-        {
-            setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getDarkBackground() +
-                          QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
-                          QString(" color: ") + currentTheme->getHoverColorWhite() + QString("}"));
-        }
-        else
-        {
-            setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getDarkBackground() +
-                          QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
-                          QString(" color: ") + currentTheme->getHoverColorBlack() + QString("}"));
-        }
+
+        setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getDarkBackground() +
+                      QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
+                      QString(" color: ") + currentTheme->getHoverColorWhite() + QString("}"));
     }
     else
     {
-        if (isWhite)
-        {
-            setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getLightBackground() +
-                          QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
-                          QString(" color: ") + currentTheme->getHoverColorWhite() + QString("}"));
-        }
-        else
-        {
-            setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getLightBackground() +
-                          QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
-                          QString(" color: ") + currentTheme->getHoverColorBlack() + QString("}"));
-        }
+        setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getLightBackground() +
+                      QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
+                      QString(" color: ") + currentTheme->getHoverColorWhite() + QString("}"));
+
     }
 }
 
 void BoardTile::removePiece()
 {
-    occupied = false;
-    setText("");
+    piece = nullptr;
+}
+
+char BoardTile::getPieceSymbol()
+{
+    if(piece != nullptr)
+    {
+        return piece->getPieceSymbol();
+    }
+    return '\0';
+}
+
+bool BoardTile::getPieceColor()
+{
+    if(piece != nullptr)
+    {
+        return piece->isWhite();
+    }
+    return false;
+}
+
+bool BoardTile::isOccupied()
+{
+    if(piece != nullptr)
+    {
+        return true;
+    }
+    return false;
 }
 
 void BoardTile::mousePressEvent(QMouseEvent *)
@@ -130,7 +93,7 @@ void BoardTile::mousePressEvent(QMouseEvent *)
 void BoardTile::unhighlightTiles()
 {
     for (int i = 0; i < vmIdx; i++)
-        board[validMoves[i] / 8][validMoves[i] & 7]->displayTileColor();
+        grid[validMoves[i] / 8][validMoves[i] & 7]->displayTileColor();
 }
 
 void BoardTile::enforceRules()
@@ -143,12 +106,12 @@ void BoardTile::enforceRules()
         //        **Perhaps consider using a grid of 8x8 which holds positive
         //              values to indicate that moving to a specific tile will
         //              move it into a check position.
-        if (occupied && isWhite == isWhiteTurn)
+        if ((piece != nullptr) && (piece->isWhite() == isWhiteTurn))
         {
             if (game->canMove(this))
             {
                 selectedTile = this;
-                if (isWhite)
+                if (piece->isWhite())
                 {
                     selectedTile->setStyleSheet(QString("QLabel {background-color:") +
                                                 currentTheme->getHoverBackground() + "color: " + currentTheme->getHoverColorWhite() + QString("}"));
@@ -194,10 +157,10 @@ void BoardTile::enforceRules()
         {
             if (tileNumber == validMoves[i])
             {
-                setPiece(selectedTile->getPieceSymbol(), selectedTile->getPieceColor());
+                setPiece(selectedTile->getPiece());
                 selectedTile->removePiece();
-                selectedTile->populateTile(selectedTile->getPieceSymbol(), selectedTile->getPieceColor());
-                populateTile(selectedTile->getPieceSymbol(), selectedTile->getPieceColor());
+                selectedTile->displayTile();
+                displayTile();
 
                 unhighlightTiles();
                 vmIdx = 0;
@@ -218,7 +181,10 @@ void BoardTile::enforceRules()
             selected = 1;
         }
 
+        // update the attack board
+        game->updateAttackBoard();
         // scan for check after a piece has moved
         game->scanForCheck();
+
     }
 }

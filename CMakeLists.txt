@@ -27,6 +27,8 @@ if(UNIX)
     boardtile.h
     rules.cpp
     rules.h
+    piece.cpp
+    piece.h
   )
 endif()
 

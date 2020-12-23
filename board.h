@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include "boardtile.h"
+#include "piece.h"
 
 namespace Ui
 {
@@ -48,6 +49,23 @@ private:
      */
     void updateTheme(Theme::themes);
 
+    void createPieces(Piece *whitePieces[16], Piece *blackPieces[16]);
+
+    /**
+     * @brief Initializes the tiles on the board grid.
+     *
+     * @param grid The grid of tiles representing the board.
+     * @param _parent The parent widget to this board.
+     */
+    void initializeGrid(BoardTile *grid[8][8], QWidget *_parent);
+
+    /**
+     * @brief Initializes the pieces on the board.
+     *
+     * @param grid The grid of tiles representing the board.
+     */
+    void initializePieces(BoardTile *grid[8][8], Piece *whitePieces[16], Piece *blackPieces[16]);
+
     // These private slots are used to handel the actions performed by the user in the GUI menubar.
 private slots:
     void on_actionNew_Game_triggered();
@@ -77,20 +95,5 @@ public:
      */
     void setOutline(int, int, bool);
 };
-
-/**
- * @brief Initializes the tiles on the board grid.
- * 
- * @param grid The grid of tiles representing the board.
- * @param _parent The parent widget to this board.
- */
-void initialize(BoardTile *grid[8][8], QWidget *_parent);
-
-/**
- * @brief Initializes the pieces on the board.
- * 
- * @param grid The grid of tiles representing the board. 
- */
-void initializePieces(BoardTile *grid[8][8]);
 
 #endif // BOARD_H

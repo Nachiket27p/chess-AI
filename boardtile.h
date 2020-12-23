@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include "theme.h"
+#include "piece.h"
 
 class BoardTile : public QLabel
 {
@@ -13,12 +14,8 @@ private:
     int tileNumber;
     // Identifies if this tile is a dark tile
     bool isDarkTile;
-    // Identified if this tile is occupied by a piece
-    bool occupied;
-    // Identifies if this tile is occupied by a white piece
-    bool isWhite;
-    // Identified the specific piece on this tile
-    char pieceSymbol;
+
+    Piece *piece;
 
     // static counter used to determine when a player tries to move a piece
     static int selected;
@@ -50,30 +47,19 @@ public:
      * @param _parent The QWidget object on which this tile will be rendered.
      */
     BoardTile(int _row, int _col, int _tileNumber, bool _isDarkTile, QWidget *_parent)
-        : QLabel(_parent), row(_row), col(_col), tileNumber(_tileNumber), isDarkTile(_isDarkTile),
-          occupied(false)
+        : QLabel(_parent), row(_row), col(_col), tileNumber(_tileNumber), isDarkTile(_isDarkTile)
     {
-        // Nothing to do
+        piece = nullptr;
     }
 
-    /**
-     * @brief Set the piece onto this tile, the 'symbol' param identified the tyle 
-     * piece being placed on this tile. The piece codes are located in 'util.h'.
-     * 
-     * @param symbol Character code representing the peice code.
-     * @param isWhite Flag to represent if the piece being placed on here is a white.
-     *                  'true' if white, 'false' if black.
-     */
-    void setPiece(const char symbol, bool isWhite);
+
+    void setPiece(Piece* piece=nullptr);
 
     /**
      * @brief Populates the tile with the the piece identified by 'symbol' parameter passed in.
      * 
-     * @param symbol Character code representing the peice code.
-     * @param isWhite Flag to represent if the piece being placed on here is a white.
-     *                  'true' if white, 'false' if black.
      */
-    void populateTile(const char symbol, bool isWhite);
+    void displayTile();
 
     /**
      * @brief Used to set the color of the tile on the board, after pieces are moved or
@@ -93,7 +79,7 @@ public:
      * 
      * @return char The unique character code.
      */
-    char getPieceSymbol() { return pieceSymbol; }
+    char getPieceSymbol();
 
     /**
      * @brief Returns the row on which this tile is located (Zero based index).
@@ -122,7 +108,9 @@ public:
      * @return true If piece on this tile is white.
      * @return false If this piee is black or unoccupied.
      */
-    bool getPieceColor() { return isWhite; }
+    bool getPieceColor();
+
+    Piece *getPiece() { return piece; }
 
     /**
      * @brief Determines if the tile is occupied by a piece.
@@ -130,7 +118,7 @@ public:
      * @return true If there is a piece on this tile.
      * @return false If the ther is no piece on this tile.
      */
-    bool isOccupied() { return occupied; }
+    bool isOccupied();
 
     /**
      * @brief Registers mouse events on this tile, increlemts the static variable 
