@@ -126,6 +126,7 @@ public:
      * 
      */
     void mousePressEvent(QMouseEvent *);
+
 };
 
 #endif // BOARDTILE_H

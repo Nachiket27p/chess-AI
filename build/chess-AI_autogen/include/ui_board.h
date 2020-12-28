@@ -58,7 +58,7 @@ public:
         Board->setCentralWidget(centralwidget);
         menubar = new QMenuBar(Board);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1000, 34));
+        menubar->setGeometry(QRect(0, 0, 1000, 31));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuTheme = new QMenu(menubar);

@@ -217,6 +217,33 @@ chess-AI_autogen/mocs_compilation.cpp.s:
 	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.s
 .PHONY : chess-AI_autogen/mocs_compilation.cpp.s
 
+debugwindow.o: debugwindow.cpp.o
+
+.PHONY : debugwindow.o
+
+# target to build an object file
+debugwindow.cpp.o:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/debugwindow.cpp.o
+.PHONY : debugwindow.cpp.o
+
+debugwindow.i: debugwindow.cpp.i
+
+.PHONY : debugwindow.i
+
+# target to preprocess a source file
+debugwindow.cpp.i:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/debugwindow.cpp.i
+.PHONY : debugwindow.cpp.i
+
+debugwindow.s: debugwindow.cpp.s
+
+.PHONY : debugwindow.s
+
+# target to generate assembly for a file
+debugwindow.cpp.s:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/debugwindow.cpp.s
+.PHONY : debugwindow.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -344,6 +371,9 @@ help:
 	@echo "... chess-AI_autogen/mocs_compilation.o"
 	@echo "... chess-AI_autogen/mocs_compilation.i"
 	@echo "... chess-AI_autogen/mocs_compilation.s"
+	@echo "... debugwindow.o"
+	@echo "... debugwindow.i"
+	@echo "... debugwindow.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

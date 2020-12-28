@@ -172,13 +172,13 @@ void BoardTile::enforceRules()
         }
 
 
-
         // If the move was not valid/successful then set the selected value back to 1
         // to indicate that game state has returned to a position where the player has
         // selected a piece.
         if(!moveSuccess)
         {
             selected = 1;
+            return;
         }
 
         // update the attack board

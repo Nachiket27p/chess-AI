@@ -1,7 +1,10 @@
 #ifndef RULES_H
 #define RULES_H
 
+#include <vector>
 #include "boardtile.h"
+#include "debugwindow.h"
+#include "piece.h"
 
 extern BoardTile *grid[8][8];
 extern int validMoves[64];
@@ -30,9 +33,14 @@ private:
     BoardTile *blackKing;
     BoardTile *whiteKing;
 
+    DebugWindow *dbw;
+    std::vector<Piece *> blackKingDefenders;
+    std::vector<Piece *> whiteKingDefenders;
+
+public:
     // two boards white and black
-    bool whiteAttacks[8][8] = {};
-    bool blackAttacks[8][8] = {};
+    int whiteAttacks[8][8] = {};
+    int blackAttacks[8][8] = {};
 
 private:
     /**
@@ -50,12 +58,12 @@ private:
         whiteKing = grid[7][4];
 
         // initialize the attack board
-        for(int col = 0; col < 8; col++)
+        for (int col = 0; col < 8; col++)
         {
             // the only places the pieces can attack at the beginning
             // is the 1 row beyond the pawns
-            whiteAttacks[2][col] = 1;
-            blackAttacks[6][col] = 1;
+            whiteAttacks[5][col] = 1;
+            blackAttacks[2][col] = 1;
         }
     };
 
@@ -86,6 +94,11 @@ public:
     void scanForCheck();
 
     void updateAttackBoard();
+
+    void resetKingDefenders();
+
+    //ssssssssssssssssssssssssssssssssssssss
+    void setDebugWindowAccess(DebugWindow *dbw);
 
 private:
     /**
@@ -133,6 +146,17 @@ private:
      */
     bool enforceQueen(BoardTile *tile);
 
+    /**
+     * @brief Helper function to ensure the rook, bishop, and queen are only
+     *          allowed to move to valid locations.
+     * 
+     * @param row The row on the grid.
+     * @param col The column on the grid.
+     * @param dr The increment in the row dimension.
+     * @param dc The increment in the col dimension.
+     * @param ok Only gets set to 'true' if a valid move is added to the list of valid moves.
+     * @param tile The tile which is being checked.
+     */
     inline void enforceRBQHelper(int row, int col, int dr, int dc, bool *ok, BoardTile *tile);
 
     /**
@@ -151,26 +175,89 @@ private:
     void highlightTiles();
 
     /**
-     * @brief setCheck Private helper function to set check.
+     * @brief This is a helper function which is ued to add a valid move to the 
+     * list of valid moves. It also take into consideration if there is
+     * is a check and only allows valid moves.
+     * 
+     * @param tileNumber The unique id used to when ther is a check, and used as the
+     * unique id add to the valid move array.
+     * @param ok Only gets set to 'true' if a valid move is added to the list of valid moves.
      */
-    inline void setCheck();
-
     inline void addValidMove(int tileNumber, bool *ok);
 
+    /**
+     * @brief This is a special helper function used for the king, as it has special
+     * requirements for valid moves when ther is a check.
+     * 
+     * @param row The row coordiante being checked.
+     * @param col The column coordinate being checked.
+     * @param tileNumber The unique tile id which gets added to the valid list of moves.
+     * @param ok Only gets set to 'true' if a valid move is added to the list of valid moves.
+     */
     inline void addValidMoveKing(int row, int col, int tileNumber, bool *ok);
 
-    inline void updateAttackBoardHelper(Piece *pieces[16], bool attackBoard[8][8], bool pieceColor);
+    /**
+     * @brief This helper function is used to update the corresponding attack board
+     * when a move for that color/side is made.
+     * 
+     * @param pieces The list of pieces whose attack tiles need to be computed.
+     * @param attackBoard The 8x8 grid on which a true value is set if a piece can attack that spot.
+     * @param pieceColor The color to indicate which sides board to update.
+     */
+    inline void updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], int pieceColor);
 
-    inline void attackeRBQHelper(int row, int col, int dr, int dc, bool pieceColor, bool attackGrid[8][8]);
+    /**
+     * @brief Helper function used to computer the attack tile for rook, bishop, and queen.
+     * 
+     * @param row The start row index being checked.
+     * @param col The start column index being checked.
+     * @param dr Can be +1/0/-1 to determine if the row value increased or decreased.
+     * @param dc Can be +1/0/-1 to determine if the column value increased or decreased.
+     * @param pieceColor If the piece is black or white.
+     * @param attackGrid The grid which is being updated.
+     */
+    inline void attackeRBQHelper(int row, int col, int dr, int dc, bool pieceColor, int attackGrid[8][8]);
 
+    /**
+     * @brief  Used to find the check source if a check is detected using the arrack grid.
+     * Calls other helper function to aid in this task.
+     * 
+     */
     inline void locateCheckSource();
 
+    /**
+     * @brief Helper function used to scan for a check when one is detected.
+     * 
+     * @param row The start row index of the king being checked.
+     * @param col The start column index of the king being checked.
+     * @param dr Can be +1/0/-1 to determine if the row value increased or decreased.
+     * @param dc Can be +1/0/-1 to determine if the column value increased or decreased.
+     * @param checkPiece 
+     * @return true If a check was located.
+     * @return false If a check was not located.
+     */
     inline bool scanCheckHelper(int row, int col, int dr, int dc, char *checkPiece);
 
     inline bool checkKnight(int row, int col);
 
     inline bool checkTile(int row, int col, char pieceType);
 
+    /**
+     * @brief setCheck Private helper function to set check.
+     */
+    inline void setCheck();
+
+    // need to create a function whcih:
+    // * If the king can possibly be attacked using the opposit colors attack board
+    //      then figure out a way to check if this piece can move or will moving cause
+    //      a check to occur.
+    // * Also check if the the king is being moved then will does the tile it is moving
+    //      to case an immediate check.
+    inline bool enforceMoveHelper(/* parameters */);
+
+    bool isKingDefender(Piece* p);
+
+    bool canKingDefenderMove(int dr, int dc, BoardTile *tile, BoardTile *king, int attackBoardVal);
 };
 
 #endif // RULES_H

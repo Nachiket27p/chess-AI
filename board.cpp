@@ -14,6 +14,12 @@ int validMoves[64];
 int vmIdx = 0;
 bool isWhiteTurn = true;
 
+//ssssssssssssssssssssssssssssss
+void Board::setDebugWindowAccess(DebugWindow *dbw)
+{
+    game->setDebugWindowAccess(dbw);
+}
+
 Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 {
     ui->setupUi(this);

@@ -29,6 +29,9 @@ if(UNIX)
     rules.h
     piece.cpp
     piece.h
+    debugwindow.cpp
+    debugwindow.h
+    debugwindow.ui
   )
 endif()
 
