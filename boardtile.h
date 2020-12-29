@@ -52,8 +52,7 @@ public:
         piece = nullptr;
     }
 
-
-    void setPiece(Piece* piece=nullptr);
+    void setPiece(Piece *piece = nullptr);
 
     /**
      * @brief Populates the tile with the the piece identified by 'symbol' parameter passed in.
@@ -127,6 +126,8 @@ public:
      */
     void mousePressEvent(QMouseEvent *);
 
+    bool hasMoved();
+    void setMoved();
 };
 
 #endif // BOARDTILE_H

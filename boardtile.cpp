@@ -14,7 +14,7 @@ int BoardTile::selected = 0;
 extern Theme *currentTheme;
 extern bool isWhiteTurn;
 
-void BoardTile::setPiece(Piece* piece)
+void BoardTile::setPiece(Piece *piece)
 {
     this->piece = piece;
     piece->updatePosition(row, col);
@@ -48,7 +48,6 @@ void BoardTile::displayTileColor()
         setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getLightBackground() +
                       QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
                       QString(" color: ") + currentTheme->getHoverColorWhite() + QString("}"));
-
     }
 }
 
@@ -59,7 +58,7 @@ void BoardTile::removePiece()
 
 char BoardTile::getPieceSymbol()
 {
-    if(piece != nullptr)
+    if (piece != nullptr)
     {
         return piece->getPieceSymbol();
     }
@@ -68,7 +67,7 @@ char BoardTile::getPieceSymbol()
 
 bool BoardTile::getPieceColor()
 {
-    if(piece != nullptr)
+    if (piece != nullptr)
     {
         return piece->isWhite();
     }
@@ -77,7 +76,7 @@ bool BoardTile::getPieceColor()
 
 bool BoardTile::isOccupied()
 {
-    if(piece != nullptr)
+    if (piece != nullptr)
     {
         return true;
     }
@@ -88,6 +87,20 @@ void BoardTile::mousePressEvent(QMouseEvent *)
 {
     ++selected;
     enforceRules();
+}
+
+bool BoardTile::hasMoved()
+{
+    if (piece != nullptr)
+    {
+        return piece->hasMoved();
+    }
+    return false;
+}
+
+void BoardTile::setMoved()
+{
+    piece->setMoved();
 }
 
 void BoardTile::unhighlightTiles()
@@ -144,12 +157,13 @@ void BoardTile::enforceRules()
             return;
         }
 
+        int kingTNBefore;
         // if the piece being moved is the the king the update the king pointer
-        if(selectedTile->getPieceSymbol() == kingID)
+        if (selectedTile->getPieceSymbol() == kingID)
         {
             game->setKingPos(selectedTile->getPieceColor(), this);
+            kingTNBefore = selectedTile->getTileNumber();
         }
-
 
         // perform the operations to move the piece
         bool moveSuccess = false;
@@ -160,8 +174,9 @@ void BoardTile::enforceRules()
                 setPiece(selectedTile->getPiece());
                 selectedTile->removePiece();
                 selectedTile->displayTile();
+                // mark the piece as being moved
+                setMoved();
                 displayTile();
-
                 unhighlightTiles();
                 vmIdx = 0;
                 selected = 0;
@@ -171,20 +186,40 @@ void BoardTile::enforceRules()
             }
         }
 
-
         // If the move was not valid/successful then set the selected value back to 1
         // to indicate that game state has returned to a position where the player has
         // selected a piece.
-        if(!moveSuccess)
+        if (!moveSuccess)
         {
             selected = 1;
             return;
+        }
+
+        if (piece->getPieceSymbol() == kingID)
+        {
+            // Queen side castle
+            if ((kingTNBefore - tileNumber) == 2)
+            {
+                grid[row][col - 2]->setMoved();
+                grid[row][col + 1]->setPiece(grid[row][col - 2]->getPiece());
+                grid[row][col - 2]->removePiece();
+                grid[row][col - 2]->displayTile();
+                grid[row][col + 1]->displayTile();
+            }
+            // king side castle
+            else if ((kingTNBefore - tileNumber) == -2)
+            {
+                grid[row][col + 1]->setMoved();
+                grid[row][col - 1]->setPiece(grid[row][col + 1]->getPiece());
+                grid[row][col + 1]->removePiece();
+                grid[row][col + 1]->displayTile();
+                grid[row][col - 1]->displayTile();
+            }
         }
 
         // update the attack board
         game->updateAttackBoard();
         // scan for check after a piece has moved
         game->scanForCheck();
-
     }
 }

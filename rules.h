@@ -238,7 +238,7 @@ private:
      */
     inline bool scanCheckHelper(int row, int col, int dr, int dc, char *checkPiece);
 
-    inline bool checkKnight(int row, int col);
+    bool checkKnight(int row, int col);
 
     inline bool checkTile(int row, int col, char pieceType);
 
@@ -247,17 +247,11 @@ private:
      */
     inline void setCheck();
 
-    // need to create a function whcih:
-    // * If the king can possibly be attacked using the opposit colors attack board
-    //      then figure out a way to check if this piece can move or will moving cause
-    //      a check to occur.
-    // * Also check if the the king is being moved then will does the tile it is moving
-    //      to case an immediate check.
-    inline bool enforceMoveHelper(/* parameters */);
+    inline bool isKingDefender(Piece* p);
 
-    bool isKingDefender(Piece* p);
+    inline bool canKingDefenderMove(int dr, int dc, BoardTile *tile, BoardTile *king, int attackBoardVal);
 
-    bool canKingDefenderMove(int dr, int dc, BoardTile *tile, BoardTile *king, int attackBoardVal);
+    bool canCastle(BoardTile *tile);
 };
 
 #endif // RULES_H
