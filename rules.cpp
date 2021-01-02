@@ -412,6 +412,21 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
     int vmIdxbefore = vmIdx;
     if (isCheck)
     {
+        // if there are more than pieces causing check
+        if (checkPieces.size() > 1)
+        {
+            *ok = false;
+            return;
+        }
+
+        // for (int i = 0; i < checkPieces.size(); i++)
+        // {
+        //     int checkRow = checkPieces[i].row;
+        //     int checkCol = checkPieces[i].col;
+
+        int checkRow = checkPieces[0].row;
+        int checkCol = checkPieces[0].col;
+
         if ((grid[checkRow][checkCol]->getPieceSymbol() == knightID) &&
             (tileNumber == grid[checkRow][checkCol]->getTileNumber()))
         {
@@ -461,6 +476,7 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
                 curr = grid[r][c];
             }
         }
+        // } // commented out for loop
 
         // if a valid move was added then return true otherwise return false.
         if (vmIdxbefore != vmIdx)
@@ -889,6 +905,8 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
 inline void Rules::locateCheckSource()
 {
     isCheck = false;
+    checkPieces.clear();
+
     int row, col;
 
     if (isWhiteTurn)
@@ -909,7 +927,7 @@ inline void Rules::locateCheckSource()
         ((checkPiece == rookID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check north-east
@@ -917,7 +935,7 @@ inline void Rules::locateCheckSource()
         ((checkPiece == bishopID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check east
@@ -925,7 +943,7 @@ inline void Rules::locateCheckSource()
         ((checkPiece == rookID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check south-east
@@ -933,7 +951,7 @@ inline void Rules::locateCheckSource()
         ((checkPiece == bishopID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check south
@@ -941,7 +959,7 @@ inline void Rules::locateCheckSource()
         ((checkPiece == rookID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check south-west
@@ -949,7 +967,7 @@ inline void Rules::locateCheckSource()
         ((checkPiece == bishopID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check west
@@ -957,7 +975,7 @@ inline void Rules::locateCheckSource()
         ((checkPiece == rookID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check north-west
@@ -965,14 +983,14 @@ inline void Rules::locateCheckSource()
         ((checkPiece == bishopID) || (checkPiece == queenID)))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check knght
     if (checkKnight(row, col))
     {
         setCheck();
-        return;
+        // return;
     }
 
     // check pawn
@@ -981,13 +999,13 @@ inline void Rules::locateCheckSource()
         if (checkTile(row + 1, col - 1, pawnID) || checkTile(row + 1, col + 1, pawnID))
         {
             setCheck();
-            return;
+            // return;
         }
     }
     else if (checkTile(row - 1, col - 1, pawnID) || checkTile(row - 1, col + 1, pawnID))
     {
         setCheck();
-        return;
+        // return;
     }
 }
 
@@ -1002,8 +1020,9 @@ inline bool Rules::scanCheckHelper(int row, int col, int dr, int dc, char *check
             if (curr->getPieceColor() != isWhiteTurn)
             {
                 *checkPiece = curr->getPieceSymbol();
-                checkRow = row;
-                checkCol = col;
+                // checkRow = row;
+                // checkCol = col;
+                checkPieces.push_back(checkPos{row, col});
                 return true;
             }
             else

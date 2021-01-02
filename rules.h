@@ -10,6 +10,12 @@ extern BoardTile *grid[8][8];
 extern int validMoves[64];
 extern int vmIdx;
 
+typedef struct CheckPos
+{
+    int row;
+    int col;
+} checkPos;
+
 /**
  * @brief The Rules class is a singleton class which is responsible for
  * checking if moves made are valid. It one public function 'canMove'
@@ -26,8 +32,9 @@ private:
 
     // used to keep track of if there is a check.
     bool isCheck;
-    int checkRow;
-    int checkCol;
+    std::vector<checkPos> checkPieces;
+    // int checkRow;
+    // int checkCol;
 
     // used to keep track the tile number of the pawn
     // which is vulnerable to the en passant attack
@@ -60,8 +67,8 @@ private:
     {
         okToMove = false;
         isCheck = false;
-        checkRow = -1;
-        checkCol = -1;
+        // checkRow = -1;
+        // checkCol = -1;
 
         // set the initial postions of the kings
         blackKing = grid[0][4];
@@ -75,6 +82,12 @@ private:
             whiteAttacks[5][col] = 1;
             blackAttacks[2][col] = 1;
         }
+
+        // initialize the flags for en passant
+        whiteEPL = 0;
+        whiteEPR = 0;
+        blackEPL = 0;
+        blackEPR = 0;
     };
 
 public:
