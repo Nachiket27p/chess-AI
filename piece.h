@@ -6,7 +6,7 @@
 class Piece
 {
 private:
-    bool moved;
+    int moved;
     bool white;
     char pieceSymbol;
     int index;
@@ -17,7 +17,7 @@ private:
 public:
     Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QString iconPath);
 
-    bool hasMoved();
+    int hasMoved();
     void setMoved();
     int getRow();
     int getCol();

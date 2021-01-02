@@ -99,15 +99,18 @@ void Rules::scanForCheck()
 
 bool Rules::enforcePawn(BoardTile *tile)
 {
+    // check en passant
+    enPassant(tile->getTileNumber());
+
     bool ok = false;
 
     // If this piece is a king defender
     bool defender = isKingDefender(tile->getPiece());
-    int kcol = whiteKing->getCol();
+    int kcol = blackKing->getCol();
 
     if (isWhiteTurn)
     {
-        kcol = blackKing->getCol();
+        kcol = whiteKing->getCol();
     }
     bool multiDefenders = false;
 
@@ -501,6 +504,7 @@ inline void Rules::addValidMoveKing(int row, int col, int tileNumber, bool *ok)
 
 bool Rules::canCastle(BoardTile *tile)
 {
+    bool ok = false;
     Piece *rookQ = blackPieces[8];
     Piece *rookK = blackPieces[15];
     int(*attackBoard)[8] = whiteAttacks;
@@ -532,6 +536,7 @@ bool Rules::canCastle(BoardTile *tile)
             if (cc)
             {
                 validMoves[vmIdx++] = tile->getTileNumber() - 2;
+                ok = true;
             }
         }
 
@@ -550,9 +555,45 @@ bool Rules::canCastle(BoardTile *tile)
             if (cc)
             {
                 validMoves[vmIdx++] = tile->getTileNumber() + 2;
+                ok = true;
             }
         }
     }
+    return ok;
+}
+
+bool Rules::enPassant(int tileNumb)
+{
+    bool ok = false;
+
+    if (isWhiteTurn)
+    {
+        if (whiteEPL == (tileNumb - 1))
+        {
+            validMoves[vmIdx++] = tileNumb - 8 - 1;
+            ok = true;
+        }
+        if (whiteEPR == (tileNumb + 1))
+        {
+            validMoves[vmIdx++] = tileNumb - 8 + 1;
+            ok = true;
+        }
+    }
+    else
+    {
+        if (blackEPL == (tileNumb + 1))
+        {
+            validMoves[vmIdx++] = tileNumb + 8 + 1;
+            ok = true;
+        }
+        if (blackEPR == (tileNumb - 1))
+        {
+            validMoves[vmIdx++] = tileNumb + 8 - 1;
+            ok = true;
+        }
+    }
+
+    return ok;
 }
 
 //--------------------------------------------------------------------------//
@@ -594,6 +635,82 @@ void Rules::resetKingDefenders()
     {
         blackKingDefenders.clear();
     }
+}
+
+void Rules::canEnPassant(BoardTile *tile)
+{
+    int row = tile->getRow();
+    int col = tile->getCol();
+
+    if ((isWhiteTurn && (row == 3)) || (!isWhiteTurn && (row == 4)))
+    {
+        BoardTile *otherPawn = grid[row][col + 1];
+        // Left en passant
+        // should check to see if the pawn is of the opponent but
+        // it is impossible to have the same side pawn move there in 1 move.
+        if (((col + 1) < 8) && otherPawn->isOccupied() && (isWhiteTurn == otherPawn->getPieceColor()) &&
+            (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
+        {
+            if (isWhiteTurn)
+            {
+                whiteEPL = tile->getTileNumber();
+            }
+            else
+            {
+                blackEPR = tile->getTileNumber();
+            }
+        }
+
+        // Right en passant
+        // should check to see if the pawn is of the opponent but
+        // it is impossible to have the same side pawn move there in 1 move.
+        otherPawn = grid[row][col - 1];
+        if (((col - 1) >= 0) && otherPawn->isOccupied() && (isWhiteTurn == otherPawn->getPieceColor()) &&
+            (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
+        {
+            if (isWhiteTurn)
+            {
+                whiteEPR = tile->getTileNumber();
+            }
+            else
+            {
+                blackEPL = tile->getTileNumber();
+            }
+        }
+    }
+}
+
+void Rules::resetEnPassant(bool white)
+{
+    if (white)
+    {
+        whiteEPL = 0;
+        whiteEPR = 0;
+    }
+    else
+    {
+        blackEPL = 0;
+        blackEPR = 0;
+    }
+}
+
+int Rules::getEPTileNumber(bool white)
+{
+    if (white)
+    {
+        if (whiteEPL)
+            return whiteEPL;
+        if (whiteEPR)
+            return whiteEPR;
+    }
+    else
+    {
+        if (blackEPL)
+            return blackEPL;
+        if (blackEPR)
+            return blackEPR;
+    }
+    return -1;
 }
 
 inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], int pieceColor)

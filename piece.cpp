@@ -2,7 +2,7 @@
 
 Piece::Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QString iconPath)
 {
-    moved = false;
+    moved = 0;
     white = _white;
     pieceSymbol = _pieceSymbol;
     index = _index;
@@ -11,14 +11,14 @@ Piece::Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QSt
     icon = new QPixmap(iconPath);
 }
 
-bool Piece::hasMoved()
+int Piece::hasMoved()
 {
     return moved;
 }
 
 void Piece::setMoved()
 {
-    moved = true;
+    moved++;
 }
 
 int Piece::getRow()

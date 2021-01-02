@@ -165,6 +165,13 @@ void BoardTile::enforceRules()
             kingTNBefore = selectedTile->getTileNumber();
         }
 
+        // check if en passant move is being performed
+        bool ep = false;
+        if((selectedTile->getPieceSymbol() == pawnID) && (this->col != selectedTile->getCol()) && !this->isOccupied())
+        {
+            ep = true;
+        }
+
         // perform the operations to move the piece
         bool moveSuccess = false;
         for (int i = 0; i < vmIdx; i++)
@@ -195,6 +202,7 @@ void BoardTile::enforceRules()
             return;
         }
 
+        // Casteling
         if (piece->getPieceSymbol() == kingID)
         {
             // Queen side castle
@@ -216,6 +224,25 @@ void BoardTile::enforceRules()
                 grid[row][col - 1]->displayTile();
             }
         }
+
+        // en passant
+        if(piece->getPieceSymbol() == pawnID)
+        {
+            game->canEnPassant(this);
+            // en passant remove opponent piece
+            if(ep)
+            {
+                int tn = game->getEPTileNumber(!isWhiteTurn);
+                int r = tn / 8;
+                int c = tn % 8;
+                grid[r][c]->removePiece();
+                grid[r][c]->displayTile();
+            }
+        }
+
+        // reset en passant
+        game->resetEnPassant(!isWhiteTurn);
+
 
         // update the attack board
         game->updateAttackBoard();

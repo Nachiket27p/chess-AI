@@ -29,6 +29,16 @@ private:
     int checkRow;
     int checkCol;
 
+    // used to keep track the tile number of the pawn
+    // which is vulnerable to the en passant attack
+    // If value is zero then there is no en passant, even
+    // theough there is a tilenumber 0, it is impossible
+    // for there to be an en passant with tile number 0.
+    int whiteEPL;
+    int whiteEPR;
+    int blackEPL;
+    int blackEPR;
+
     // pointer always keep track of where the king piece is
     BoardTile *blackKing;
     BoardTile *whiteKing;
@@ -91,13 +101,61 @@ public:
      */
     void setKingPos(bool isWhite, BoardTile *newTile);
 
+    /**
+     * @brief This function is called at the end of every move to scan the
+     * board and determine if there is a check.
+     * 
+     */
     void scanForCheck();
 
+    /**
+     * @brief This function is used to determine all possible
+     * attack position of all sam color piece on the board.
+     * Example:
+     * If a pawn is blocking a check then the piece is obviously not
+     * allowed to move to cause a check.
+     * 
+     */
     void updateAttackBoard();
 
+    /**
+     * @brief This is called to reset the list of pieces which are
+     * currently blocking the king from a check. This function also
+     * populates the list of pieces which are blocking a check.
+     * 
+     */
     void resetKingDefenders();
 
-    //ssssssssssssssssssssssssssssssssssssss
+    /**
+     * @brief This function is used to check if en passant move can be
+     * performed. It records the tilenumber of the pawn which can be
+     * captured using the en passant.
+     * 
+     * @param tile The pawn tile which is being checked to see
+     *              if it can be captured with en passant.
+     */
+    void canEnPassant(BoardTile *tile);
+
+    /**
+     * @brief Used to reset the en passant flags because, en passant
+     * can only be utilized immediately afte the opponent triggers
+     * the opportunity to en passant.
+     * 
+     * @param white True if it is white turn, false if it is black turn.
+     */
+    void resetEnPassant(bool white);
+
+    /**
+     * @brief Returns the tile number of the piece which can be captured by
+     * en passant. If no en passant is available then returns -1.
+     * 
+     * @param white True if it is white turn, false if it is black turn.
+     * @return int Tile number of piece which can be captured if possible,
+     *              otherwise -1.
+     */
+    int getEPTileNumber(bool white);
+
+    // used to update the debugging window.
     void setDebugWindowAccess(DebugWindow *dbw);
 
 private:
@@ -238,8 +296,26 @@ private:
      */
     inline bool scanCheckHelper(int row, int col, int dr, int dc, char *checkPiece);
 
+    /**
+     * @brief Used to check if the knight is causing a check.
+     * 
+     * @param row The row position of the knight.
+     * @param col The column position of the knight.
+     * @return true If a check is caused.
+     * @return false If no check is caused.
+     */
     bool checkKnight(int row, int col);
 
+    /**
+     * @brief called by scanCheckHelper to determine if the piece
+     * at the given row and column is capable of causing a check.
+     * 
+     * @param row The row position on the board.
+     * @param col The column position on the board.
+     * @param pieceType The type of piece being checked.
+     * @return true If the piece at the position is causing a check.
+     * @return false If the piece at the position if not causing a check.
+     */
     inline bool checkTile(int row, int col, char pieceType);
 
     /**
@@ -247,11 +323,52 @@ private:
      */
     inline void setCheck();
 
-    inline bool isKingDefender(Piece* p);
+    /**
+     * @brief A private helper function which is used to check if
+     * a particular piece is blocking a check.
+     * 
+     * @param p Piece being checked.
+     * @return true If it is blocking a check.
+     * @return false If it is not blocking a check.
+     */
+    inline bool isKingDefender(Piece *p);
 
+    /**
+     * @brief Used to determine if the piece is a blocking a check
+     * which direction is is allowed to move in.
+     * 
+     * @param dr Can be +1/0/-1 to determine if the row value increased or decreased.
+     * @param dc Can be +1/0/-1 to determine if the column value increased or decreased.
+     * @param tile The tile being checked.
+     * @param king The BoardTile on whcih the king is located.
+     * @param attackBoardVal The attack value on the grid where the 'tile' is located.
+     * @return true If the piece on the 'tile' can move.
+     * @return false If the piece on the 'tile' cannot move.
+     */
     inline bool canKingDefenderMove(int dr, int dc, BoardTile *tile, BoardTile *king, int attackBoardVal);
 
+    /**
+     * @brief Used to check if a castle can be performed. This function is called 
+     * from the enforceKing function. If the king can castle then the castle
+     * position is added to the list of valid moved.
+     * 
+     * @param tile The tile on which the king is located.
+     * @return true If the king can castle and a move was added to validMoved
+     * @return false If the king cannot castle.
+     */
     bool canCastle(BoardTile *tile);
+
+    /**
+     * @brief Used toe check if en passant can be performed based on the
+     * the private flags whiteEPL, whiteEPR, blackEPL, blackEPR. If en passant
+     * move can be performed the move is added to the list of valid moves.
+     * 
+     * @param tileNumb The tile numer of the pawn which can capture with
+     *                  enpassant.
+     * @return true If the capture can be performed.
+     * @return false If the capture cannot be performed.
+     */
+    bool enPassant(int tileNumb);
 };
 
 #endif // RULES_H
