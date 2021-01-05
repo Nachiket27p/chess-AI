@@ -1,6 +1,13 @@
+#include <stack>
 #include "rules.h"
 #include "utils.h"
 #include "piece.h"
+
+#define SINGLE_DEFENDER 17
+#define ATTACK_OCCUPIED 2
+#define ATTACK_BEHIND -1
+#define ATTACK_KING_BEHIND -16
+#define ATTACK_SPECIAL -77
 
 extern bool isWhiteTurn;
 extern Theme *currentTheme;
@@ -78,14 +85,16 @@ void Rules::scanForCheck()
     {
         row = whiteKing->getRow();
         col = whiteKing->getCol();
-        if (blackAttacks[row][col] == 2)
+//        if (blackAttacks[row][col] == ATTACK_OCCUPIED)
+        if (blackAttacks[row][col] > 0)
             setCheck();
     }
     else
     {
         row = blackKing->getRow();
         col = blackKing->getCol();
-        if (whiteAttacks[row][col] == 2)
+//        if (whiteAttacks[row][col] == ATTACK_OCCUPIED)
+        if (whiteAttacks[row][col] > 0)
             setCheck();
     }
 
@@ -103,20 +112,24 @@ bool Rules::enforcePawn(BoardTile *tile)
     enPassant(tile->getTileNumber());
 
     bool ok = false;
+    int row = tile->getRow();
+    int col = tile->getCol();
 
     // If this piece is a king defender
     bool defender = isKingDefender(tile->getPiece());
     int kcol = blackKing->getCol();
+    // get value from white attack board for black move
+    int attackBoardVal = whiteAttacks[row][col];
 
     if (isWhiteTurn)
     {
         kcol = whiteKing->getCol();
+        attackBoardVal = blackAttacks[row][col];
     }
     bool multiDefenders = false;
 
-    int row = tile->getRow();
-    int col = tile->getCol();
-    if (whiteAttacks[row][col] < -2)
+
+    if (attackBoardVal > SINGLE_DEFENDER)
         multiDefenders = true;
 
     if (tile->getPieceColor())
@@ -749,26 +762,12 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
             {
                 if (WITHIN_BOUNDS(pc + 1))
                 {
-                    if (!grid[pr + pawndr][pc + 1]->isOccupied())
-                    {
-                        attackBoard[pr + pawndr][pc + 1] = 1;
-                    }
-                    else if (grid[pr + pawndr][pc + 1]->getPieceColor() != pieceColor)
-                    {
-                        attackBoard[pr + pawndr][pc + 1] = 2;
-                    }
+                    attackBoard[pr + pawndr][pc + 1]++;
                 }
 
                 if (WITHIN_BOUNDS(pc - 1))
                 {
-                    if (!grid[pr + pawndr][pc - 1]->isOccupied())
-                    {
-                        attackBoard[pr + pawndr][pc - 1] = 1;
-                    }
-                    else if (grid[pr + pawndr][pc - 1]->getPieceColor() != pieceColor)
-                    {
-                        attackBoard[pr + pawndr][pc - 1] = 2;
-                    }
+                    attackBoard[pr + pawndr][pc - 1]++;
                 }
             }
             break;
@@ -789,14 +788,7 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
                 dc = pos[i][1];
                 if (WITHIN_BOUNDS(pr + dr) && WITHIN_BOUNDS(pc + dc))
                 {
-                    if (!grid[pr + dr][pc + dc]->isOccupied())
-                    {
-                        attackBoard[pr + dr][pc + dc] = 1;
-                    }
-                    else if (grid[pr + dr][pc + dc]->getPieceColor() != pieceColor)
-                    {
-                        attackBoard[pr + dr][pc + dc] = 2;
-                    }
+                    attackBoard[pr + dr][pc + dc]++;
                 }
             }
             break;
@@ -821,7 +813,7 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
                 {
                     for (int j = -1; j <= 1; j++)
                     {
-                        if (!(i == 0 && j == 0) && WITHIN_BOUNDS(pc + i) &&
+                        if (!(i == 0 && j == 0) && WITHIN_BOUNDS(pc + j) &&
                             grid[pr + i][pc + j]->isOccupied() &&
                             grid[pr + i][pc + j]->getPieceColor() != pieceColor)
                         {
@@ -840,36 +832,67 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
 
 inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool pieceColor, int attackGrid[8][8])
 {
+    std::stack<int> savedAttackValues;
+    bool behind = false;
     row += dr;
     col += dc;
-    int val = 1;
+
     while (WITHIN_BOUNDS(row) && WITHIN_BOUNDS(col))
     {
+        // save the current attack value in the case of backtracking
+        savedAttackValues.push(attackGrid[row][col]);
+
         if (grid[row][col]->isOccupied())
         {
-            if ((grid[row][col]->getPieceSymbol() == kingID) && (attackGrid[row - dr][col - dc] == 2))
+            if ((grid[row][col]->getPieceSymbol() == kingID) && (attackGrid[row - dr][col - dc] == ATTACK_BEHIND))
             {
-                int dval = -1;
-                attackGrid[row][col] = dval--;
-                int nrow = row - dr;
-                int ncol = col - dc;
-                while (attackGrid[nrow][ncol] == 2)
+                int dval = ATTACK_KING_BEHIND;
+                int oldAV = savedAttackValues.top();
+                savedAttackValues.pop();
+                if (oldAV > 0)
                 {
-                    if (grid[nrow][ncol]->isOccupied())
-                    {
-                        attackGrid[nrow][ncol] = dval--;
-                    }
-                    nrow -= dr;
-                    ncol -= dc;
-                }
-                // save the piece in the list of kings defenders
-                if (pieceColor)
-                {
-                    blackKingDefenders.push_back(grid[nrow + dr][ncol + dc]->getPiece());
+                    attackGrid[row][col] = oldAV;
                 }
                 else
                 {
-                    whiteKingDefenders.push_back(grid[nrow + dr][ncol + dc]->getPiece());
+                    attackGrid[row][col] = dval--;
+                }
+                // move in the opposite direction and populate attack grid
+                int nrow = row - dr;
+                int ncol = col - dc;
+                while (attackGrid[nrow][ncol] == ATTACK_BEHIND)
+                {
+                    oldAV = savedAttackValues.top();
+                    savedAttackValues.pop();
+
+                    if (grid[nrow][ncol]->isOccupied())
+                    {
+                        dval--;
+                    }
+                    // if the old value is positive then restore it
+                    if (oldAV > 0)
+                    {
+                        attackGrid[nrow][ncol] = oldAV;
+                    }
+                    else
+                    {
+                        attackGrid[nrow][ncol] = 0;
+                    }
+
+                    nrow -= dr;
+                    ncol -= dc;
+                }
+
+                // update the attack value to be positive
+                attackGrid[nrow][ncol] = abs(dval);
+                // save the piece in the list of kings defenders
+                if (pieceColor)
+                {
+                    blackKingDefenders.push_back(grid[nrow][ncol]->getPiece());
+                }
+                else
+                {
+                    whiteKingDefenders.push_back(grid[nrow][ncol]->getPiece());
                 }
 
                 // update the row and column and continue
@@ -878,20 +901,30 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
                 continue;
             }
 
+            // if the piece is sam color break
             if (grid[row][col]->getPieceColor() == pieceColor)
             {
                 break;
             }
-            else
+            else if (!behind)
             {
-                val = 2;
+                if(savedAttackValues.top() >= 0)
+                    attackGrid[row][col]++;
+                row += dr;
+                col += dc;
+                behind = true;
+                continue;
             }
         }
-        // if this grid slot is already marked with a negative value do not change it
-        // only set the vaue if it is 0
-        if (attackGrid[row][col] >= 0)
+
+        // if the attack grid value is negative then overwrite it
+        if (behind)
         {
-            attackGrid[row][col] = val;
+            attackGrid[row][col] = ATTACK_BEHIND;
+        }
+        else if (attackGrid[row][col] >= 0)
+        {
+            attackGrid[row][col]++;
         }
         row += dr;
         col += dc;
@@ -1104,7 +1137,7 @@ bool Rules::canKingDefenderMove(int dr, int dc, BoardTile *tile, BoardTile *king
     int tc = tile->getCol();
 
     // if this piece is a defender
-    if (isKingDefender(tile->getPiece()) && (attackBoardVal == -2))
+    if (isKingDefender(tile->getPiece()) && (attackBoardVal == SINGLE_DEFENDER))
     {
         kdr = tr - king->getRow();
         kdc = tc - king->getCol();

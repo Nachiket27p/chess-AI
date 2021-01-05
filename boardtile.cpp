@@ -113,12 +113,6 @@ void BoardTile::enforceRules()
 {
     if (selected == 1)
     {
-        // TODO: Need to find a way to reduce the number of positions
-        //          the king can move based on miving to a position will yeild
-        //          another check.
-        //        **Perhaps consider using a grid of 8x8 which holds positive
-        //              values to indicate that moving to a specific tile will
-        //              move it into a check position.
         if ((piece != nullptr) && (piece->isWhite() == isWhiteTurn))
         {
             if (game->canMove(this))
