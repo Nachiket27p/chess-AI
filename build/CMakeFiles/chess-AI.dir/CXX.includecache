@@ -114,6 +114,18 @@ rules.h
 QMainWindow
 -
 
+/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp
+QApplication
+-
+board.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/board.h
+debugwindow.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.h
+
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp
+piece.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
+
 /home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
 QPixmap
 -
@@ -137,6 +149,10 @@ debugwindow.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.h
 piece.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
+
+/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp
+theme.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
 QString
