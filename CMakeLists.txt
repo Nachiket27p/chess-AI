@@ -32,6 +32,8 @@ if(UNIX)
     debugwindow.cpp
     debugwindow.h
     debugwindow.ui
+    minmaxabp.cpp
+    minmaxabp.h
   )
 endif()
 
