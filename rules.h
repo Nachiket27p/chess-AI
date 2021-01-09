@@ -6,6 +6,9 @@
 #include "debugwindow.h"
 #include "piece.h"
 
+#define CHECK_MATE 100
+#define STALE_MATE 101
+
 extern BoardTile *grid[8][8];
 extern int validMoves[64];
 extern int vmIdx;
@@ -168,6 +171,21 @@ public:
      */
     int getEPTileNumber(bool white);
 
+    /**
+     * @brief This function is used to determine if the game has
+     * reached a check/stale mate situation. The return value
+     * indicates if it is a check/stale mate or neither.
+     * 
+     * @param turn If it is white(true) or black(false) turn.
+     * @return int 'CHECK_MATE=100' or 'STALE_MATE=101' or 0 if neither.
+     */
+    int hasGameEnded(bool turn);
+
+    /**
+     * @brief Highlights the tiles to which the piece can move to.
+     */
+    void highlightTiles();
+
     // used to update the debugging window.
     void setDebugWindowAccess(DebugWindow *dbw);
 
@@ -240,12 +258,6 @@ private:
     bool enforceKing(BoardTile *tile);
 
     /**
-     * @brief Highlights the tiles to which the piece can move to.
-     * 
-     */
-    void highlightTiles();
-
-    /**
      * @brief This is a helper function which is ued to add a valid move to the 
      * list of valid moves. It also take into consideration if there is
      * is a check and only allows valid moves.
@@ -292,7 +304,6 @@ private:
     /**
      * @brief  Used to find the check source if a check is detected using the arrack grid.
      * Calls other helper function to aid in this task.
-     * 
      */
     inline void locateCheckSource();
 
@@ -312,8 +323,8 @@ private:
     /**
      * @brief Used to check if the knight is causing a check.
      * 
-     * @param row The row position of the knight.
-     * @param col The column position of the knight.
+     * @param row The row position of the king.
+     * @param col The column position of the king.
      * @return true If a check is caused.
      * @return false If no check is caused.
      */

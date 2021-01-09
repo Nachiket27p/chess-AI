@@ -2,16 +2,17 @@
 #include "utils.h"
 #include "boardtile.h"
 #include "rules.h"
+#include "board.h"
 
 // Get an instance of the rules class.
 extern Rules *game;
-
-// Instantiate the private static variables
+// Instantiate the private static variables.
 BoardTile *BoardTile::selectedTile = nullptr;
+// initialize the selected flag to 0 to indicate no piece is selected
 int BoardTile::selected = 0;
-
-// Access the extern variables which determine the run and the current theme
+// Access the extern variables which determine the run and the current theme.
 extern Theme *currentTheme;
+// keeps track of which sides turn it is.
 extern bool isWhiteTurn;
 
 void BoardTile::setPiece(Piece *piece)
@@ -22,6 +23,8 @@ void BoardTile::setPiece(Piece *piece)
 
 void BoardTile::displayTile()
 {
+    // if there is a piece on this tile display the icon
+    // otherwise clear it.
     if (piece != nullptr)
     {
         setPixmap(*piece->getIcon());
@@ -36,18 +39,26 @@ void BoardTile::displayTile()
 
 void BoardTile::displayTileColor()
 {
+    // based on if it is the dark or light tile set the correct background color
     if (isDarkTile)
     {
-
-        setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getDarkBackground() +
-                      QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
-                      QString(" color: ") + currentTheme->getHoverColorWhite() + QString("}"));
+        setStyleSheet(QString("QLabel {background-color: ") +
+                      currentTheme->getDarkBackground() +
+                      QString("} :hover {background-color: ") +
+                      currentTheme->getHoverBackground() +
+                      QString(" color: ") +
+                      currentTheme->getHoverColorWhite() +
+                      QString("}"));
     }
     else
     {
-        setStyleSheet(QString("QLabel {background-color: ") + currentTheme->getLightBackground() +
-                      QString("} :hover {background-color: ") + currentTheme->getHoverBackground() +
-                      QString(" color: ") + currentTheme->getHoverColorWhite() + QString("}"));
+        setStyleSheet(QString("QLabel {background-color: ") +
+                      currentTheme->getLightBackground() +
+                      QString("} :hover {background-color: ") +
+                      currentTheme->getHoverBackground() +
+                      QString(" color: ") +
+                      currentTheme->getHoverColorWhite() +
+                      QString("}"));
     }
 }
 
@@ -58,6 +69,8 @@ void BoardTile::removePiece()
 
 char BoardTile::getPieceSymbol()
 {
+    // if this tile has a piece on it then return the piece
+    // symbol otherwise return null terminator.
     if (piece != nullptr)
     {
         return piece->getPieceSymbol();
@@ -67,6 +80,9 @@ char BoardTile::getPieceSymbol()
 
 bool BoardTile::getPieceColor()
 {
+    // if there is a piece on this tile then return the color
+    // true = white, false = white. Not if there is no piece it still
+    // returns false.
     if (piece != nullptr)
     {
         return piece->isWhite();
@@ -76,6 +92,8 @@ bool BoardTile::getPieceColor()
 
 bool BoardTile::isOccupied()
 {
+    // if there is a piece on this tile then return true otherwise,
+    // return false.
     if (piece != nullptr)
     {
         return true;
@@ -85,57 +103,107 @@ bool BoardTile::isOccupied()
 
 void BoardTile::mousePressEvent(QMouseEvent *)
 {
+    // increment the selected counter to determine if a tile has been selected.
     ++selected;
+    // call the function to determine the valid moves and if the
+    // selected move is valid.
     enforceRules();
 }
 
-bool BoardTile::hasMoved()
+int BoardTile::hasMoved()
 {
+    // if there is a piece on this tile call the hasMoved function
+    // on the piece object and return the number of moves this piece
+    // has made in toal through this game.
     if (piece != nullptr)
-    {
         return piece->hasMoved();
-    }
-    return false;
+
+    return 0;
 }
 
 void BoardTile::setMoved()
 {
-    piece->setMoved();
+    // call the setMoved function to increment the move counter for
+    // this piece.
+    if (piece != nullptr)
+        piece->setMoved();
 }
 
 void BoardTile::unhighlightTiles()
 {
+    // unhilight all the tiles on the board using the validMoves array
     for (int i = 0; i < vmIdx; i++)
         grid[validMoves[i] / 8][validMoves[i] & 7]->displayTileColor();
 }
 
+void BoardTile::checkGameEnd()
+{
+    // call the hasGameEnded function from the Rules class to determine
+    // if there is a check/stale mate.
+    int endVal = game->hasGameEnded(isWhiteTurn);
+    int rtnVal = 0;
+    // if the game is over display a dialog.
+    if (endVal == CHECK_MATE)
+    {
+        CONFIRM_DIALOG(this->parentWidget(), rtnVal, "Check Mate.");
+    }
+    else if (endVal == STALE_MATE)
+    {
+        CONFIRM_DIALOG(this->parentWidget(), rtnVal, "Stale Mate.");
+    }
+    // ask user if they want to reset the game
+    if (rtnVal)
+    {
+        Board *b = (Board *)this->parentWidget();
+        // reset game
+        b->on_actionNew_Game_triggered();
+    }
+}
+
 void BoardTile::enforceRules()
 {
+    // if a piece is selected then determine the valid moves for the selected
+    // piece.
     if (selected == 1)
     {
+        // there must be a piece on the tile selected and
+        // the piece selected must also be the correct color
         if ((piece != nullptr) && (piece->isWhite() == isWhiteTurn))
         {
+            // call the canMove function from the Rules class to determine the
+            // valid position on the board where this piece can move.
             if (game->canMove(this))
             {
+                // set the style sheet
                 selectedTile = this;
                 if (piece->isWhite())
                 {
                     selectedTile->setStyleSheet(QString("QLabel {background-color:") +
-                                                currentTheme->getHoverBackground() + "color: " + currentTheme->getHoverColorWhite() + QString("}"));
+                                                currentTheme->getHoverBackground() +
+                                                "color: " +
+                                                currentTheme->getHoverColorWhite() +
+                                                QString("}"));
                 }
                 else
                 {
                     selectedTile->setStyleSheet(QString("QLabel {background-color:") +
-                                                currentTheme->getHoverBackground() + "color: " + currentTheme->getHoverColorBlack() + QString("}"));
+                                                currentTheme->getHoverBackground() +
+                                                "color: " +
+                                                currentTheme->getHoverColorBlack() +
+                                                QString("}"));
                 }
+                // if the piece can move then highlight the correct tiles.
+                game->highlightTiles();
             }
             else
             {
+                // the piece cannot move then reset the selected flag.
                 selected = 0;
             }
         }
         else
         {
+            // if an invalid piece is initially selected reset the flag.
             selected = 0;
         }
     }
@@ -161,7 +229,8 @@ void BoardTile::enforceRules()
 
         // check if en passant move is being performed
         bool ep = false;
-        if((selectedTile->getPieceSymbol() == pawnID) && (this->col != selectedTile->getCol()) && !this->isOccupied())
+        if ((selectedTile->getPieceSymbol() == pawnID) &&
+            (this->col != selectedTile->getCol()) && !this->isOccupied())
         {
             ep = true;
         }
@@ -172,16 +241,34 @@ void BoardTile::enforceRules()
         {
             if (tileNumber == validMoves[i])
             {
+                // if the tile to which this piece is being moved is
+                // occupied by the opponents piece then set the piece as
+                // captured
+                if (isOccupied())
+                    piece->setCaptured();
+
+                // replace the piece on this tile
                 setPiece(selectedTile->getPiece());
+                // remove the piece from the selected tile & display the empty tile
                 selectedTile->removePiece();
                 selectedTile->displayTile();
+
                 // mark the piece as being moved
                 setMoved();
+                // display the piece on the new position and unhighlight other tiles
                 displayTile();
                 unhighlightTiles();
+
+                // reset the valid moves index to 0 so the validMoves array does not
+                // need to be cleared
                 vmIdx = 0;
+                // reset the board to have no tiles selected
                 selected = 0;
+                // change the turn variable to indicate it is the opponents turn now
                 isWhiteTurn = (isWhiteTurn + 1) & 1;
+
+                // flag the move as being valid, used outside the loop if no valid
+                // was slected
                 moveSuccess = true;
                 break;
             }
@@ -220,27 +307,61 @@ void BoardTile::enforceRules()
         }
 
         // en passant
-        if(piece->getPieceSymbol() == pawnID)
+        if (piece->getPieceSymbol() == pawnID)
         {
             game->canEnPassant(this);
-            // en passant remove opponent piece
-            if(ep)
+            // if ep was set to true above then perform enpassant by
+            // removing the opposings pawn.
+            if (ep)
             {
                 int tn = game->getEPTileNumber(!isWhiteTurn);
                 int r = tn / 8;
                 int c = tn % 8;
+                grid[r][c]->getPiece()->setCaptured();
                 grid[r][c]->removePiece();
                 grid[r][c]->displayTile();
             }
         }
 
+        // convert pawn to queen
+        if (piece->getPieceSymbol() == pawnID)
+        {
+            // because turn has switched over true means its black's turn
+            if (isWhiteTurn)
+            {
+                // if a black pawn has reached the opposite end conver to queen
+                if (row == 7)
+                {
+                    int index = this->piece->getIndex();
+                    delete piece;
+                    QString pp = "";
+                    PAWN_PROMOTION_DIALOG(this->parentWidget(), pp, isWhiteTurn);
+                    piece = new Piece(false, queenID, index, row, col, blackPath + pp);
+                    displayTile();
+                }
+            }
+            else
+            {
+                // if a white pawn has reached the opposite end conver to queen
+                if (row == 0)
+                {
+                    int index = this->piece->getIndex();
+                    delete piece;
+                    QString pp = "";
+                    PAWN_PROMOTION_DIALOG(this->parentWidget(), pp, !isWhiteTurn);
+                    piece = new Piece(true, queenID, index, row, col, whitePath + pp);
+                    displayTile();
+                }
+            }
+        }
+
         // reset en passant
         game->resetEnPassant(!isWhiteTurn);
-
-
         // update the attack board
         game->updateAttackBoard();
         // scan for check after a piece has moved
         game->scanForCheck();
+        // check if the game is over
+        checkGameEnd();
     }
 }

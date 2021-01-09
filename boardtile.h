@@ -8,19 +8,17 @@
 class BoardTile : public QLabel
 {
 private:
-    // Coordinated on the board
+    // Coordinated on the board.
     int row, col;
-    // Unique grid spot number
+    // Unique grid spot number.
     int tileNumber;
-    // Identifies if this tile is a dark tile
+    // Identifies if this tile is a dark tile.
     bool isDarkTile;
-
+    // Pointer to the piece currently on this tile.
     Piece *piece;
-
-    // static counter used to determine when a player tries to move a piece
+    // static counter used to determine when a player tries to move a piece.
     static int selected;
-
-    // static BoardTile object which keeps track of the piece piece seected
+    // static BoardTile object which keeps track of the piece piece seected.
     static BoardTile *selectedTile;
 
 private:
@@ -35,6 +33,14 @@ private:
      * been selcted. This is a helper to the 'enforceRules' function.
      */
     void unhighlightTiles();
+
+    /**
+     * @brief Used to check if the game has ended via a check/stale mate. This function
+     * calls 'hasGameEnded' function in the Rules class to help determine if game has ended.
+     * If the game has ended a dialog is displayed with a message informing the player
+     * how the game has ended.
+     */
+    void checkGameEnd();
 
 public:
     /**
@@ -52,6 +58,11 @@ public:
         piece = nullptr;
     }
 
+    /**
+     * @brief Set the Piece object.
+     * 
+     * @param piece The piece object to be placed on this tile.
+     */
     void setPiece(Piece *piece = nullptr);
 
     /**
@@ -74,7 +85,8 @@ public:
     void removePiece();
 
     /**
-     * @brief Returns the character identifying the piece located on this tile.
+     * @brief Returns the character identifying the piece located on this tile. If
+     * there is no piece then return null terminator.
      * 
      * @return char The unique character code.
      */
@@ -102,13 +114,19 @@ public:
     int getTileNumber() { return tileNumber; }
 
     /**
-     * @brief Determines if the piece on the board is white or black.
+     * @brief Determines if the piece on the board is white or black. Note false is
+     * returned even if it is unoccupied.
      * 
      * @return true If piece on this tile is white.
      * @return false If this piee is black or unoccupied.
      */
     bool getPieceColor();
 
+    /**
+     * @brief Get the Piece object on this tile.
+     * 
+     * @return Piece* The piece on this tile.
+     */
     Piece *getPiece() { return piece; }
 
     /**
@@ -126,7 +144,18 @@ public:
      */
     void mousePressEvent(QMouseEvent *);
 
-    bool hasMoved();
+    /**
+     * @brief Returns the number of times the piece on this tile has moved,
+     * if no piece is on the tile then 0 is returned.
+     * 
+     * @return int Number of moved the piece on this tile has made in total.
+     */
+    int hasMoved();
+
+    /**
+     * @brief Set the piece on this tile to moved by calling the setMoved function
+     * within the Piece class.
+     */
     void setMoved();
 };
 

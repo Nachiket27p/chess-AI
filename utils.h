@@ -6,6 +6,7 @@
 #include <string>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <QMessageBox>
 #include "boardtile.h"
 
 static bool saveGame(BoardTile *tiles)
@@ -47,12 +48,45 @@ static const QString noPiecesDirMsg = "Could not locate \"pieces\" directory. Pl
 // static const QString blackPath = "/home/nachiket/Documents/qt5-workspace/chess-AI/pieces/black/";
 
 // macro used to create confirm dialogs
-#define CONFIRM_DIALOG(RTNVAL, MESSAGE)                               \
-    QMessageBox msgBox(this);                                         \
+#define CONFIRM_DIALOG(PARENT, RTNVAL, MESSAGE)                       \
+    QMessageBox msgBox(PARENT);                                       \
     msgBox.setText(MESSAGE);                                          \
     msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel); \
     msgBox.setDefaultButton(QMessageBox::Ok);                         \
     RTNVAL = msgBox.exec();
+
+#define PAWN_PROMOTION_DIALOG(PARENT, PIECE, TURN)              \
+    QMessageBox msgBox(this->parentWidget());                   \
+    msgBox.setText("What would you like to promote to?");       \
+    msgBox.addButton(tr("Bishop"), QMessageBox::AcceptRole);    \
+    msgBox.addButton(tr("Knight"), QMessageBox::RejectRole);    \
+    msgBox.addButton(tr("Rook"), QMessageBox::DestructiveRole); \
+    msgBox.addButton(tr("Queen"), QMessageBox::ActionRole);     \
+    int promoPiece = msgBox.exec();                             \
+    if (promoPiece == QMessageBox::AcceptRole)                  \
+    {                                                           \
+        PIECE = "bishop_black.svg";                             \
+        if (TURN)                                               \
+            PIECE = "bishop_white.svg";                         \
+    }                                                           \
+    else if (promoPiece == QMessageBox::RejectRole)             \
+    {                                                           \
+        PIECE = "knight_black.svg";                             \
+        if (TURN)                                               \
+            PIECE = "knight_white.svg";                         \
+    }                                                           \
+    else if (promoPiece == QMessageBox::DestructiveRole)        \
+    {                                                           \
+        PIECE = "rook_black.svg";                               \
+        if (TURN)                                               \
+            PIECE = "rook_white.svg";                           \
+    }                                                           \
+    else if (promoPiece == QMessageBox::ActionRole)             \
+    {                                                           \
+        PIECE = "queen_black.svg";                              \
+        if (TURN)                                               \
+            PIECE = "white_black.svg";                          \
+    }
 
 // checks if the variable is in bound
 #define WITHIN_BOUNDS(var) (((var) >= 0) && ((var) < 8))
