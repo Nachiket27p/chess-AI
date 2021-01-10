@@ -5,13 +5,12 @@
 #include "boardtile.h"
 #include "debugwindow.h"
 #include "piece.h"
+#include "utils.h"
 
 #define CHECK_MATE 100
 #define STALE_MATE 101
 
 extern BoardTile *grid[8][8];
-extern int validMoves[64];
-extern int vmIdx;
 
 typedef struct CheckPos
 {
@@ -30,14 +29,16 @@ private:
     // Used to keep single instance of this class
     static Rules *instance;
 
+    // vairables used to keep track of the valid moves
+    int validMoves[64];
+    int vmIdx = 0;
+
     // Used internally to determine if a requested tile can move.
     bool okToMove;
 
     // used to keep track of if there is a check.
     bool isCheck;
     std::vector<checkPos> checkPieces;
-    // int checkRow;
-    // int checkCol;
 
     // used to keep track the tile number of the pawn
     // which is vulnerable to the en passant attack
@@ -49,10 +50,6 @@ private:
     int blackEPL;
     int blackEPR;
 
-    // pointer always keep track of where the king piece is
-    BoardTile *blackKing;
-    BoardTile *whiteKing;
-
     DebugWindow *dbw;
     std::vector<Piece *> blackKingDefenders;
     std::vector<Piece *> whiteKingDefenders;
@@ -62,6 +59,10 @@ public:
     int whiteAttacks[8][8] = {};
     int blackAttacks[8][8] = {};
 
+    // used to keep track which tile is selected
+    int selected;
+    BoardTile *selectedTile;
+
 private:
     /**
      * @brief Private constructor to keep only 1 instane of this calls.
@@ -70,12 +71,6 @@ private:
     {
         okToMove = false;
         isCheck = false;
-        // checkRow = -1;
-        // checkCol = -1;
-
-        // set the initial postions of the kings
-        blackKing = grid[0][4];
-        whiteKing = grid[7][4];
 
         // initialize the attack board
         for (int col = 0; col < 8; col++)
@@ -91,6 +86,10 @@ private:
         whiteEPR = 0;
         blackEPL = 0;
         blackEPR = 0;
+
+        // initialize the selection variables
+        selected = 0;
+        selectedTile = nullptr;
     };
 
 public:
@@ -109,13 +108,6 @@ public:
      * @return false If the piece on the tile passed in cannot move.
      */
     bool canMove(BoardTile *tile);
-
-    /**
-     * @brief Used to update the position of the king if is is being moved.
-     * @param isWhite If the piece is white or black.
-     * @param newTile If The pointer to the new tile on which the king is located.
-     */
-    void setKingPos(bool isWhite, BoardTile *newTile);
 
     /**
      * @brief This function is called at the end of every move to scan the
@@ -185,6 +177,17 @@ public:
      * @brief Highlights the tiles to which the piece can move to.
      */
     void highlightTiles();
+
+    /**
+     * @brief Unhilights any highlighted tiles.
+     */
+    void unhighlightTiles();
+
+    bool isValidMove(int tileNumb);
+
+    void resetVmIdx();
+
+    void getMoves(std::vector<Move> &moves, int startTileNumb);
 
     // used to update the debugging window.
     void setDebugWindowAccess(DebugWindow *dbw);

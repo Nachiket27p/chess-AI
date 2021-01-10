@@ -1,4 +1,5 @@
 #include "piece.h"
+#include "utils.h"
 
 Piece::Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QString iconPath)
 {
@@ -10,6 +11,44 @@ Piece::Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QSt
     row = _row;
     col = _col;
     icon = new QPixmap(iconPath);
+}
+
+Piece::Piece(const Piece &p)
+{
+    this->moved = p.moved;
+    this->white = p.white;
+    this->pieceSymbol = p.pieceSymbol;
+    this->index = p.index;
+    this->row = p.row;
+    this->col = p.col;
+    this->captured = p.captured;
+
+    // determine correct path
+    QString subPath = blackPath;
+    if (this->white)
+        subPath = whitePath;
+
+    QString iconImgName = pawnIconName;
+    switch (this->pieceSymbol)
+    {
+    case rookID:
+        iconImgName = rookIconName;
+        break;
+    case knightID:
+        iconImgName = knightIconName;
+        break;
+    case bishopID:
+        iconImgName = bishopIconName;
+        break;
+    case queenID:
+        iconImgName = queenIconName;
+        break;
+    case kingID:
+        iconImgName = kingIconName;
+        break;
+    };
+
+    this->icon = new QPixmap(subPath + iconImgName);
 }
 
 int Piece::hasMoved()

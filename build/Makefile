@@ -271,6 +271,33 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+minmaxabp.o: minmaxabp.cpp.o
+
+.PHONY : minmaxabp.o
+
+# target to build an object file
+minmaxabp.cpp.o:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/minmaxabp.cpp.o
+.PHONY : minmaxabp.cpp.o
+
+minmaxabp.i: minmaxabp.cpp.i
+
+.PHONY : minmaxabp.i
+
+# target to preprocess a source file
+minmaxabp.cpp.i:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/minmaxabp.cpp.i
+.PHONY : minmaxabp.cpp.i
+
+minmaxabp.s: minmaxabp.cpp.s
+
+.PHONY : minmaxabp.s
+
+# target to generate assembly for a file
+minmaxabp.cpp.s:
+	$(MAKE) -f CMakeFiles/chess-AI.dir/build.make CMakeFiles/chess-AI.dir/minmaxabp.cpp.s
+.PHONY : minmaxabp.cpp.s
+
 piece.o: piece.cpp.o
 
 .PHONY : piece.o
@@ -377,6 +404,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... minmaxabp.o"
+	@echo "... minmaxabp.i"
+	@echo "... minmaxabp.s"
 	@echo "... piece.o"
 	@echo "... piece.i"
 	@echo "... piece.s"

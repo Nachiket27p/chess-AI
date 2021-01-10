@@ -7,19 +7,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <QMessageBox>
-#include "boardtile.h"
-
-static bool saveGame(BoardTile *tiles)
-{
-    std::ofstream file;
-    file.open("savefile");
-
-    // save state of board
-
-    file.close();
-
-    return true;
-}
 
 // unique character identifiers for pieces
 static const char pawnID = 'p';
@@ -28,6 +15,13 @@ static const char knightID = 'k';
 static const char bishopID = 'b';
 static const char kingID = 'K';
 static const char queenID = 'q';
+
+static const QString pawnIconName = "pawn.svg";
+static const QString rookIconName = "rook.svg";
+static const QString knightIconName = "knight.svg";
+static const QString bishopIconName = "bishop.svg";
+static const QString queenIconName = "queen.svg";
+static const QString kingIconName = "king.svg";
 
 // get the current path of this file and use it to locate the images for the pieces.
 // This method of locating the resources means the images of the pieces must always
@@ -55,7 +49,7 @@ static const QString noPiecesDirMsg = "Could not locate \"pieces\" directory. Pl
     msgBox.setDefaultButton(QMessageBox::Ok);                         \
     RTNVAL = msgBox.exec();
 
-#define PAWN_PROMOTION_DIALOG(PARENT, PIECE, TURN)              \
+#define PAWN_PROMOTION_DIALOG(PARENT, PIECE)                    \
     QMessageBox msgBox(this->parentWidget());                   \
     msgBox.setText("What would you like to promote to?");       \
     msgBox.addButton(tr("Bishop"), QMessageBox::AcceptRole);    \
@@ -65,30 +59,28 @@ static const QString noPiecesDirMsg = "Could not locate \"pieces\" directory. Pl
     int promoPiece = msgBox.exec();                             \
     if (promoPiece == QMessageBox::AcceptRole)                  \
     {                                                           \
-        PIECE = "bishop_black.svg";                             \
-        if (TURN)                                               \
-            PIECE = "bishop_white.svg";                         \
+        PIECE = bishopIconName;                                 \
     }                                                           \
     else if (promoPiece == QMessageBox::RejectRole)             \
     {                                                           \
-        PIECE = "knight_black.svg";                             \
-        if (TURN)                                               \
-            PIECE = "knight_white.svg";                         \
+        PIECE = knightIconName;                                 \
     }                                                           \
     else if (promoPiece == QMessageBox::DestructiveRole)        \
     {                                                           \
-        PIECE = "rook_black.svg";                               \
-        if (TURN)                                               \
-            PIECE = "rook_white.svg";                           \
+        PIECE = rookIconName;                                   \
     }                                                           \
     else if (promoPiece == QMessageBox::ActionRole)             \
     {                                                           \
-        PIECE = "queen_black.svg";                              \
-        if (TURN)                                               \
-            PIECE = "white_black.svg";                          \
+        PIECE = queenIconName;                                  \
     }
 
 // checks if the variable is in bound
 #define WITHIN_BOUNDS(var) (((var) >= 0) && ((var) < 8))
+
+typedef struct move
+{
+    int startTileNumb;
+    int endTileNumb;
+} Move;
 
 #endif // UTILS_H

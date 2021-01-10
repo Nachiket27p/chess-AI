@@ -23,6 +23,11 @@
 			"EWIEGA46WW/moc_debugwindow.cpp"
 		],
 		[
+			"/home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.h",
+			"MU",
+			"EWIEGA46WW/moc_minmaxabp.cpp"
+		],
+		[
 			"/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h",
 			"MU",
 			"EWIEGA46WW/moc_piece.cpp"
@@ -101,6 +106,7 @@
 			"MU"
 		],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp", "MU" ],
+		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp", "MU" ],
 		[ "/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp", "MU" ]

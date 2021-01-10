@@ -13,8 +13,6 @@ BoardTile *grid[8][8];
 Theme *currentTheme;
 Rules *game;
 
-int validMoves[64];
-int vmIdx = 0;
 bool isWhiteTurn = true;
 
 //ssssssssssssssssssssssssssssss
@@ -52,51 +50,51 @@ void Board::createPieces(Piece *whitePieces[16], Piece *blackPieces[16])
     // create the pawns
     while (col < 8)
     {
-        whitePieces[pidx] = new Piece(true, pawnID, col, 6, col, whitePath + "pawn_white.svg");
-        blackPieces[pidx] = new Piece(false, pawnID, col, 1, col, blackPath + "pawn_black.svg");
+        whitePieces[pidx] = new Piece(true, pawnID, col, 6, col, whitePath + pawnIconName);
+        blackPieces[pidx] = new Piece(false, pawnID, col, 1, col, blackPath + pawnIconName);
         col++;
         pidx++;
     }
     col = 0;
 
     // create the A column rooks
-    whitePieces[pidx] = new Piece(true, rookID, col, 7, col, whitePath + "rook_white.svg");
-    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + "rook_black.svg");
+    whitePieces[pidx] = new Piece(true, rookID, col, 7, col, whitePath + rookIconName);
+    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + rookIconName);
     col++;
     pidx++;
     // create the B  column knights
-    whitePieces[pidx] = new Piece(true, knightID, col, 7, col, whitePath + "knight_white.svg");
-    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + "knight_black.svg");
+    whitePieces[pidx] = new Piece(true, knightID, col, 7, col, whitePath + knightIconName);
+    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + knightIconName);
     col++;
     pidx++;
     // create the C column bishops
-    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col, whitePath + "bishop_white.svg");
-    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + "bishop_black.svg");
+    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col, whitePath + bishopIconName);
+    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + bishopIconName);
     col++;
     pidx++;
     // create the queens
-    whitePieces[pidx] = new Piece(true, queenID, col, 7, col, whitePath + "queen_white.svg");
-    blackPieces[pidx] = new Piece(false, queenID, col, 0, col, blackPath + "queen_black.svg");
+    whitePieces[pidx] = new Piece(true, queenID, col, 7, col, whitePath + queenIconName);
+    blackPieces[pidx] = new Piece(false, queenID, col, 0, col, blackPath + queenIconName);
     col++;
     pidx++;
     // create the kings
-    whitePieces[pidx] = new Piece(true, kingID, col, 7, col, whitePath + "king_white.svg");
-    blackPieces[pidx] = new Piece(false, kingID, col, 0, col, blackPath + "king_black.svg");
+    whitePieces[pidx] = new Piece(true, kingID, col, 7, col, whitePath + kingIconName);
+    blackPieces[pidx] = new Piece(false, kingID, col, 0, col, blackPath + kingIconName);
     col++;
     pidx++;
     // create the F column bishops
-    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col, whitePath + "bishop_white.svg");
-    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + "bishop_black.svg");
+    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col, whitePath + bishopIconName);
+    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + bishopIconName);
     col++;
     pidx++;
     // create the G column knights
-    whitePieces[pidx] = new Piece(true, knightID, col, 7, col, whitePath + "knight_white.svg");
-    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + "knight_black.svg");
+    whitePieces[pidx] = new Piece(true, knightID, col, 7, col, whitePath + knightIconName);
+    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + knightIconName);
     col++;
     pidx++;
     // create the H column rooks
-    whitePieces[pidx] = new Piece(true, rookID, col, 7, col, whitePath + "rook_white.svg");
-    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + "rook_black.svg");
+    whitePieces[pidx] = new Piece(true, rookID, col, 7, col, whitePath + rookIconName);
+    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + rookIconName);
 }
 
 bool Board::checkResources()
@@ -188,6 +186,18 @@ void Board::resetPieces()
         whitePieces[col]->resetPiece(6, col);
         whitePieces[sr + col]->resetPiece(7, col);
     }
+}
+
+bool Board::saveGame(BoardTile *tiles)
+{
+    std::ofstream file;
+    file.open("savefile");
+
+    // save state of board
+
+    file.close();
+
+    return true;
 }
 
 void Board::on_actionNew_Game_triggered()

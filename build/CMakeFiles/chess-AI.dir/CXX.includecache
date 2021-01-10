@@ -60,18 +60,6 @@ piece.h
 debugwindow.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.h
 
-/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp
-QMenu
--
-utils.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
-boardtile.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.h
-rules.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
-board.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/board.h
-
 /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.h
 QLabel
 -
@@ -116,31 +104,9 @@ rules.h
 QMainWindow
 -
 
-/home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp
-QApplication
--
-board.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/board.h
-debugwindow.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.h
-
-/home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp
-piece.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
-
 /home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
 QPixmap
 -
-
-/home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp
-stack
--
-rules.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
-utils.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
-piece.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
 vector
@@ -151,6 +117,8 @@ debugwindow.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.h
 piece.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
+utils.h
+/home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
 QString
@@ -169,8 +137,6 @@ sys/stat.h
 -
 QMessageBox
 -
-boardtile.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.h
 
 /usr/include/x86_64-linux-gnu/qt5/QtCore/QEvent
 qcoreevent.h

@@ -105,6 +105,13 @@ private:
      */
     void resetPieces();
 
+    /**
+     * @brief Saves the game state. TODO
+     * @param tiles
+     * @return
+     */
+    bool saveGame(BoardTile *tiles);
+
 public slots:
     /**
      * @brief This slot is public as it is used to reset the game when a check or stale mate is detected.

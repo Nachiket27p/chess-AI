@@ -29,6 +29,12 @@ public:
     Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QString iconPath);
 
     /**
+     * @brief Copy constructor for Piece.
+     * @param p The Piece which is being copied into this one.
+     */
+    Piece(const Piece &p);
+
+    /**
      * @brief Return the number of moves this piece has made in total.
      * 
      * @return int Number of moves.

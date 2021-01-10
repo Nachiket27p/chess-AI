@@ -7,6 +7,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/chess-AI.dir/debugwindow.cpp.o"
   "CMakeFiles/chess-AI.dir/main.cpp.o"
+  "CMakeFiles/chess-AI.dir/minmaxabp.cpp.o"
   "CMakeFiles/chess-AI.dir/piece.cpp.o"
   "CMakeFiles/chess-AI.dir/rules.cpp.o"
   "CMakeFiles/chess-AI.dir/theme.cpp.o"

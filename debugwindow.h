@@ -3,8 +3,9 @@
 
 #include <QMainWindow>
 
-namespace Ui {
-class DebugWindow;
+namespace Ui
+{
+    class DebugWindow;
 }
 
 class DebugWindow : public QMainWindow
@@ -17,7 +18,6 @@ public:
 
     void updateWhiteValues();
     void updateBlackValues();
-
 
 private:
     Ui::DebugWindow *ui;
