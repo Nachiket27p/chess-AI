@@ -9,7 +9,6 @@
 #define ATTACK_KING_BEHIND -16
 #define ATTACK_SPECIAL -77
 
-extern bool isWhiteTurn;
 extern Theme *currentTheme;
 extern Piece *whitePieces[16];
 extern Piece *blackPieces[16];
@@ -20,6 +19,21 @@ Rules *Rules::instance = nullptr;
 void Rules::setDebugWindowAccess(DebugWindow *_dbw)
 {
     dbw = _dbw;
+}
+
+bool Rules::isWhiteTurn()
+{
+    return turn;
+}
+
+void Rules::setTurn(bool _turn)
+{
+    turn = _turn;
+}
+
+void Rules::rotateTurn()
+{
+    turn = (turn + 1) & 1;
 }
 
 Rules *Rules::getInstance()
@@ -67,7 +81,7 @@ void Rules::scanForCheck()
     isCheck = false;
     int row, col;
 
-    if (isWhiteTurn)
+    if (turn)
     {
         row = whitePieces[12]->getRow();
         col = whitePieces[12]->getCol();
@@ -106,7 +120,7 @@ bool Rules::enforcePawn(BoardTile *tile)
     int attackBoardVal = whiteAttacks[row][col];
     // if it is white turn then the black attack board needs to be checked
     // and the white king column needs to be used.
-    if (isWhiteTurn)
+    if (turn)
     {
         kcol = whitePieces[12]->getCol();
         attackBoardVal = blackAttacks[row][col];
@@ -202,7 +216,7 @@ bool Rules::enforceRook(BoardTile *tile)
     // and attack board.
     BoardTile *king = grid[blackPieces[12]->getRow()][blackPieces[12]->getCol()];
     int attackBoardVal = whiteAttacks[row][col];
-    if (isWhiteTurn)
+    if (turn)
     {
         king = grid[whitePieces[12]->getRow()][whitePieces[12]->getCol()];
         attackBoardVal = blackAttacks[row][col];
@@ -248,7 +262,7 @@ bool Rules::enforceKnight(BoardTile *tile)
         // get value from white attack board for black move
         int attackBoardVal = whiteAttacks[row][col];
         // if its white white turn get black attacks
-        if (isWhiteTurn)
+        if (turn)
             attackBoardVal = blackAttacks[row][col];
         // if the knight is a single defender then return false
         // because it cannot move.
@@ -294,7 +308,7 @@ bool Rules::enforceBishop(BoardTile *tile)
     // and attack board.
     BoardTile *king = grid[blackPieces[12]->getRow()][blackPieces[12]->getCol()];
     int attackBoardVal = whiteAttacks[row][col];
-    if (isWhiteTurn)
+    if (turn)
     {
         king = grid[whitePieces[12]->getRow()][whitePieces[12]->getCol()];
         attackBoardVal = blackAttacks[row][col];
@@ -336,7 +350,7 @@ bool Rules::enforceQueen(BoardTile *tile)
     // and attack board.
     BoardTile *king = grid[blackPieces[12]->getRow()][blackPieces[12]->getCol()];
     int attackBoardVal = whiteAttacks[row][col];
-    if (isWhiteTurn)
+    if (turn)
     {
         king = grid[whitePieces[12]->getRow()][whitePieces[12]->getCol()];
         attackBoardVal = blackAttacks[row][col];
@@ -445,10 +459,10 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
         int checkCol = checkPieces[0].col;
 
         // the knight can only move if it is able to attack the
-        if ((grid[checkRow][checkCol]->getPieceSymbol() == knightID) &&
-            (tileNumber == grid[checkRow][checkCol]->getTileNumber()))
+        if (grid[checkRow][checkCol]->getPieceSymbol() == knightID)
         {
-            validMoves[vmIdx++] = tileNumber;
+            if(tileNumber == grid[checkRow][checkCol]->getTileNumber())
+                validMoves[vmIdx++] = tileNumber;
         }
         else
         {
@@ -457,7 +471,7 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
             int dr = 0;
             int dc = 0;
             int diffRow, diffCol;
-            if (isWhiteTurn)
+            if (turn)
             {
                 diffRow = whitePieces[12]->getRow() - checkRow;
                 diffCol = whitePieces[12]->getCol() - checkCol;
@@ -510,7 +524,7 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
 inline void Rules::addValidMoveKing(int row, int col, int tileNumber, bool *ok)
 {
     int vmIdxbefore = vmIdx;
-    if (isWhiteTurn)
+    if (turn)
     {
         if (blackAttacks[row][col] <= 0)
             validMoves[vmIdx++] = tileNumber;
@@ -536,7 +550,7 @@ bool Rules::canCastle(BoardTile *tile)
     int(*attackBoard)[8] = whiteAttacks;
 
     // get the correct rooks based on whose turn it is.
-    if (isWhiteTurn)
+    if (turn)
     {
         rookQ = whitePieces[8];
         rookK = whitePieces[15];
@@ -594,7 +608,7 @@ bool Rules::enPassant(int tileNumb)
 {
     bool ok = false;
     // if it's white turn then check the white enpassant flags
-    if (isWhiteTurn)
+    if (turn)
     {
         // whiteEPL and whiteEPR contrin the tile number of the
         // pawn next to the one being checked.
@@ -633,7 +647,7 @@ bool Rules::enPassant(int tileNumb)
 
 void Rules::updateAttackBoard()
 {
-    if (isWhiteTurn)
+    if (turn)
     {
         // reset white defenders
         whiteKingDefenders.clear();
@@ -657,7 +671,7 @@ void Rules::updateAttackBoard()
 
 void Rules::resetKingDefenders()
 {
-    if (isWhiteTurn)
+    if (turn)
     {
         whiteKingDefenders.clear();
     }
@@ -672,16 +686,16 @@ void Rules::canEnPassant(BoardTile *tile)
     int row = tile->getRow();
     int col = tile->getCol();
 
-    if ((isWhiteTurn && (row == 3)) || (!isWhiteTurn && (row == 4)))
+    if ((turn && (row == 3)) || (!turn && (row == 4)))
     {
         BoardTile *otherPawn = grid[row][col + 1];
         // Left en passant
         // should check to see if the pawn is of the opponent but
         // it is impossible to have the same side pawn move there in 1 move.
-        if (((col + 1) < 8) && otherPawn->isOccupied() && (isWhiteTurn == otherPawn->getPieceColor()) &&
+        if (((col + 1) < 8) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
             (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
         {
-            if (isWhiteTurn)
+            if (turn)
             {
                 whiteEPL = tile->getTileNumber();
             }
@@ -695,10 +709,10 @@ void Rules::canEnPassant(BoardTile *tile)
         // should check to see if the pawn is of the opponent but
         // it is impossible to have the same side pawn move there in 1 move.
         otherPawn = grid[row][col - 1];
-        if (((col - 1) >= 0) && otherPawn->isOccupied() && (isWhiteTurn == otherPawn->getPieceColor()) &&
+        if (((col - 1) >= 0) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
             (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
         {
-            if (isWhiteTurn)
+            if (turn)
             {
                 whiteEPR = tile->getTileNumber();
             }
@@ -710,10 +724,10 @@ void Rules::canEnPassant(BoardTile *tile)
     }
 }
 
-void Rules::resetEnPassant(bool white)
+void Rules::resetEnPassant(bool whiteTurn)
 {
     // reset enpassant flags
-    if (white)
+    if (whiteTurn)
     {
         whiteEPL = 0;
         whiteEPR = 0;
@@ -725,12 +739,12 @@ void Rules::resetEnPassant(bool white)
     }
 }
 
-int Rules::getEPTileNumber(bool white)
+int Rules::getEPTileNumber(bool whiteTurn)
 {
     // returns the appropriate enpassant flag
     // if it ends with 'L' - Left side
     // if it ends with 'R' - Right side
-    if (white)
+    if (whiteTurn)
     {
         if (whiteEPL)
             return whiteEPL;
@@ -747,12 +761,12 @@ int Rules::getEPTileNumber(bool white)
     return -1;
 }
 
-int Rules::hasGameEnded(bool turn)
+int Rules::hasGameEnded(bool whiteTurn)
 {
     // based on if whose turn it is get the appropriate
     // array of pieces.
     Piece *(*pcs) = blackPieces;
-    if (turn)
+    if (whiteTurn)
     {
         pcs = whitePieces;
     }
@@ -1098,7 +1112,7 @@ inline void Rules::locateCheckSource()
     int row, col;
 
     // based on the turn get the appropriate king position.
-    if (isWhiteTurn)
+    if (turn)
     {
         row = whitePieces[12]->getRow();
         col = whitePieces[12]->getCol();
@@ -1113,7 +1127,7 @@ inline void Rules::locateCheckSource()
 
     // check north
     if (scanCheckHelper(row - 1, col, -1, 0, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == rookID) || (checkPiece == queenID)))
+        ((checkPiece == rookID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1121,7 +1135,7 @@ inline void Rules::locateCheckSource()
 
     // check north-east
     if (scanCheckHelper(row - 1, col + 1, -1, 1, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == bishopID) || (checkPiece == queenID)))
+        ((checkPiece == bishopID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1129,7 +1143,7 @@ inline void Rules::locateCheckSource()
 
     // check east
     if (scanCheckHelper(row, col + 1, 0, 1, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == rookID) || (checkPiece == queenID)))
+        ((checkPiece == rookID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1137,7 +1151,7 @@ inline void Rules::locateCheckSource()
 
     // check south-east
     if (scanCheckHelper(row + 1, col + 1, 1, 1, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == bishopID) || (checkPiece == queenID)))
+        ((checkPiece == bishopID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1145,7 +1159,7 @@ inline void Rules::locateCheckSource()
 
     // check south
     if (scanCheckHelper(row + 1, col, 1, 0, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == rookID) || (checkPiece == queenID)))
+        ((checkPiece == rookID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1153,7 +1167,7 @@ inline void Rules::locateCheckSource()
 
     // check south-west
     if (scanCheckHelper(row + 1, col - 1, 1, -1, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == bishopID) || (checkPiece == queenID)))
+        ((checkPiece == bishopID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1161,7 +1175,7 @@ inline void Rules::locateCheckSource()
 
     // check west
     if (scanCheckHelper(row, col - 1, -1, 0, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == rookID) || (checkPiece == queenID)))
+        ((checkPiece == rookID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1169,7 +1183,7 @@ inline void Rules::locateCheckSource()
 
     // check north-west
     if (scanCheckHelper(row - 1, col - 1, -1, -1, &checkPiece) && (checkPiece != '\0') &&
-        ((checkPiece == bishopID) || (checkPiece == queenID)))
+        ((checkPiece == bishopID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
         // return;
@@ -1177,21 +1191,6 @@ inline void Rules::locateCheckSource()
 
     // check knght
     if (checkKnight(row, col))
-    {
-        setCheck();
-        // return;
-    }
-
-    // check pawn
-    if (isWhiteTurn)
-    {
-        if (checkTile(row + 1, col - 1, pawnID) || checkTile(row + 1, col + 1, pawnID))
-        {
-            setCheck();
-            // return;
-        }
-    }
-    else if (checkTile(row - 1, col - 1, pawnID) || checkTile(row - 1, col + 1, pawnID))
     {
         setCheck();
         // return;
@@ -1205,7 +1204,7 @@ inline bool Rules::scanCheckHelper(int row, int col, int dr, int dc, char *check
     bool correctPawnDir = false;
     if(dc != 0)
     {
-        if(isWhiteTurn)
+        if(turn)
         {
             if(dr == -1)
                 correctPawnDir = true;
@@ -1226,7 +1225,7 @@ inline bool Rules::scanCheckHelper(int row, int col, int dr, int dc, char *check
             // if the color of the piece located on the
             // tile being examined is different to the turn
             // then save this piece as one causing check.
-            if (curr->getPieceColor() != isWhiteTurn)
+            if (curr->getPieceColor() != turn)
             {
                 // if the piece detected is a pawn then it must
                 // be only one tile away and has to be facing the
@@ -1273,10 +1272,10 @@ bool Rules::checkKnight(int row, int col)
     // the row and column is the position of the king on the board
     // so checking all the knight attack positions around the king
     // allows to determine if a knight is causing a check.
-    if (checkTile(row - 2, col + 1, knightID) || checkTile(row - 1, col + 2, knightID) ||
-        checkTile(row + 1, col + 2, knightID) || checkTile(row + 2, col + 1, knightID) ||
-        checkTile(row + 2, col - 1, knightID) || checkTile(row + 1, col - 2, knightID) ||
-        checkTile(row - 1, col - 2, knightID) || checkTile(row - 2, col - 1, knightID))
+    if (checkKnightHelper(row - 2, col + 1, knightID) || checkKnightHelper(row - 1, col + 2, knightID) ||
+        checkKnightHelper(row + 1, col + 2, knightID) || checkKnightHelper(row + 2, col + 1, knightID) ||
+        checkKnightHelper(row + 2, col - 1, knightID) || checkKnightHelper(row + 1, col - 2, knightID) ||
+        checkKnightHelper(row - 1, col - 2, knightID) || checkKnightHelper(row - 2, col - 1, knightID))
     {
         return true;
     }
@@ -1286,7 +1285,7 @@ bool Rules::checkKnight(int row, int col)
     }
 }
 
-inline bool Rules::checkTile(int row, int col, char pieceType)
+inline bool Rules::checkKnightHelper(int row, int col, char pieceType)
 {
     // if the position (row,col) is within bounds then
     // check if the position contains a piece type
@@ -1294,8 +1293,9 @@ inline bool Rules::checkTile(int row, int col, char pieceType)
     if (WITHIN_BOUNDS(row) && WITHIN_BOUNDS(col))
     {
         BoardTile *curr = grid[row][col];
-        if ((curr->getPieceSymbol() == pieceType) && (curr->getPieceColor() != isWhiteTurn))
+        if ((curr->getPieceSymbol() == pieceType) && (curr->getPieceColor() != turn))
         {
+            checkPieces.push_back(checkPos{row, col});
             return true;
         }
     }
@@ -1312,7 +1312,7 @@ bool Rules::isKingDefender(Piece *p)
     // get the appropriate king defender vector
     // based on the turn
     std::vector<Piece *> kd;
-    if (isWhiteTurn)
+    if (turn)
     {
         kd = whiteKingDefenders;
     }

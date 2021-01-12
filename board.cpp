@@ -13,8 +13,6 @@ BoardTile *grid[8][8];
 Theme *currentTheme;
 Rules *game;
 
-bool isWhiteTurn = true;
-
 //ssssssssssssssssssssssssssssss
 void Board::setDebugWindowAccess(DebugWindow *dbw)
 {
@@ -209,7 +207,8 @@ void Board::on_actionNew_Game_triggered()
     // if the response if 'ok' then reset all the pieces on the grid.
     if (rtnval == QMessageBox::Ok)
     {
-        isWhiteTurn = true;
+//        isWhiteTurn = true;
+        game->setTurn(true);
 
         for (int i = 0; i < 8; i++)
         {

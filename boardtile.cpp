@@ -8,8 +8,6 @@
 extern Rules *game;
 // Access the extern variables which determine the run and the current theme.
 extern Theme *currentTheme;
-// keeps track of which sides turn it is.
-extern bool isWhiteTurn;
 
 void BoardTile::setPiece(Piece *piece)
 {
@@ -129,7 +127,7 @@ void BoardTile::checkGameEnd()
 {
     // call the hasGameEnded function from the Rules class to determine
     // if there is a check/stale mate.
-    int endVal = game->hasGameEnded(isWhiteTurn);
+    int endVal = game->hasGameEnded(game->isWhiteTurn());
     int rtnVal = 0;
     // if the game is over display a dialog.
     if (endVal == CHECK_MATE)
@@ -166,7 +164,7 @@ void BoardTile::enforceRules()
     {
         // there must be a piece on the tile selected and
         // the piece selected must also be the correct color
-        if ((piece != nullptr) && (piece->isWhite() == isWhiteTurn))
+        if ((piece != nullptr) && (piece->isWhite() == game->isWhiteTurn()))
         {
             // call the canMove function from the Rules class to determine the
             // valid position on the board where this piece can move.
@@ -240,7 +238,7 @@ void BoardTile::enforceRules()
             // occupied by the opponents piece then set the piece as
             // captured
             if (isOccupied())
-                piece->setCaptured();
+                this->piece->setCaptured();
 
             // replace the piece on this tile
             setPiece(game->selectedTile->getPiece());
@@ -248,9 +246,9 @@ void BoardTile::enforceRules()
             game->selectedTile->removePiece();
             game->selectedTile->displayTile();
             // mark the piece as being moved
-            setMoved();
+            this->setMoved();
             // display the piece on the new position and unhighlight other tiles
-            displayTile();
+            this->displayTile();
             // unhilight the unselected tiles
             game->unhighlightTiles();
             // reset the valid moves index to 0 so the validMoves array does not
@@ -259,7 +257,7 @@ void BoardTile::enforceRules()
             // reset the board to have no tiles selected
             game->selected = 0;
             // change the turn variable to indicate it is the opponents turn now
-            isWhiteTurn = (isWhiteTurn + 1) & 1;
+            game->rotateTurn();
         }
         else
         {
@@ -301,7 +299,7 @@ void BoardTile::enforceRules()
             // removing the opposings pawn.
             if (ep)
             {
-                int tn = game->getEPTileNumber(!isWhiteTurn);
+                int tn = game->getEPTileNumber(!game->isWhiteTurn());
                 int r = tn / 8;
                 int c = tn % 8;
                 grid[r][c]->getPiece()->setCaptured();
@@ -311,10 +309,10 @@ void BoardTile::enforceRules()
         }
 
         // convert pawn to queen
-        if (piece->getPieceSymbol() == pawnID)
+        if (this->piece->getPieceSymbol() == pawnID)
         {
             // because turn has switched over true means its black's turn
-            if (isWhiteTurn)
+            if (game->isWhiteTurn())
             {
                 // if a black pawn has reached the opposite end conver to queen
                 if (row == 7)
@@ -324,7 +322,7 @@ void BoardTile::enforceRules()
                     QString pp = "";
                     PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
                     piece = new Piece(false, queenID, index, row, col, blackPath + pp);
-                    displayTile();
+                    this->displayTile();
                 }
             }
             else
@@ -337,18 +335,18 @@ void BoardTile::enforceRules()
                     QString pp = "";
                     PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
                     piece = new Piece(true, queenID, index, row, col, whitePath + pp);
-                    displayTile();
+                    this->displayTile();
                 }
             }
         }
 
         // reset en passant
-        game->resetEnPassant(!isWhiteTurn);
+        game->resetEnPassant(!game->isWhiteTurn());
         // update the attack board
         game->updateAttackBoard();
         // scan for check after a piece has moved
         game->scanForCheck();
         // check if the game is over
-        checkGameEnd();
+        this->checkGameEnd();
     }
 }

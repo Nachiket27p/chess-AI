@@ -26,6 +26,10 @@ typedef struct CheckPos
 class Rules
 {
 private:
+    // used to keep track of whise turn it is
+    // ture means white turn and false means black turn
+    bool turn;
+
     // Used to keep single instance of this class
     static Rules *instance;
 
@@ -69,6 +73,7 @@ private:
      */
     Rules()
     {
+        turn = true;
         okToMove = false;
         isCheck = false;
 
@@ -93,6 +98,13 @@ private:
     };
 
 public:
+
+    bool isWhiteTurn();
+
+    void setTurn(bool _turn);
+
+    void rotateTurn();
+
     /**
      * @brief Returns the instance of the class. If an instance does not exist
      * construts a new one and returns it.
@@ -151,7 +163,7 @@ public:
      * 
      * @param white True if it is white turn, false if it is black turn.
      */
-    void resetEnPassant(bool white);
+    void resetEnPassant(bool whiteTurn);
 
     /**
      * @brief Returns the tile number of the piece which can be captured by
@@ -161,7 +173,7 @@ public:
      * @return int Tile number of piece which can be captured if possible,
      *              otherwise -1.
      */
-    int getEPTileNumber(bool white);
+    int getEPTileNumber(bool whiteTurn);
 
     /**
      * @brief This function is used to determine if the game has
@@ -171,7 +183,7 @@ public:
      * @param turn If it is white(true) or black(false) turn.
      * @return int 'CHECK_MATE=100' or 'STALE_MATE=101' or 0 if neither.
      */
-    int hasGameEnded(bool turn);
+    int hasGameEnded(bool whiteTurn);
 
     /**
      * @brief Highlights the tiles to which the piece can move to.
@@ -343,7 +355,7 @@ private:
      * @return true If the piece at the position is causing a check.
      * @return false If the piece at the position if not causing a check.
      */
-    inline bool checkTile(int row, int col, char pieceType);
+    inline bool checkKnightHelper(int row, int col, char pieceType);
 
     /**
      * @brief setCheck Private helper function to set check.
