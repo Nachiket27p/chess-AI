@@ -65,9 +65,6 @@ public:
      */
     bool checkResources();
 
-    //sssssssssssssssssssssssss
-    void setDebugWindowAccess(DebugWindow *dbw);
-
 private:
     // The ui object associated with this main window
     Ui::Board *ui;

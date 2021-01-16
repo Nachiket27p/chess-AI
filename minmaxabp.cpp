@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-MinMaxABP::MinMaxABP(BoardTile* (*_grid)[8][8], Piece* (*_whitePieces)[16], Piece* (*_blackPieces)[16], bool _color, EvaluationScheme _evalSchema)
+MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, EvaluationScheme _evalSchema)
 {
     game = game->getInstance();
     grid = _grid;
@@ -16,7 +16,7 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
 {
     if (depth == 0 || game->hasGameEnded(maxingColor))
     {
-        return evaluate(maxingColor);
+        return evaluate();
     }
 
     int currEval;
@@ -24,28 +24,28 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
     game->getMoves(moves);
 
     // select a random move as the best move first
-//    srand(time(NULL));
+    //    srand(time(NULL));
     int randChoice = rand() % moves->size();
     Move bm = (*moves)[randChoice];
 
     if (maximizing)
     {
         int maxEval = 0;
-        for(auto mve : *moves)
+        for (auto mve : *moves)
         {
             backUpEPValue();
             makeMove(mve);
             currEval = minMax(depth - 1, alpha, beta, false, maxingColor, bestMove);
             unmakeMove(mve, maximizing);
             restoreEPValue();
-            if(currEval > maxEval)
+            if (currEval > maxEval)
             {
                 maxEval = currEval;
                 bm = mve;
             }
             // alpha-beta pruning
             alpha = std::max(alpha, maxEval);
-            if(alpha >= beta)
+            if (alpha >= beta)
                 break;
         }
         // if loop has ended then depth is about to change
@@ -61,21 +61,21 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
     else
     {
         int minEval = 0;
-        for(auto mve : *moves)
+        for (auto mve : *moves)
         {
             backUpEPValue();
             makeMove(mve);
             currEval = minMax(depth - 1, alpha, beta, true, maxingColor, bestMove);
             unmakeMove(mve, maximizing);
             restoreEPValue();
-            if(currEval < minEval)
+            if (currEval < minEval)
             {
                 minEval = currEval;
                 bm = mve;
             }
             // alpha-beta pruning
             beta = std::min(beta, minEval);
-            if(beta <= alpha)
+            if (beta <= alpha)
                 break;
         }
         // if loop has ended then depth is about to change
@@ -87,53 +87,54 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
 
         return minEval;
     }
-
 }
 
-int MinMaxABP::evaluate(bool maxingColor)
+int MinMaxABP::evaluate()
 {
     int eval;
-    switch(evalSchema)
+    switch (evalSchema)
     {
     case EvaluationScheme::basic:
-        eval = basicEvaluate(maxingColor);
+        eval = basicEvaluate();
         break;
     case EvaluationScheme::complex:
-        eval = complexEbaluate(maxingColor);
+        eval = complexEbaluate();
         break;
     default:
-        eval = staticEvaluate(maxingColor);
+        eval = staticEvaluate();
         break;
     }
     return eval;
 }
 
-int MinMaxABP::staticEvaluate(bool maxingColor)
+int MinMaxABP::staticEvaluate()
 {
     // reset the scores
     whiteScore = 0;
     blackScore = 0;
 
-    for(int i = 0; i < 16; i++)
+    for (int i = 0; i < 16; i++)
     {
         // accumulate the white score if the piece has not been captured
-        if(!(*whitePieces)[i]->isCaptured())
+        if (!(*whitePieces)[i]->isCaptured())
             whiteScore += (*whitePieces)[i]->getBasePowerValue();
 
         // accumulate the black score if the piece has not been captured
-        if(!(*blackPieces)[i]->isCaptured())
+        if (!(*blackPieces)[i]->isCaptured())
             blackScore += (*blackPieces)[i]->getBasePowerValue();
     }
     return (whiteScore - blackScore);
 }
 
-int MinMaxABP::basicEvaluate(bool maxingColor)
+int MinMaxABP::basicEvaluate()
 {
-    // TODO
+    for (int i = 0; i < 16; i++)
+    {
+    }
     return 0;
 }
 
-int MinMaxABP::complexEbaluate(bool maxingColor)
+int MinMaxABP::complexEbaluate()
 {
     // TODO
     return 0;
@@ -159,7 +160,7 @@ void MinMaxABP::unmakeMove(Move m, bool turn)
     delete (*grid)[row][col]->getPiece();
     (*grid)[row][col]->setPiece(bUpM->backUpStartPiece);
 
-    if(whiteTurn)
+    if (whiteTurn)
     {
         (*whitePieces)[index] = bUpM->backUpStartPiece;
     }
@@ -168,8 +169,7 @@ void MinMaxABP::unmakeMove(Move m, bool turn)
         (*blackPieces)[index] = bUpM->backUpStartPiece;
     }
 
-
-    if(bUpM->backUpEndPiece == nullptr)
+    if (bUpM->backUpEndPiece == nullptr)
     {
         row = m.endTileNumb / 8;
         col = m.endTileNumb % 8;
@@ -185,25 +185,24 @@ void MinMaxABP::unmakeMove(Move m, bool turn)
         (*grid)[row][col]->setPiece(bUpM->backUpEndPiece);
 
         // restore the piece in piece arrays
-        if(whiteTurn)
+        if (whiteTurn)
             (*whitePieces)[index] = bUpM->backUpEndPiece;
         else
             (*blackPieces)[index] = bUpM->backUpEndPiece;
     }
 
-    if(bUpM->backUpAdditionalPiece != nullptr)
+    if (bUpM->backUpAdditionalPiece != nullptr)
     {
         row = bUpM->backUpAdditionalPiece->getRow();
         col = bUpM->backUpAdditionalPiece->getCol();
         whiteTurn = bUpM->backUpAdditionalPiece->isWhite();
         delete (*grid)[row][col]->getPiece();
         (*grid)[row][col]->setPiece(bUpM->backUpAdditionalPiece);
-        if(whiteTurn)
+        if (whiteTurn)
             (*whitePieces)[index] = bUpM->backUpAdditionalPiece;
         else
             (*blackPieces)[index] = bUpM->backUpAdditionalPiece;
     }
-
 
     // rotate turn
     game->rotateTurn();
@@ -212,9 +211,9 @@ void MinMaxABP::unmakeMove(Move m, bool turn)
 void MinMaxABP::simulateMove(Move m)
 {
     int rowStart, colStart, rowEnd, colEnd;
-    rowStart = m.startTileNumb/8;
+    rowStart = m.startTileNumb / 8;
     colStart = m.startTileNumb % 8;
-    rowEnd = m.endTileNumb/8;
+    rowEnd = m.endTileNumb / 8;
     colEnd = m.endTileNumb % 8;
     BoardTile *startTile = (*grid)[rowStart][colStart];
     BoardTile *endTile = (*grid)[rowEnd][colEnd];
@@ -222,7 +221,7 @@ void MinMaxABP::simulateMove(Move m)
     // back up the start and end tiles for when the move is undone
     BackUpMove *bUpM = new BackUpMove();
     bUpM->backUpStartPiece = new Piece(*(startTile->getPiece()));
-    if(endTile->getPiece() != nullptr)
+    if (endTile->getPiece() != nullptr)
         bUpM->backUpEndPiece = new Piece(*(endTile->getPiece()));
 
     // the king tile number before moving
@@ -239,7 +238,7 @@ void MinMaxABP::simulateMove(Move m)
     // check if en passant move is being performed
     bool ep = false;
     if ((movingPieceSymbol == pawnID) &&
-        (endTile->getCol()!= startTile->getCol()) && !endTile->isOccupied())
+        (endTile->getCol() != startTile->getCol()) && !endTile->isOccupied())
     {
         ep = true;
     }
@@ -346,7 +345,7 @@ void MinMaxABP::simulateMove(Move m)
     // scan for check after a piece has moved
     game->scanForCheck();
     // check if the game is over
-//    endTile->checkGameEnd();
+    //    endTile->checkGameEnd();
     // save the move to the stack
     backUpMoves.push(bUpM);
 }

@@ -5,17 +5,20 @@
 #include "board.h"
 #include "minmaxabp.h"
 
+// debug window
+extern DebugWindow *dbw;
+
 // Get an instance of the rules class.
 extern Rules *game;
 // Access the extern variables which determine the run and the current theme.
 extern Theme *currentTheme;
-
+// min-max alpha-beta AI
 extern MinMaxABP *mmabp;
 
 void BoardTile::setPiece(Piece *_piece)
 {
     this->piece = _piece;
-    if(_piece != nullptr)
+    if (_piece != nullptr)
         piece->updatePosition(row, col, this->tileNumber);
 }
 
@@ -134,7 +137,7 @@ void BoardTile::aiMove()
     int beta = INT_MAX;
     bool maximizing = false;
     bool maximizingColor = false;
-    Move bestMove{0 , 0};
+    Move bestMove{0, 0};
     mmabp->minMax(depth, alpha, beta, maximizing, maximizingColor, &bestMove);
     // TODO: make move
     int rowStart = bestMove.startTileNumb / 8;
@@ -150,6 +153,9 @@ void BoardTile::aiMove()
     game->selected = 2;
     // call the enforce rules function to perform the move
     grid[rowEnd][colEnd]->enforceRules(false);
+
+    // // update the board
+    // dbw->updateBlackValues();
 }
 
 void BoardTile::checkGameEnd()
@@ -204,18 +210,18 @@ void BoardTile::enforceRules(bool playerMove)
                 if (piece->isWhite())
                 {
                     game->selectedTile->setStyleSheet(QString("QLabel {background-color:") +
-                                                currentTheme->getHoverBackground() +
-                                                "color: " +
-                                                currentTheme->getHoverColorWhite() +
-                                                QString("}"));
+                                                      currentTheme->getHoverBackground() +
+                                                      "color: " +
+                                                      currentTheme->getHoverColorWhite() +
+                                                      QString("}"));
                 }
                 else
                 {
                     game->selectedTile->setStyleSheet(QString("QLabel {background-color:") +
-                                                currentTheme->getHoverBackground() +
-                                                "color: " +
-                                                currentTheme->getHoverColorBlack() +
-                                                QString("}"));
+                                                      currentTheme->getHoverBackground() +
+                                                      "color: " +
+                                                      currentTheme->getHoverColorBlack() +
+                                                      QString("}"));
                 }
                 // if the piece can move then highlight the correct tiles.
                 game->highlightTiles();
@@ -383,7 +389,7 @@ void BoardTile::enforceRules(bool playerMove)
         qApp->processEvents();
 
         // call AI
-        if(playerMove)
+        if (playerMove)
             aiMove();
     }
 }

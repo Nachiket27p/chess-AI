@@ -17,6 +17,7 @@ static const char bishopID = 'b';
 static const char kingID = 'K';
 static const char queenID = 'q';
 
+// names of the icon files in the pieces/<black/white>/ directory
 static const QString pawnIconName = "pawn.svg";
 static const QString rookIconName = "rook.svg";
 static const QString knightIconName = "knight.svg";
@@ -78,13 +79,15 @@ static const QString noPiecesDirMsg = "Could not locate \"pieces\" directory. Pl
 // checks if the variable is in bound
 #define WITHIN_BOUNDS(var) (((var) >= 0) && ((var) < 8))
 
+// used to obtain moves from the rules class
 typedef struct move
 {
     int startTileNumb;
     int endTileNumb;
 } Move;
 
-static std::unordered_map<char,int> basePowerValues = {{pawnID, 1},
+// used to set default power values for the pieces
+static std::unordered_map<char, int> basePowerValues = {{pawnID, 1},
                                                         {rookID, 5},
                                                         {knightID, 3},
                                                         {bishopID, 3},

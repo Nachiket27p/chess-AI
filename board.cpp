@@ -15,12 +15,6 @@ Theme *currentTheme;
 Rules *game;
 MinMaxABP *mmabp;
 
-//ssssssssssssssssssssssssssssss
-void Board::setDebugWindowAccess(DebugWindow *dbw)
-{
-    game->setDebugWindowAccess(dbw);
-}
-
 Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 {
     // initialize the ui.
@@ -215,7 +209,7 @@ void Board::on_actionNew_Game_triggered()
     // if the response if 'ok' then reset all the pieces on the grid.
     if (rtnval == QMessageBox::Ok)
     {
-//        isWhiteTurn = true;
+        //        isWhiteTurn = true;
         game->setTurn(true);
 
         for (int i = 0; i < 8; i++)

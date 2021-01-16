@@ -7,11 +7,16 @@
 #include "piece.h"
 #include "utils.h"
 
+// used to indicate if there is a check mate
+// or a stale mate.
 #define CHECK_MATE 100
 #define STALE_MATE 101
 
+// the 2d array of BoardTiles which represents the chess board.
+// Declared and defined in board.cpp
 extern BoardTile *grid[8][8];
 
+// used to keep track of pieces whcih are causing a check.
 typedef struct CheckPos
 {
     int row;
@@ -49,14 +54,9 @@ private:
     // If value is zero then there is no en passant, even
     // theough there is a tilenumber 0, it is impossible
     // for there to be an en passant with tile number 0.
-//    int whiteEPL;
-//    int whiteEPR;
-//    int blackEPL;
-//    int blackEPR;
     int whiteEP;
     int blackEP;
 
-    DebugWindow *dbw;
     std::vector<Piece *> blackKingDefenders;
     std::vector<Piece *> whiteKingDefenders;
 
@@ -89,10 +89,10 @@ private:
         }
 
         // initialize the flags for en passant
-//        whiteEPL = 0;
-//        whiteEPR = 0;
-//        blackEPL = 0;
-//        blackEPR = 0;
+        //        whiteEPL = 0;
+        //        whiteEPR = 0;
+        //        blackEPL = 0;
+        //        blackEPR = 0;
         whiteEP = 0;
         blackEP = 0;
 
@@ -102,7 +102,6 @@ private:
     };
 
 public:
-
     bool isWhiteTurn();
 
     void setTurn(bool _turn);
@@ -201,14 +200,29 @@ public:
      */
     void unhighlightTiles();
 
+    /**
+     * @brief Used to check if the move is valid.
+     * 
+     * @param tileNumb The tile to which the move is being made.
+     * @return true If the move is valid.
+     * @return false If the move is invalid.
+     */
     bool isValidMove(int tileNumb);
 
+    /**
+     * @brief Rests the vmIdx which keeps track of the index
+     * for hte validMoves array. Resetting this essentially clears
+     * all the valid moves.
+     */
     void resetVmIdx();
 
+    /**
+     * @brief Populates all the possible valid moves into the
+     * vector passed in.
+     * 
+     * @param moves The list of all moves.
+     */
     void getMoves(std::vector<Move> *moves);
-
-    // used to update the debugging window.
-    void setDebugWindowAccess(DebugWindow *dbw);
 
 private:
     /**

@@ -125,7 +125,18 @@ public:
      */
     void resetPiece(int _row = -1, int _col = -1);
 
+    /**
+     * @brief Returns the base power for this piece.
+     * 
+     * @return int The base power value for this piece.
+     */
     int getBasePowerValue();
+
+    /**
+     * @brief Get the index of this piece in the pieces array.
+     * 
+     * @return int The index at which position this piece is located.
+     */
     int getIndex();
 };
 

@@ -18,11 +18,11 @@ private:
     Piece *piece;
 
 private:
-//    /**
-//     * @brief Used to check if the piece selected can move and if so which
-//     * direction it can move in, calls the canMove function from the Rules class.
-//     */
-//    void enforceRules(bool playerMove = true);
+    //    /**
+    //     * @brief Used to check if the piece selected can move and if so which
+    //     * direction it can move in, calls the canMove function from the Rules class.
+    //     */
+    //    void enforceRules(bool playerMove = true);
 
 public:
     /**
@@ -160,6 +160,10 @@ public:
      */
     void setMoved();
 
+    /**
+     * @brief Used to call the AI min-max alpha-beta pruning algorithm.
+     * 
+     */
     static void aiMove();
 };
 
