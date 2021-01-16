@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <unordered_map>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -82,5 +83,12 @@ typedef struct move
     int startTileNumb;
     int endTileNumb;
 } Move;
+
+static std::unordered_map<char,int> basePowerValues = {{pawnID, 1},
+                                                        {rookID, 5},
+                                                        {knightID, 3},
+                                                        {bishopID, 3},
+                                                        {queenID, 9},
+                                                        {kingID, 90}};
 
 #endif // UTILS_H

@@ -18,19 +18,11 @@ private:
     Piece *piece;
 
 private:
-    /**
-     * @brief Used to check if the piece selected can move and if so which
-     * direction it can move in, calls the canMove function from the Rules class.
-     */
-    void enforceRules();
-
-    /**
-     * @brief Used to check if the game has ended via a check/stale mate. This function
-     * calls 'hasGameEnded' function in the Rules class to help determine if game has ended.
-     * If the game has ended a dialog is displayed with a message informing the player
-     * how the game has ended.
-     */
-    void checkGameEnd();
+//    /**
+//     * @brief Used to check if the piece selected can move and if so which
+//     * direction it can move in, calls the canMove function from the Rules class.
+//     */
+//    void enforceRules(bool playerMove = true);
 
 public:
     /**
@@ -49,6 +41,20 @@ public:
     }
 
     /**
+     * @brief Used to check if the piece selected can move and if so which
+     * direction it can move in, calls the canMove function from the Rules class.
+     */
+    void enforceRules(bool playerMove = true);
+
+    /**
+     * @brief Used to check if the game has ended via a check/stale mate. This function
+     * calls 'hasGameEnded' function in the Rules class to help determine if game has ended.
+     * If the game has ended a dialog is displayed with a message informing the player
+     * how the game has ended.
+     */
+    void checkGameEnd();
+
+    /**
      * @brief Copy constructor.
      * @param b2 BoardTile which is being copied into this one.
      */
@@ -59,7 +65,7 @@ public:
      * 
      * @param piece The piece object to be placed on this tile.
      */
-    void setPiece(Piece *piece = nullptr);
+    void setPiece(Piece *_piece = nullptr);
 
     /**
      * @brief Populates the tile with the the piece identified by 'symbol' parameter passed in.
@@ -153,6 +159,8 @@ public:
      * within the Piece class.
      */
     void setMoved();
+
+    static void aiMove();
 };
 
 #endif // BOARDTILE_H

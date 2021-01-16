@@ -3,16 +3,20 @@
 #include "boardtile.h"
 #include "rules.h"
 #include "board.h"
+#include "minmaxabp.h"
 
 // Get an instance of the rules class.
 extern Rules *game;
 // Access the extern variables which determine the run and the current theme.
 extern Theme *currentTheme;
 
-void BoardTile::setPiece(Piece *piece)
+extern MinMaxABP *mmabp;
+
+void BoardTile::setPiece(Piece *_piece)
 {
-    this->piece = piece;
-    piece->updatePosition(row, col);
+    this->piece = _piece;
+    if(_piece != nullptr)
+        piece->updatePosition(row, col, this->tileNumber);
 }
 
 void BoardTile::displayTile()
@@ -123,6 +127,31 @@ void BoardTile::setMoved()
         piece->setMoved();
 }
 
+void BoardTile::aiMove()
+{
+    int depth = 4;
+    int alpha = 0;
+    int beta = 0;
+    bool maximizing = false;
+    bool maximizingColor = false;
+    Move bestMove{0 , 0};
+    mmabp->minMax(depth, &alpha, &beta, maximizing, maximizingColor, &bestMove);
+    // TODO: make move
+    int rowStart = bestMove.startTileNumb / 8;
+    int colStart = bestMove.startTileNumb % 8;
+    int rowEnd = bestMove.endTileNumb / 8;
+    int colEnd = bestMove.endTileNumb % 8;
+
+    // call the canMove to populate the valid moves in validMoves array
+    game->canMove(grid[rowStart][colStart]);
+    // set the selected tile in the game object
+    game->selectedTile = grid[rowStart][colStart];
+    // set the selected to 2 to indicate the piece has already been selected
+    game->selected = 2;
+    // call the enforce rules function to perform the move
+    grid[rowEnd][colEnd]->enforceRules(false);
+}
+
 void BoardTile::checkGameEnd()
 {
     // call the hasGameEnded function from the Rules class to determine
@@ -156,7 +185,7 @@ BoardTile::BoardTile(const BoardTile &b)
     this->piece = b.piece;
 }
 
-void BoardTile::enforceRules()
+void BoardTile::enforceRules(bool playerMove)
 {
     // if a piece is selected then determine the valid moves for the selected
     // piece.
@@ -218,16 +247,17 @@ void BoardTile::enforceRules()
         // the king tile number before moving
         // used to determine which side to castle and
         // which rook to move.
+        char movingPieceSymbol = game->selectedTile->getPieceSymbol();
         int kingTNBefore;
         // if the piece being moved is the the king the update the king pointer
-        if (game->selectedTile->getPieceSymbol() == kingID)
+        if (movingPieceSymbol == kingID)
         {
             kingTNBefore = game->selectedTile->getTileNumber();
         }
 
         // check if en passant move is being performed
         bool ep = false;
-        if ((game->selectedTile->getPieceSymbol() == pawnID) &&
+        if ((movingPieceSymbol == pawnID) &&
             (this->col != game->selectedTile->getCol()) && !this->isOccupied())
         {
             ep = true;
@@ -269,7 +299,7 @@ void BoardTile::enforceRules()
         }
 
         // Casteling
-        if (piece->getPieceSymbol() == kingID)
+        if (movingPieceSymbol == kingID)
         {
             // Queen side castle
             if ((kingTNBefore - tileNumber) == 2)
@@ -292,7 +322,7 @@ void BoardTile::enforceRules()
         }
 
         // en passant
-        if (piece->getPieceSymbol() == pawnID)
+        if (movingPieceSymbol == pawnID)
         {
             game->canEnPassant(this);
             // if ep was set to true above then perform enpassant by
@@ -309,7 +339,7 @@ void BoardTile::enforceRules()
         }
 
         // convert pawn to queen
-        if (this->piece->getPieceSymbol() == pawnID)
+        if (movingPieceSymbol == pawnID)
         {
             // because turn has switched over true means its black's turn
             if (game->isWhiteTurn())
@@ -317,11 +347,11 @@ void BoardTile::enforceRules()
                 // if a black pawn has reached the opposite end conver to queen
                 if (row == 7)
                 {
-                    int index = this->piece->getIndex();
+                    int pIndex = this->getPiece()->getIndex();
                     delete piece;
                     QString pp = "";
                     PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
-                    piece = new Piece(false, queenID, index, row, col, blackPath + pp);
+                    this->piece = new Piece(false, queenID, this->tileNumber, row, col, pIndex, blackPath + pp);
                     this->displayTile();
                 }
             }
@@ -330,11 +360,11 @@ void BoardTile::enforceRules()
                 // if a white pawn has reached the opposite end conver to queen
                 if (row == 0)
                 {
-                    int index = this->piece->getIndex();
+                    int pIndex = this->getPiece()->getIndex();
                     delete piece;
                     QString pp = "";
                     PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
-                    piece = new Piece(true, queenID, index, row, col, whitePath + pp);
+                    this->piece = new Piece(true, queenID, this->tileNumber, row, col, pIndex, whitePath + pp);
                     this->displayTile();
                 }
             }
@@ -348,5 +378,9 @@ void BoardTile::enforceRules()
         game->scanForCheck();
         // check if the game is over
         this->checkGameEnd();
+
+        // call AI
+        if(playerMove)
+            aiMove();
     }
 }

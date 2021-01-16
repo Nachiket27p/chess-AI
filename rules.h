@@ -49,10 +49,12 @@ private:
     // If value is zero then there is no en passant, even
     // theough there is a tilenumber 0, it is impossible
     // for there to be an en passant with tile number 0.
-    int whiteEPL;
-    int whiteEPR;
-    int blackEPL;
-    int blackEPR;
+//    int whiteEPL;
+//    int whiteEPR;
+//    int blackEPL;
+//    int blackEPR;
+    int whiteEP;
+    int blackEP;
 
     DebugWindow *dbw;
     std::vector<Piece *> blackKingDefenders;
@@ -87,10 +89,12 @@ private:
         }
 
         // initialize the flags for en passant
-        whiteEPL = 0;
-        whiteEPR = 0;
-        blackEPL = 0;
-        blackEPR = 0;
+//        whiteEPL = 0;
+//        whiteEPR = 0;
+//        blackEPL = 0;
+//        blackEPR = 0;
+        whiteEP = 0;
+        blackEP = 0;
 
         // initialize the selection variables
         selected = 0;
@@ -104,6 +108,8 @@ public:
     void setTurn(bool _turn);
 
     void rotateTurn();
+
+    void setEPTileNumber(int ep, bool whiteTurn);
 
     /**
      * @brief Returns the instance of the class. If an instance does not exist
@@ -199,7 +205,7 @@ public:
 
     void resetVmIdx();
 
-    void getMoves(std::vector<Move> &moves, int startTileNumb);
+    void getMoves(std::vector<Move> *moves);
 
     // used to update the debugging window.
     void setDebugWindowAccess(DebugWindow *dbw);

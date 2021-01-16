@@ -1,15 +1,17 @@
 #include "piece.h"
 #include "utils.h"
 
-Piece::Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QString iconPath)
+Piece::Piece(bool _white, char _pieceSymbol, int _tileNumber, int _row, int _col, int _index, QString iconPath)
 {
     moved = 0;
     captured = false;
     white = _white;
     pieceSymbol = _pieceSymbol;
-    index = _index;
+    tileNumber = _tileNumber;
     row = _row;
     col = _col;
+    basePowerValue = basePowerValues[_pieceSymbol];
+    index = _index;
     icon = new QPixmap(iconPath);
 }
 
@@ -18,10 +20,12 @@ Piece::Piece(const Piece &p)
     this->moved = p.moved;
     this->white = p.white;
     this->pieceSymbol = p.pieceSymbol;
-    this->index = p.index;
+    this->tileNumber = p.tileNumber;
     this->row = p.row;
     this->col = p.col;
     this->captured = p.captured;
+    this->index = p.index;
+    this->basePowerValue = p.basePowerValue;
 
     // determine correct path
     QString subPath = blackPath;
@@ -96,15 +100,26 @@ QPixmap *Piece::getIcon()
     return icon;
 }
 
-void Piece::updatePosition(int _row, int _col)
+int Piece::getBasePowerValue()
 {
-    row = _row;
-    col = _col;
+    return basePowerValue;
 }
 
 int Piece::getIndex()
 {
     return index;
+}
+
+void Piece::updatePosition(int _row, int _col, int _tileNumber)
+{
+    row = _row;
+    col = _col;
+    tileNumber = _tileNumber;
+}
+
+int Piece::getTileNumber()
+{
+    return tileNumber;
 }
 
 void Piece::resetPiece(int _row, int _col)

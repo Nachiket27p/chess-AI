@@ -5,6 +5,7 @@ CMakeFiles/chess-AI.dir/board.cpp.o: ../board.cpp
 CMakeFiles/chess-AI.dir/board.cpp.o: ../board.h
 CMakeFiles/chess-AI.dir/board.cpp.o: ../boardtile.h
 CMakeFiles/chess-AI.dir/board.cpp.o: ../debugwindow.h
+CMakeFiles/chess-AI.dir/board.cpp.o: ../minmaxabp.h
 CMakeFiles/chess-AI.dir/board.cpp.o: ../piece.h
 CMakeFiles/chess-AI.dir/board.cpp.o: ../rules.h
 CMakeFiles/chess-AI.dir/board.cpp.o: ../theme.h
@@ -484,6 +485,7 @@ CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../board.h
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../boardtile.cpp
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../boardtile.h
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../debugwindow.h
+CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../minmaxabp.h
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../piece.h
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../rules.h
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../theme.h

@@ -2,6 +2,7 @@
 #include "ui_board.h"
 #include "utils.h"
 #include "rules.h"
+#include "minmaxabp.h"
 
 // keeps track of the black and white pieces on the board
 Piece *whitePieces[16];
@@ -12,6 +13,7 @@ BoardTile *grid[8][8];
 
 Theme *currentTheme;
 Rules *game;
+MinMaxABP *mmabp;
 
 //ssssssssssssssssssssssssssssss
 void Board::setDebugWindowAccess(DebugWindow *dbw)
@@ -34,6 +36,7 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
     initializePiecesOnGrid(grid, whitePieces, blackPieces);
 
     game = game->getInstance();
+    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, false);
 }
 
 Board::~Board()
@@ -45,54 +48,59 @@ void Board::createPieces(Piece *whitePieces[16], Piece *blackPieces[16])
 {
     int col = 0;
     int pidx = 0;
+    int blackTileNumb = 8;
+    int whiteTileNumb = 48;
     // create the pawns
     while (col < 8)
     {
-        whitePieces[pidx] = new Piece(true, pawnID, col, 6, col, whitePath + pawnIconName);
-        blackPieces[pidx] = new Piece(false, pawnID, col, 1, col, blackPath + pawnIconName);
+        whitePieces[pidx] = new Piece(true, pawnID, whiteTileNumb + col, 6, col, pidx, whitePath + pawnIconName);
+        blackPieces[pidx] = new Piece(false, pawnID, blackTileNumb + col, 1, col, pidx, blackPath + pawnIconName);
         col++;
         pidx++;
     }
+    // reset variables to initialize the second row of pieces
     col = 0;
+    blackTileNumb = 0;
+    whiteTileNumb = 56;
 
     // create the A column rooks
-    whitePieces[pidx] = new Piece(true, rookID, col, 7, col, whitePath + rookIconName);
-    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + rookIconName);
+    whitePieces[pidx] = new Piece(true, rookID, whiteTileNumb + col, 7, col, pidx, whitePath + rookIconName);
+    blackPieces[pidx] = new Piece(false, rookID, blackTileNumb + col, 0, col, pidx, blackPath + rookIconName);
     col++;
     pidx++;
     // create the B  column knights
-    whitePieces[pidx] = new Piece(true, knightID, col, 7, col, whitePath + knightIconName);
-    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + knightIconName);
+    whitePieces[pidx] = new Piece(true, knightID, whiteTileNumb + col, 7, col, pidx, whitePath + knightIconName);
+    blackPieces[pidx] = new Piece(false, knightID, blackTileNumb + col, 0, col, pidx, blackPath + knightIconName);
     col++;
     pidx++;
     // create the C column bishops
-    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col, whitePath + bishopIconName);
-    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + bishopIconName);
+    whitePieces[pidx] = new Piece(true, bishopID, whiteTileNumb + col, 7, col, pidx, whitePath + bishopIconName);
+    blackPieces[pidx] = new Piece(false, bishopID, blackTileNumb + col, 0, col, pidx, blackPath + bishopIconName);
     col++;
     pidx++;
     // create the queens
-    whitePieces[pidx] = new Piece(true, queenID, col, 7, col, whitePath + queenIconName);
-    blackPieces[pidx] = new Piece(false, queenID, col, 0, col, blackPath + queenIconName);
+    whitePieces[pidx] = new Piece(true, queenID, whiteTileNumb + col, 7, col, pidx, whitePath + queenIconName);
+    blackPieces[pidx] = new Piece(false, queenID, blackTileNumb + col, 0, col, pidx, blackPath + queenIconName);
     col++;
     pidx++;
     // create the kings
-    whitePieces[pidx] = new Piece(true, kingID, col, 7, col, whitePath + kingIconName);
-    blackPieces[pidx] = new Piece(false, kingID, col, 0, col, blackPath + kingIconName);
+    whitePieces[pidx] = new Piece(true, kingID, whiteTileNumb + col, 7, col, pidx, whitePath + kingIconName);
+    blackPieces[pidx] = new Piece(false, kingID, blackTileNumb + col, 0, col, pidx, blackPath + kingIconName);
     col++;
     pidx++;
     // create the F column bishops
-    whitePieces[pidx] = new Piece(true, bishopID, col, 7, col, whitePath + bishopIconName);
-    blackPieces[pidx] = new Piece(false, bishopID, col, 0, col, blackPath + bishopIconName);
+    whitePieces[pidx] = new Piece(true, bishopID, whiteTileNumb + col, 7, col, pidx, whitePath + bishopIconName);
+    blackPieces[pidx] = new Piece(false, bishopID, blackTileNumb + col, 0, col, pidx, blackPath + bishopIconName);
     col++;
     pidx++;
     // create the G column knights
-    whitePieces[pidx] = new Piece(true, knightID, col, 7, col, whitePath + knightIconName);
-    blackPieces[pidx] = new Piece(false, knightID, col, 0, col, blackPath + knightIconName);
+    whitePieces[pidx] = new Piece(true, knightID, whiteTileNumb + col, 7, col, pidx, whitePath + knightIconName);
+    blackPieces[pidx] = new Piece(false, knightID, blackTileNumb + col, 0, col, pidx, blackPath + knightIconName);
     col++;
     pidx++;
     // create the H column rooks
-    whitePieces[pidx] = new Piece(true, rookID, col, 7, col, whitePath + rookIconName);
-    blackPieces[pidx] = new Piece(false, rookID, col, 0, col, blackPath + rookIconName);
+    whitePieces[pidx] = new Piece(true, rookID, whiteTileNumb + col, 7, col, pidx, whitePath + rookIconName);
+    blackPieces[pidx] = new Piece(false, rookID, blackTileNumb + col, 0, col, pidx, blackPath + rookIconName);
 }
 
 bool Board::checkResources()

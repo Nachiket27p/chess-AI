@@ -36,6 +36,14 @@ void Rules::rotateTurn()
     turn = (turn + 1) & 1;
 }
 
+void Rules::setEPTileNumber(int ep, bool whiteTurn)
+{
+    if(whiteTurn)
+        whiteEP = ep;
+    else
+        blackEP = ep;
+}
+
 Rules *Rules::getInstance()
 {
     if (!instance)
@@ -107,9 +115,8 @@ void Rules::scanForCheck()
 bool Rules::enforcePawn(BoardTile *tile)
 {
     // check en passant
-    enPassant(tile->getTileNumber());
+    bool ok = enPassant(tile->getTileNumber());
 
-    bool ok = false;
     int row = tile->getRow();
     int col = tile->getCol();
 
@@ -612,12 +619,22 @@ bool Rules::enPassant(int tileNumb)
     {
         // whiteEPL and whiteEPR contrin the tile number of the
         // pawn next to the one being checked.
-        if (whiteEPL == (tileNumb - 1))
+//        if (whiteEPL == (tileNumb - 1))
+//        {
+//            validMoves[vmIdx++] = tileNumb - 8 - 1;
+//            ok = true;
+//        }
+//        if (whiteEPR == (tileNumb + 1))
+//        {
+//            validMoves[vmIdx++] = tileNumb - 8 + 1;
+//            ok = true;
+//        }
+        if (whiteEP == (tileNumb - 1))
         {
             validMoves[vmIdx++] = tileNumb - 8 - 1;
             ok = true;
         }
-        if (whiteEPR == (tileNumb + 1))
+        if (whiteEP == (tileNumb + 1))
         {
             validMoves[vmIdx++] = tileNumb - 8 + 1;
             ok = true;
@@ -625,12 +642,22 @@ bool Rules::enPassant(int tileNumb)
     }
     else
     {
-        if (blackEPL == (tileNumb + 1))
+//        if (blackEPL == (tileNumb + 1))
+//        {
+//            validMoves[vmIdx++] = tileNumb + 8 + 1;
+//            ok = true;
+//        }
+//        if (blackEPR == (tileNumb - 1))
+//        {
+//            validMoves[vmIdx++] = tileNumb + 8 - 1;
+//            ok = true;
+//        }
+        if (blackEP == (tileNumb + 1))
         {
             validMoves[vmIdx++] = tileNumb + 8 + 1;
             ok = true;
         }
-        if (blackEPR == (tileNumb - 1))
+        if (blackEP == (tileNumb - 1))
         {
             validMoves[vmIdx++] = tileNumb + 8 - 1;
             ok = true;
@@ -685,6 +712,7 @@ void Rules::canEnPassant(BoardTile *tile)
 {
     int row = tile->getRow();
     int col = tile->getCol();
+    bool wasEPSet = false;
 
     if ((turn && (row == 3)) || (!turn && (row == 4)))
     {
@@ -695,14 +723,23 @@ void Rules::canEnPassant(BoardTile *tile)
         if (((col + 1) < 8) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
             (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
         {
+//            if (turn)
+//            {
+//                whiteEPL = tile->getTileNumber();
+//            }
+//            else
+//            {
+//                blackEPR = tile->getTileNumber();
+//            }
             if (turn)
             {
-                whiteEPL = tile->getTileNumber();
+                whiteEP = tile->getTileNumber();
             }
             else
             {
-                blackEPR = tile->getTileNumber();
+                blackEP = tile->getTileNumber();
             }
+            wasEPSet = true;
         }
 
         // Right en passant
@@ -712,31 +749,62 @@ void Rules::canEnPassant(BoardTile *tile)
         if (((col - 1) >= 0) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
             (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
         {
+//            if (turn)
+//            {
+//                whiteEPR = tile->getTileNumber();
+//            }
+//            else
+//            {
+//                blackEPL = tile->getTileNumber();
+//            }
             if (turn)
             {
-                whiteEPR = tile->getTileNumber();
+                whiteEP = tile->getTileNumber();
             }
             else
             {
-                blackEPL = tile->getTileNumber();
+                blackEP = tile->getTileNumber();
             }
+            wasEPSet = true;
         }
     }
+
+    if(!wasEPSet)
+    {
+        if(turn)
+        {
+            whiteEP = 0;
+        }
+        else
+        {
+            blackEP = 0;
+        }
+    }
+
 }
 
 void Rules::resetEnPassant(bool whiteTurn)
 {
     // reset enpassant flags
+//    if (whiteTurn)
+//    {
+//        whiteEPL = 0;
+//        whiteEPR = 0;
+//    }
+//    else
+//    {
+//        blackEPL = 0;
+//        blackEPR = 0;
+//    }
     if (whiteTurn)
     {
-        whiteEPL = 0;
-        whiteEPR = 0;
+        whiteEP = 0;
     }
     else
     {
-        blackEPL = 0;
-        blackEPR = 0;
+        blackEP = 0;
     }
+
 }
 
 int Rules::getEPTileNumber(bool whiteTurn)
@@ -744,19 +812,29 @@ int Rules::getEPTileNumber(bool whiteTurn)
     // returns the appropriate enpassant flag
     // if it ends with 'L' - Left side
     // if it ends with 'R' - Right side
-    if (whiteTurn)
+//    if (whiteTurn)
+//    {
+//        if (whiteEPL)
+//            return whiteEPL;
+//        if (whiteEPR)
+//            return whiteEPR;
+//    }
+//    else
+//    {
+//        if (blackEPL)
+//            return blackEPL;
+//        if (blackEPR)
+//            return blackEPR;
+//    }
+    if(whiteTurn)
     {
-        if (whiteEPL)
-            return whiteEPL;
-        if (whiteEPR)
-            return whiteEPR;
+        if(whiteEP > 0)
+            return whiteEP;
     }
     else
     {
-        if (blackEPL)
-            return blackEPL;
-        if (blackEPR)
-            return blackEPR;
+        if(blackEP > 0)
+            return blackEP;
     }
     return -1;
 }
@@ -867,12 +945,35 @@ void Rules::resetVmIdx()
     vmIdx = 0;
 }
 
-void Rules::getMoves(std::vector<Move> &moves, int startTileNumb)
+void Rules::getMoves(std::vector<Move> *moves)
 {
-    for(int i = 0; i < vmIdx; i++)
+    Piece *(*pcs) = blackPieces;
+    if (turn)
     {
-        moves.push_back(Move{startTileNumb, validMoves[i]});
+        pcs = whitePieces;
     }
+    int backUpVmIdx = vmIdx;
+    // go through all the pieces
+    for(int i = 0; i < 16; i ++)
+    {
+        // if the piece is not captured compute its valid moves
+        if(!pcs[i]->isCaptured())
+        {
+            // compute its moves by calling the canMove function to populate
+            // the validMoves array.
+            this->canMove(grid[pcs[i]->getRow()][pcs[i]->getCol()]);
+            for(int j = 0; j < vmIdx; j++)
+            {
+               // save all the valid moves into the moves vector
+               // passed in as the parameter
+               moves->push_back(Move{pcs[i]->getTileNumber(), validMoves[j]});
+            }
+            // reset the index for validMoves to simulate clearing the array
+            vmIdx = 0;
+        }
+    }
+    // restore the original vmIdx
+    vmIdx = backUpVmIdx;
 }
 
 inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], int pieceColor)

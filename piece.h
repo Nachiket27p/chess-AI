@@ -9,10 +9,12 @@ private:
     int moved;
     bool white;
     char pieceSymbol;
-    int index;
+    int tileNumber;
     int row;
     int col;
     bool captured;
+    int basePowerValue;
+    int index;
     QPixmap *icon;
 
 public:
@@ -26,7 +28,7 @@ public:
      * @param _col The column location on the grid.
      * @param iconPath The filepath to the piece symbol.
      */
-    Piece(bool _white, char _pieceSymbol, int _index, int _row, int _col, QString iconPath);
+    Piece(bool _white, char _pieceSymbol, int _tileNumber, int _row, int _col, int _index, QString iconPath);
 
     /**
      * @brief Copy constructor for Piece.
@@ -103,14 +105,14 @@ public:
      * @param _row Row position on board.
      * @param _col Column position on board.
      */
-    void updatePosition(int _row, int _col);
+    void updatePosition(int _row, int _col, int _tileNumber);
 
     /**
      * @brief Get the index of this piece in the array of pieces.
      * 
      * @return int Index in piece array.
      */
-    int getIndex();
+    int getTileNumber();
 
     /**
      * @brief Reset this piece to the row and column specified,
@@ -122,6 +124,9 @@ public:
      * @param _col Column to which this piece will be moved.
      */
     void resetPiece(int _row = -1, int _col = -1);
+
+    int getBasePowerValue();
+    int getIndex();
 };
 
 #endif // PIECE_H
