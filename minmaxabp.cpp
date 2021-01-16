@@ -2,16 +2,17 @@
 #include <stdlib.h>
 #include <time.h>
 
-MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color)
+MinMaxABP::MinMaxABP(BoardTile* (*_grid)[8][8], Piece* (*_whitePieces)[16], Piece* (*_blackPieces)[16], bool _color, EvaluationScheme _evalSchema)
 {
     game = game->getInstance();
     grid = _grid;
     whitePieces = _whitePieces;
     blackPieces = _blackPieces;
     color = _color;
+    evalSchema = _evalSchema;
 }
 
-int MinMaxABP::minMax(int depth, int *alpha, int *beta, bool maximizing, bool maxingColor, Move *bestMove)
+int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool maxingColor, Move *bestMove)
 {
     if (depth == 0 || game->hasGameEnded(maxingColor))
     {
@@ -32,8 +33,6 @@ int MinMaxABP::minMax(int depth, int *alpha, int *beta, bool maximizing, bool ma
         int maxEval = 0;
         for(auto mve : *moves)
         {
-            if(depth == 2 && mve.startTileNumb == 54 && mve.endTileNumb == 38)
-                int x = 4;
             backUpEPValue();
             makeMove(mve);
             currEval = minMax(depth - 1, alpha, beta, false, maxingColor, bestMove);
@@ -44,8 +43,16 @@ int MinMaxABP::minMax(int depth, int *alpha, int *beta, bool maximizing, bool ma
                 maxEval = currEval;
                 bm = mve;
             }
+            // alpha-beta pruning
+            alpha = std::max(alpha, maxEval);
+            if(alpha >= beta)
+                break;
         }
+        // if loop has ended then depth is about to change
+        // so reset the possible enpassant value
         game->resetEnPassant(game->isWhiteTurn());
+
+        // save the best move
         bestMove->startTileNumb = bm.startTileNumb;
         bestMove->endTileNumb = bm.endTileNumb;
 
@@ -56,8 +63,6 @@ int MinMaxABP::minMax(int depth, int *alpha, int *beta, bool maximizing, bool ma
         int minEval = 0;
         for(auto mve : *moves)
         {
-            if(depth == 1 && mve.startTileNumb == 38 && mve.endTileNumb == 47)
-                int x = 4;
             backUpEPValue();
             makeMove(mve);
             currEval = minMax(depth - 1, alpha, beta, true, maxingColor, bestMove);
@@ -68,9 +73,15 @@ int MinMaxABP::minMax(int depth, int *alpha, int *beta, bool maximizing, bool ma
                 minEval = currEval;
                 bm = mve;
             }
+            // alpha-beta pruning
+            beta = std::min(beta, minEval);
+            if(beta <= alpha)
+                break;
         }
+        // if loop has ended then depth is about to change
+        // so reset the possible enpassant value
         game->resetEnPassant(game->isWhiteTurn());
-
+        // save the best move
         bestMove->startTileNumb = bm.startTileNumb;
         bestMove->endTileNumb = bm.endTileNumb;
 
@@ -81,20 +92,51 @@ int MinMaxABP::minMax(int depth, int *alpha, int *beta, bool maximizing, bool ma
 
 int MinMaxABP::evaluate(bool maxingColor)
 {
+    int eval;
+    switch(evalSchema)
+    {
+    case EvaluationScheme::basic:
+        eval = basicEvaluate(maxingColor);
+        break;
+    case EvaluationScheme::complex:
+        eval = complexEbaluate(maxingColor);
+        break;
+    default:
+        eval = staticEvaluate(maxingColor);
+        break;
+    }
+    return eval;
+}
+
+int MinMaxABP::staticEvaluate(bool maxingColor)
+{
+    // reset the scores
     whiteScore = 0;
     blackScore = 0;
+
     for(int i = 0; i < 16; i++)
     {
+        // accumulate the white score if the piece has not been captured
         if(!(*whitePieces)[i]->isCaptured())
-        {
             whiteScore += (*whitePieces)[i]->getBasePowerValue();
-        }
+
+        // accumulate the black score if the piece has not been captured
         if(!(*blackPieces)[i]->isCaptured())
-        {
             blackScore += (*blackPieces)[i]->getBasePowerValue();
-        }
     }
     return (whiteScore - blackScore);
+}
+
+int MinMaxABP::basicEvaluate(bool maxingColor)
+{
+    // TODO
+    return 0;
+}
+
+int MinMaxABP::complexEbaluate(bool maxingColor)
+{
+    // TODO
+    return 0;
 }
 
 void MinMaxABP::makeMove(Move m)

@@ -130,12 +130,12 @@ void BoardTile::setMoved()
 void BoardTile::aiMove()
 {
     int depth = 4;
-    int alpha = 0;
-    int beta = 0;
+    int alpha = INT_MIN;
+    int beta = INT_MAX;
     bool maximizing = false;
     bool maximizingColor = false;
     Move bestMove{0 , 0};
-    mmabp->minMax(depth, &alpha, &beta, maximizing, maximizingColor, &bestMove);
+    mmabp->minMax(depth, alpha, beta, maximizing, maximizingColor, &bestMove);
     // TODO: make move
     int rowStart = bestMove.startTileNumb / 8;
     int colStart = bestMove.startTileNumb % 8;
@@ -378,6 +378,9 @@ void BoardTile::enforceRules(bool playerMove)
         game->scanForCheck();
         // check if the game is over
         this->checkGameEnd();
+
+        // force the app to update before calling the AI
+        qApp->processEvents();
 
         // call AI
         if(playerMove)
