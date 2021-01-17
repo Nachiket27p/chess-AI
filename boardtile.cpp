@@ -150,11 +150,18 @@ void BoardTile::aiMove()
     game->selectedTile = grid[rowStart][colStart];
     // set the selected to 2 to indicate the piece has already been selected
     game->selected = 2;
+
+    // force the app to update before calling the AI
+    qApp->processEvents();
+
     // call the enforce rules function to perform the move
     grid[rowEnd][colEnd]->enforceRules(false);
 
-    // // update the board
-    // dbw->updateBlackValues();
+    // reset the atttack boards
+    game->updateAttackBoard();
+    game->rotateTurn();
+    game->updateAttackBoard();
+    game->rotateTurn();
 }
 
 void BoardTile::checkGameEnd()
@@ -356,7 +363,7 @@ void BoardTile::enforceRules(bool playerMove)
                     delete piece;
                     QString pp = "";
                     // if it is a player move let them choose otherwise, auto select the queen
-                    if(playerMove)
+                    if (playerMove)
                     {
                         PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
                     }
@@ -378,7 +385,7 @@ void BoardTile::enforceRules(bool playerMove)
                     delete piece;
                     QString pp = "";
                     // if it is a player move let them choose otherwise, auto select the queen
-                    if(playerMove)
+                    if (playerMove)
                     {
                         PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
                     }
@@ -406,6 +413,11 @@ void BoardTile::enforceRules(bool playerMove)
 
         // call AI
         if (playerMove)
+        {
             aiMove();
+            // force the app to update before calling the AI
+            qApp->processEvents();
+        }
+
     }
 }

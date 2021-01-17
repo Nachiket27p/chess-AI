@@ -45,12 +45,12 @@ void Theme::setTheme(themes selection)
         attackRGB[2] = 0;
         break;
     case green:
-        darkBackgroundRGB[0] = 0;
+        darkBackgroundRGB[0] = 20;
         darkBackgroundRGB[1] = 100;
-        darkBackgroundRGB[2] = 0;
-        lightBackgroundRGB[0] = 250;
-        lightBackgroundRGB[1] = 250;
-        lightBackgroundRGB[2] = 250;
+        darkBackgroundRGB[2] = 30;
+        lightBackgroundRGB[0] = 220;
+        lightBackgroundRGB[1] = 220;
+        lightBackgroundRGB[2] = 220;
         hoverBackgroundRGB[0] = 150;
         hoverBackgroundRGB[1] = 150;
         hoverBackgroundRGB[2] = 150;

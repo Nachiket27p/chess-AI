@@ -130,10 +130,49 @@ int MinMaxABP::staticEvaluate()
 
 int MinMaxABP::basicEvaluate()
 {
+    // reset the scores
+    whiteScore = 0;
+    blackScore = 0;
+
+    Piece* currPiece;
+    int r, c;
+
     for (int i = 0; i < 16; i++)
     {
+        // accumulate the white score if the piece has not been captured
+        currPiece = (*whitePieces)[i];
+        if (!currPiece->isCaptured())
+        {
+            whiteScore += currPiece->getBasePowerValue();
+            r = currPiece->getRow();
+            c = currPiece->getCol();
+
+            if(game->blackAttacks[r][c] == SINGLE_DEFENDER)
+                whiteScore -= (currPiece->getBasePowerValue()/2);
+            else if(game->blackAttacks[r][c] > SINGLE_DEFENDER)
+                whiteScore += game->whiteAttacks[r][c];
+            else
+                whiteScore += (game->whiteAttacks[r][c] - game->blackAttacks[r][c]);
+        }
+
+        // accumulate the black score if the piece has not been captured
+        currPiece = (*blackPieces)[i];
+        if (!currPiece->isCaptured())
+        {
+            blackScore += currPiece->getBasePowerValue();
+            r = currPiece->getRow();
+            c = currPiece->getCol();
+
+            if(game->whiteAttacks[r][c] == SINGLE_DEFENDER)
+                blackScore -= (currPiece->getBasePowerValue()/2);
+            else if(game->whiteAttacks[r][c] > SINGLE_DEFENDER)
+                blackScore += game->blackAttacks[r][c];
+            else
+                blackScore += (game->blackAttacks[r][c] - game->whiteAttacks[r][c]);
+
+        }
     }
-    return 0;
+    return (whiteScore - blackScore);
 }
 
 int MinMaxABP::complexEbaluate()
@@ -209,7 +248,7 @@ void MinMaxABP::unmakeMove(Move m)
             {
                 (*grid)[row][col+3]->setPiece();
             }
-            else if(bUpM->backUpAdditionalPiece->getIndex() == 16)
+            else if(bUpM->backUpAdditionalPiece->getIndex() == 15)
             {
                 (*grid)[row][col-2]->setPiece();
             }

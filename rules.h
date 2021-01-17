@@ -7,6 +7,20 @@
 #include "piece.h"
 #include "utils.h"
 
+// #define ATTACK_OCCUPIED 2
+// #define ATTACK_BEHIND -1
+// #define ATTACK_SPECIAL -77
+
+#define ATTACK_KING_BEHIND -16
+#define SINGLE_DEFENDER ((-ATTACK_KING_BEHIND) + 1)
+//#define ATTACK_PAWN 1
+//#define ATTACK_ROOK 3
+//#define ATTACK_BISHOP 9
+//#define ATTACK_KNIGHT 27
+//#define ATTACK_QUEEN 81
+//#define ATTACK_KING 241
+
+
 // used to indicate if there is a check mate
 // or a stale mate.
 #define CHECK_MATE 100

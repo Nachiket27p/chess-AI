@@ -87,11 +87,11 @@ typedef struct move
 } Move;
 
 // used to set default power values for the pieces
-static std::unordered_map<char, int> basePowerValues = {{pawnID, 1},
-                                                        {rookID, 5},
-                                                        {knightID, 3},
-                                                        {bishopID, 3},
-                                                        {queenID, 9},
-                                                        {kingID, 90}};
+static std::unordered_map<char, int> basePowerValues = {{pawnID, 10},
+                                                        {rookID, 50},
+                                                        {knightID, 30},
+                                                        {bishopID, 30},
+                                                        {queenID, 90},
+                                                        {kingID, 900}};
 
 #endif // UTILS_H

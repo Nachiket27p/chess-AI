@@ -37,7 +37,7 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 
     game = game->getInstance();
     bool maximizingColor = false;
-    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, false);
+    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, false, EvaluationScheme::basic);
 }
 
 Board::~Board()
@@ -133,7 +133,7 @@ void Board::initializeGrid(BoardTile *grid[8][8], Board *_parent)
 {
     // create the theme object and set it to the default.
     currentTheme = new Theme();
-    currentTheme->setTheme(Theme::def);
+    currentTheme->setTheme(Theme::green);
 
     // create the borders around the grid
     for (int i = 0; i < 4; i++)
