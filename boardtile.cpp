@@ -132,7 +132,7 @@ void BoardTile::setMoved()
 
 void BoardTile::aiMove()
 {
-    int depth = 3;
+    int depth = 4;
     int alpha = INT_MIN;
     int beta = INT_MAX;
     bool maximizing = false;
@@ -418,6 +418,5 @@ void BoardTile::enforceRules(bool playerMove)
             // force the app to update before calling the AI
             qApp->processEvents();
         }
-
     }
 }

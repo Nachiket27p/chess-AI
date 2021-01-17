@@ -134,7 +134,7 @@ int MinMaxABP::basicEvaluate()
     whiteScore = 0;
     blackScore = 0;
 
-    Piece* currPiece;
+    Piece *currPiece;
     int r, c;
 
     for (int i = 0; i < 16; i++)
@@ -147,9 +147,9 @@ int MinMaxABP::basicEvaluate()
             r = currPiece->getRow();
             c = currPiece->getCol();
 
-            if(game->blackAttacks[r][c] == SINGLE_DEFENDER)
-                whiteScore -= (currPiece->getBasePowerValue()/2);
-            else if(game->blackAttacks[r][c] > SINGLE_DEFENDER)
+            if (game->blackAttacks[r][c] == SINGLE_DEFENDER)
+                whiteScore -= (currPiece->getBasePowerValue() / 2);
+            else if (game->blackAttacks[r][c] > SINGLE_DEFENDER)
                 whiteScore += game->whiteAttacks[r][c];
             else
                 whiteScore += (game->whiteAttacks[r][c] - game->blackAttacks[r][c]);
@@ -163,13 +163,12 @@ int MinMaxABP::basicEvaluate()
             r = currPiece->getRow();
             c = currPiece->getCol();
 
-            if(game->whiteAttacks[r][c] == SINGLE_DEFENDER)
-                blackScore -= (currPiece->getBasePowerValue()/2);
-            else if(game->whiteAttacks[r][c] > SINGLE_DEFENDER)
+            if (game->whiteAttacks[r][c] == SINGLE_DEFENDER)
+                blackScore -= (currPiece->getBasePowerValue() / 2);
+            else if (game->whiteAttacks[r][c] > SINGLE_DEFENDER)
                 blackScore += game->blackAttacks[r][c];
             else
                 blackScore += (game->blackAttacks[r][c] - game->whiteAttacks[r][c]);
-
         }
     }
     return (whiteScore - blackScore);
@@ -242,15 +241,15 @@ void MinMaxABP::unmakeMove(Move m)
         // if the additional piece is a rook then a castle was performed
         // based on the rook index determine if it was a queen side
         // or king side castle. Reset d1/d8 or f1/f8.
-        if(bUpM->backUpAdditionalPiece->getPieceSymbol() == rookID)
+        if (bUpM->backUpAdditionalPiece->getPieceSymbol() == rookID)
         {
-            if(bUpM->backUpAdditionalPiece->getIndex() == 8)
+            if (bUpM->backUpAdditionalPiece->getIndex() == 8)
             {
-                (*grid)[row][col+3]->setPiece();
+                (*grid)[row][col + 3]->setPiece();
             }
-            else if(bUpM->backUpAdditionalPiece->getIndex() == 15)
+            else if (bUpM->backUpAdditionalPiece->getIndex() == 15)
             {
-                (*grid)[row][col-2]->setPiece();
+                (*grid)[row][col - 2]->setPiece();
             }
         }
 
@@ -313,9 +312,6 @@ void MinMaxABP::simulateMove(Move m)
     startTile->removePiece();
     // mark the piece as being moved
     endTile->setMoved();
-    // display the piece on the new position and unhighlight other tiles
-    // unhilight the unselected tiles
-    game->unhighlightTiles();
     // reset the valid moves index to 0 so the validMoves array does not
     // need to be cleared
     game->resetVmIdx();

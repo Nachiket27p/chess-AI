@@ -55,7 +55,7 @@ include CMakeFiles/chess-AI_autogen.dir/progress.make
 
 CMakeFiles/chess-AI_autogen:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC and UIC for target chess-AI"
-	/usr/bin/cmake -E cmake_autogen /home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI_autogen.dir/AutogenInfo.json Debug
+	/usr/bin/cmake -E cmake_autogen /home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles/chess-AI_autogen.dir/AutogenInfo.json Release
 
 chess-AI_autogen: CMakeFiles/chess-AI_autogen
 chess-AI_autogen: CMakeFiles/chess-AI_autogen.dir/build.make

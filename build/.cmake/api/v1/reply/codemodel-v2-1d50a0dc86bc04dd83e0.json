@@ -19,7 +19,7 @@
 					]
 				}
 			],
-			"name" : "Debug",
+			"name" : "Release",
 			"projects" : 
 			[
 				{
@@ -40,14 +40,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "chess-AI::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-chess-AI-Debug-822aefeb0b5319e4feca.json",
+					"jsonFile" : "target-chess-AI-Release-065e99838ef099f8e064.json",
 					"name" : "chess-AI",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "chess-AI_autogen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-chess-AI_autogen-Debug-caf7719c8e02278f6310.json",
+					"jsonFile" : "target-chess-AI_autogen-Release-caf7719c8e02278f6310.json",
 					"name" : "chess-AI_autogen",
 					"projectIndex" : 0
 				}

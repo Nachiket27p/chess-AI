@@ -610,18 +610,6 @@ bool Rules::enPassant(int tileNumb)
     // if it's white turn then check the white enpassant flags
     if (turn)
     {
-        // whiteEPL and whiteEPR contrin the tile number of the
-        // pawn next to the one being checked.
-        //        if (whiteEPL == (tileNumb - 1))
-        //        {
-        //            validMoves[vmIdx++] = tileNumb - 8 - 1;
-        //            ok = true;
-        //        }
-        //        if (whiteEPR == (tileNumb + 1))
-        //        {
-        //            validMoves[vmIdx++] = tileNumb - 8 + 1;
-        //            ok = true;
-        //        }
         if (whiteEP == (tileNumb - 1))
         {
             validMoves[vmIdx++] = tileNumb - 8 - 1;
@@ -635,16 +623,6 @@ bool Rules::enPassant(int tileNumb)
     }
     else
     {
-        //        if (blackEPL == (tileNumb + 1))
-        //        {
-        //            validMoves[vmIdx++] = tileNumb + 8 + 1;
-        //            ok = true;
-        //        }
-        //        if (blackEPR == (tileNumb - 1))
-        //        {
-        //            validMoves[vmIdx++] = tileNumb + 8 - 1;
-        //            ok = true;
-        //        }
         if (blackEP == (tileNumb + 1))
         {
             validMoves[vmIdx++] = tileNumb + 8 + 1;
@@ -716,14 +694,6 @@ void Rules::canEnPassant(BoardTile *tile)
         if (((col + 1) < 8) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
             (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
         {
-            //            if (turn)
-            //            {
-            //                whiteEPL = tile->getTileNumber();
-            //            }
-            //            else
-            //            {
-            //                blackEPR = tile->getTileNumber();
-            //            }
             if (turn)
             {
                 whiteEP = tile->getTileNumber();
@@ -742,14 +712,6 @@ void Rules::canEnPassant(BoardTile *tile)
         if (((col - 1) >= 0) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
             (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
         {
-            //            if (turn)
-            //            {
-            //                whiteEPR = tile->getTileNumber();
-            //            }
-            //            else
-            //            {
-            //                blackEPL = tile->getTileNumber();
-            //            }
             if (turn)
             {
                 whiteEP = tile->getTileNumber();
@@ -777,17 +739,6 @@ void Rules::canEnPassant(BoardTile *tile)
 
 void Rules::resetEnPassant(bool whiteTurn)
 {
-    // reset enpassant flags
-    //    if (whiteTurn)
-    //    {
-    //        whiteEPL = 0;
-    //        whiteEPR = 0;
-    //    }
-    //    else
-    //    {
-    //        blackEPL = 0;
-    //        blackEPR = 0;
-    //    }
     if (whiteTurn)
     {
         whiteEP = 0;
@@ -800,23 +751,6 @@ void Rules::resetEnPassant(bool whiteTurn)
 
 int Rules::getEPTileNumber(bool whiteTurn)
 {
-    // returns the appropriate enpassant flag
-    // if it ends with 'L' - Left side
-    // if it ends with 'R' - Right side
-    //    if (whiteTurn)
-    //    {
-    //        if (whiteEPL)
-    //            return whiteEPL;
-    //        if (whiteEPR)
-    //            return whiteEPR;
-    //    }
-    //    else
-    //    {
-    //        if (blackEPL)
-    //            return blackEPL;
-    //        if (blackEPR)
-    //            return blackEPR;
-    //    }
     if (whiteTurn)
     {
         if (whiteEP > 0)
@@ -1093,7 +1027,7 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
             // only back track if a piece was detected in front of the king
             if (grid[row][col]->getPieceSymbol() == kingID)
             {
-                if(behind)
+                if (behind)
                 {
                     int dval = ATTACK_KING_BEHIND;
                     int oldAV = savedAttackValues.top();
@@ -1148,17 +1082,12 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
                     {
                         whiteKingDefenders.push_back(grid[nrow][ncol]->getPiece());
                     }
-
-//                    // update the row and column and continue
-//                    row += dr;
-//                    col += dc;
-//                    continue;
                     return;
                 }
                 else
                 {
                     int prevVal = savedAttackValues.top();
-                    if(prevVal >= 0)
+                    if (prevVal >= 0)
                         attackGrid[row][col] = prevVal + 1;
                     else
                         attackGrid[row][col] = 1;
@@ -1166,8 +1095,8 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
                     row += dr;
                     col += dc;
                     // once the king was reached and backtracking is complete then return
-                    if(WITHIN_BOUNDS(row) && WITHIN_BOUNDS(col) &&
-                            !grid[row][col]->isOccupied())
+                    if (WITHIN_BOUNDS(row) && WITHIN_BOUNDS(col) &&
+                        !grid[row][col]->isOccupied())
                     {
                         attackGrid[row][col]++;
                     }

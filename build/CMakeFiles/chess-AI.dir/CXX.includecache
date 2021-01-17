@@ -6,18 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp
-board.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/board.h
-ui_board.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/ui_board.h
-utils.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
-rules.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
-minmaxabp.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.h
-
 /home/nachiket/Documents/qt5-workspace/chess-AI/board.h
 QMainWindow
 -
@@ -83,10 +71,6 @@ piece.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
 utils.h
 /home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
-
-/home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp
-theme.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
 
 /home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
 QString
@@ -3498,14 +3482,6 @@ QtGui/qwindowdefs_win.h
 QtGui/qtguiglobal.h
 -
 
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QAction
-qaction.h
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qaction.h
-
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QApplication
-qapplication.h
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qapplication.h
-
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QCommonStyle
 qcommonstyle.h
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qcommonstyle.h
@@ -3526,10 +3502,6 @@ qmainwindow.h
 qmenu.h
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qmenu.h
 
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMenuBar
-qmenubar.h
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qmenubar.h
-
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMessageBox
 qmessagebox.h
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qmessagebox.h
@@ -3537,10 +3509,6 @@ qmessagebox.h
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QScrollerProperties
 qscrollerproperties.h
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/qscrollerproperties.h
-
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/QStatusBar
-qstatusbar.h
-/usr/include/x86_64-linux-gnu/qt5/QtWidgets/qstatusbar.h
 
 /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QWidget
 qwidget.h
@@ -4964,23 +4932,5 @@ QtWidgets/qaction.h
 QtWidgets/qtwidgetsglobal.h
 -
 QtWidgets/qdialog.h
--
-
-chess-AI_autogen/include/ui_board.h
-QtCore/QVariant
--
-QtWidgets/QAction
--
-QtWidgets/QApplication
--
-QtWidgets/QMainWindow
--
-QtWidgets/QMenu
--
-QtWidgets/QMenuBar
--
-QtWidgets/QStatusBar
--
-QtWidgets/QWidget
 -
 
