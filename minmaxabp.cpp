@@ -13,7 +13,7 @@ MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piec
     maxingColor = _maxingColor;
 }
 
-int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, Move *bestMove)
+int MinMaxABP::minMax(int depth, int alpha, int beta, bool maximizing, Move *bestMove)
 {
     if (depth == 0 || game->hasGameEnded(maxingColor))
     {
@@ -45,9 +45,9 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, Move *b
                 bm = mve;
             }
             // alpha-beta pruning
-//            alpha = std::max(alpha, maxEval);
-//            if (alpha >= beta)
-//                break;
+            alpha = std::max(alpha, currEval);
+            if (alpha >= beta)
+                break;
         }
         // if loop has ended then depth is about to change
         // so reset the possible enpassant value
@@ -75,9 +75,9 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, Move *b
                 bm = mve;
             }
             // alpha-beta pruning
-//            beta = std::min(beta, minEval);
-//            if (beta <= alpha)
-//                break;
+            beta = std::min(beta, currEval);
+            if (beta <= alpha)
+                break;
         }
         // if loop has ended then depth is about to change
         // so reset the possible enpassant value

@@ -41,7 +41,7 @@ private:
 
 public:
     MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema = EvaluationScheme::def);
-    int minMax(int depth, int &alpha, int &beta, bool maximizing, Move *bestMove);
+    int minMax(int depth, int alpha, int beta, bool maximizing, Move *bestMove);
 
 private:
     /**

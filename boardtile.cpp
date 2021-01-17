@@ -355,7 +355,16 @@ void BoardTile::enforceRules(bool playerMove)
                     int pIndex = this->getPiece()->getIndex();
                     delete piece;
                     QString pp = "";
-                    PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
+                    // if it is a player move let them choose otherwise, auto select the queen
+                    if(playerMove)
+                    {
+                        PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
+                    }
+                    else
+                    {
+                        pp = queenIconName;
+                    }
+
                     this->piece = new Piece(false, queenID, this->tileNumber, row, col, pIndex, blackPath + pp);
                     this->displayTile();
                 }
@@ -368,7 +377,15 @@ void BoardTile::enforceRules(bool playerMove)
                     int pIndex = this->getPiece()->getIndex();
                     delete piece;
                     QString pp = "";
-                    PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
+                    // if it is a player move let them choose otherwise, auto select the queen
+                    if(playerMove)
+                    {
+                        PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
+                    }
+                    else
+                    {
+                        pp = queenIconName;
+                    }
                     this->piece = new Piece(true, queenID, this->tileNumber, row, col, pIndex, whitePath + pp);
                     this->displayTile();
                 }

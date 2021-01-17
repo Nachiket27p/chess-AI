@@ -1170,6 +1170,12 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
                 }
                 else
                 {
+                    int prevVal = savedAttackValues.top();
+                    if(prevVal >= 0)
+                        attackGrid[row][col] = prevVal + 1;
+                    else
+                        attackGrid[row][col] = 1;
+
                     row += dr;
                     col += dc;
                     // once the king was reached and backtracking is complete then return
@@ -1305,7 +1311,7 @@ inline void Rules::locateCheckSource()
     }
 
     // check west
-    if (scanCheckHelper(row, col - 1, -1, 0, &checkPiece) && (checkPiece != '\0') &&
+    if (scanCheckHelper(row, col - 1, 0, -1, &checkPiece) && (checkPiece != '\0') &&
         ((checkPiece == rookID) || (checkPiece == queenID) || (checkPiece == pawnID)))
     {
         setCheck();
