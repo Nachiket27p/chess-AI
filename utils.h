@@ -29,16 +29,16 @@ static const QString kingIconName = "king.svg";
 // This method of locating the resources means the images of the pieces must always
 // be in build directory.
 static std::string currExecPath = get_current_dir_name();
-static const QString whitePath = QString::fromUtf8((currExecPath + "/pieces/white/").c_str());
-static const QString blackPath = QString::fromUtf8((currExecPath + "/pieces/black/").c_str());
+static const QString whitePath = QString::fromUtf8((currExecPath + "/resources/pieces/white/").c_str());
+static const QString blackPath = QString::fromUtf8((currExecPath + "/resources/pieces/black/").c_str());
 // this function checks if the pieces directory exists to inform user on problem
 static bool isPiecesDirExist()
 {
     struct stat buffer;
-    return (stat((currExecPath + "/pieces").c_str(), &buffer) == 0);
+    return (stat((currExecPath + "/resources").c_str(), &buffer) == 0);
 }
 // message to display if the pieces directory cannot be found.
-static const QString noPiecesDirMsg = "Could not locate \"pieces\" directory. Pleace make sure the \"pieces\" directory and it's contents are in the root directory of the program.";
+static const QString noPiecesDirMsg = "Could not locate \"resources\" directory. Pleace make sure the \"resources\" directory and it's contents are in the root directory of the program.";
 // Base string for the path location of the svg images of the pieces
 // static const QString whitePath = "/home/nachiket/Documents/qt5-workspace/chess-AI/pieces/white/";
 // static const QString blackPath = "/home/nachiket/Documents/qt5-workspace/chess-AI/pieces/black/";

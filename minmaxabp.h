@@ -37,10 +37,11 @@ private:
     std::stack<backUpMove *> backUpMoves;
     std::stack<int> backUpEP;
     EvaluationScheme evalSchema;
+    bool maxingColor;
 
 public:
-    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, EvaluationScheme _evalSchema = EvaluationScheme::def);
-    int minMax(int depth, int &alpha, int &beta, bool maximizing, bool maxingColor, Move *bestMove);
+    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema = EvaluationScheme::def);
+    int minMax(int depth, int &alpha, int &beta, bool maximizing, Move *bestMove);
 
 private:
     /**
@@ -97,11 +98,8 @@ private:
      * which keeps track of all the moves made in a LIFO fashion.
      * 
      * @param m The move which is being undone.
-     * @param turn Used to determine which sides turn it is
-     *                  to help determine the correct side to which
-     *                  the move needs to be undone.
      */
-    void unmakeMove(Move m, bool turn);
+    void unmakeMove(Move m);
 
     /**
      * @brief Simulates the move on the actual game board which was

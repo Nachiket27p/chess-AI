@@ -132,13 +132,12 @@ void BoardTile::setMoved()
 
 void BoardTile::aiMove()
 {
-    int depth = 4;
+    int depth = 3;
     int alpha = INT_MIN;
     int beta = INT_MAX;
     bool maximizing = false;
-    bool maximizingColor = false;
     Move bestMove{0, 0};
-    mmabp->minMax(depth, alpha, beta, maximizing, maximizingColor, &bestMove);
+    mmabp->minMax(depth, alpha, beta, maximizing, &bestMove);
     // TODO: make move
     int rowStart = bestMove.startTileNumb / 8;
     int colStart = bestMove.startTileNumb % 8;

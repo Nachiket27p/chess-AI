@@ -5,9 +5,16 @@
 
 // #define ATTACK_OCCUPIED 2
 // #define ATTACK_BEHIND -1
+// #define ATTACK_SPECIAL -77
+
 #define ATTACK_KING_BEHIND -16
 #define SINGLE_DEFENDER ((-ATTACK_KING_BEHIND) + 1)
-// #define ATTACK_SPECIAL -77
+#define ATTACK_PAWN 1
+#define ATTACK_ROOK 3
+#define ATTACK_BISHOP 9
+#define ATTACK_KNIGHT 27
+#define ATTACK_QUEEN 81
+#define ATTACK_KING 241
 
 // debug window
 extern DebugWindow *dbw;
@@ -569,38 +576,40 @@ bool Rules::canCastle(BoardTile *tile)
     {
         bool cc = true;
         // king side castle, the rook must not have moved
-        if (!rookK->hasMoved())
+        if (!rookK->isCaptured() && !rookK->hasMoved())
         {
-            for (int dc = -1; dc >= -3; dc--)
-            {
-                if (grid[kRow][kCol + dc]->isOccupied() ||
-                    (attackBoard[kRow][kCol + dc] == 1))
-                {
-                    cc = false;
-                }
-            }
-            if (cc)
-            {
-                validMoves[vmIdx++] = tile->getTileNumber() - 2;
-                ok = true;
-            }
-        }
-
-        // queen side castle, the rook must not have move
-        if (!rookQ->hasMoved())
-        {
-            cc = true;
             for (int dc = 1; dc <= 2; dc++)
             {
                 if (grid[kRow][kCol + dc]->isOccupied() ||
                     (attackBoard[kRow][kCol + dc] == 1))
                 {
                     cc = false;
+                    break;
                 }
             }
             if (cc)
             {
                 validMoves[vmIdx++] = tile->getTileNumber() + 2;
+                ok = true;
+            }
+        }
+
+        // queen side castle, the rook must not have move
+        if (!rookQ->isCaptured() && !rookQ->hasMoved())
+        {
+            cc = true;
+            for (int dc = -1; dc >= -3; dc--)
+            {
+                if (grid[kRow][kCol + dc]->isOccupied() ||
+                    (attackBoard[kRow][kCol + dc] == 1))
+                {
+                    cc = false;
+                    break;
+                }
+            }
+            if (cc)
+            {
+                validMoves[vmIdx++] = tile->getTileNumber() - 2;
                 ok = true;
             }
         }
@@ -1095,64 +1104,82 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
         if (grid[row][col]->isOccupied())
         {
             // only back track if a piece was detected in front of the king
-            if ((grid[row][col]->getPieceSymbol() == kingID) && behind)
+            if (grid[row][col]->getPieceSymbol() == kingID)
             {
-                int dval = ATTACK_KING_BEHIND;
-                int oldAV = savedAttackValues.top();
-                savedAttackValues.pop();
-                if (oldAV > 0)
+                if(behind)
                 {
-                    attackGrid[row][col] = oldAV;
-                }
-                else
-                {
-                    attackGrid[row][col] = dval--;
-                }
-                // move in the opposite direction and populate attack grid
-                int nrow = row - dr;
-                int ncol = col - dc;
-                while (behind)
-                {
-                    // pop the previous values off the stack.
-                    oldAV = savedAttackValues.top();
+                    int dval = ATTACK_KING_BEHIND;
+                    int oldAV = savedAttackValues.top();
                     savedAttackValues.pop();
-
-                    if (grid[nrow][ncol]->isOccupied())
-                    {
-                        dval--;
-                    }
-                    // if the old value is positive then restore it
-                    // because it means there is a direct attack on this tile.
                     if (oldAV > 0)
                     {
-                        attackGrid[nrow][ncol] = oldAV;
+                        attackGrid[row][col] = oldAV;
                     }
                     else
                     {
-                        attackGrid[nrow][ncol] = 0;
+                        attackGrid[row][col] = dval;
+                    }
+                    // move in the opposite direction and populate attack grid
+                    int nrow = row - dr;
+                    int ncol = col - dc;
+                    while (behind)
+                    {
+                        // pop the previous values off the stack.
+                        oldAV = savedAttackValues.top();
+                        savedAttackValues.pop();
+
+                        if (grid[nrow][ncol]->isOccupied())
+                        {
+                            dval--;
+                        }
+                        // if the old value is positive then restore it
+                        // because it means there is a direct attack on this tile.
+                        if (oldAV > 0)
+                        {
+                            attackGrid[nrow][ncol] = oldAV;
+                        }
+                        else
+                        {
+                            attackGrid[nrow][ncol] = 0;
+                        }
+
+                        nrow -= dr;
+                        ncol -= dc;
+                        behind--;
                     }
 
-                    nrow -= dr;
-                    ncol -= dc;
-                    behind--;
-                }
+                    nrow += dr;
+                    ncol += dc;
+                    // update the attack value to be positive
+                    attackGrid[nrow][ncol] = abs(dval);
+                    // save the piece in the list of kings defenders
+                    if (pieceColor)
+                    {
+                        blackKingDefenders.push_back(grid[nrow][ncol]->getPiece());
+                    }
+                    else
+                    {
+                        whiteKingDefenders.push_back(grid[nrow][ncol]->getPiece());
+                    }
 
-                // update the attack value to be positive
-                attackGrid[nrow][ncol] = abs(dval);
-                // save the piece in the list of kings defenders
-                if (pieceColor)
-                {
-                    blackKingDefenders.push_back(grid[nrow][ncol]->getPiece());
+//                    // update the row and column and continue
+//                    row += dr;
+//                    col += dc;
+//                    continue;
+                    return;
                 }
                 else
                 {
-                    whiteKingDefenders.push_back(grid[nrow][ncol]->getPiece());
+                    row += dr;
+                    col += dc;
+                    // once the king was reached and backtracking is complete then return
+                    if(WITHIN_BOUNDS(row) && WITHIN_BOUNDS(col) &&
+                            !grid[row][col]->isOccupied())
+                    {
+                        attackGrid[row][col]++;
+                    }
+                    return;
                 }
-
-                // update the row and column and continue
-                row += dr;
-                col += dc;
-                continue;
             }
 
             // if the piece is same color then no need to
@@ -1164,8 +1191,10 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
             }
             else
             {
-                if (savedAttackValues.top() >= 0)
+                if (!behind && (savedAttackValues.top() >= 0))
                     attackGrid[row][col]++;
+
+                // increment row and column to next position
                 row += dr;
                 col += dc;
 
@@ -1177,6 +1206,9 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
                 else
                     behind = 1;
 
+                // continue because there is the potential
+                // of the king being behind this piece and if
+                // so then it needs to.
                 continue;
             }
         }
@@ -1186,9 +1218,13 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
         // needs to be incremented incase the king is located and
         // backtracking is required.
         if (behind)
+        {
             behind++;
-
-        attackGrid[row][col]++;
+        }
+        else
+        {
+            attackGrid[row][col]++;
+        }
 
         row += dr;
         col += dc;

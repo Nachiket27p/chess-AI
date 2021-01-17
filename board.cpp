@@ -20,6 +20,12 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
     // initialize the ui.
     ui->setupUi(this);
 
+    QPixmap bkgnd("resources/board.jpg");
+    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, bkgnd);
+    this->setPalette(palette);
+
     // create the pieces.
     createPieces(whitePieces, blackPieces);
 
@@ -30,7 +36,8 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
     initializePiecesOnGrid(grid, whitePieces, blackPieces);
 
     game = game->getInstance();
-    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, false);
+    bool maximizingColor = false;
+    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, false);
 }
 
 Board::~Board()
@@ -133,17 +140,17 @@ void Board::initializeGrid(BoardTile *grid[8][8], Board *_parent)
         borders[i] = new Border(_parent);
 
     // set size of each side of grid border
-    borders[0]->setOutline(100, 70, false);
-    borders[1]->setOutline(100, 880, false);
-    borders[2]->setOutline(100, 70, true);
-    borders[3]->setOutline(910, 70, true);
+    borders[0]->setOutline(45, 82, false);
+    borders[1]->setOutline(45, 892, false);
+    borders[2]->setOutline(45, 82, true);
+    borders[3]->setOutline(855, 82, true);
 
     // create the board tiles which will represent the board and hold the pieces.
     int tnum = 0;
-    int y = 80;
+    int y = 92;
     for (int row = 0; row < 8; row++) // set up tiles
     {
-        int x = 110;
+        int x = 55;
         for (int col = 0; col < 8; col++)
         {
             grid[row][col] = new BoardTile(row, col, tnum++, ((row + col) & 1), _parent);

@@ -40,7 +40,7 @@ public:
     {
         if (Board->objectName().isEmpty())
             Board->setObjectName(QString::fromUtf8("Board"));
-        Board->resize(1000, 1000);
+        Board->resize(910, 955);
         actionNew_Game = new QAction(Board);
         actionNew_Game->setObjectName(QString::fromUtf8("actionNew_Game"));
         actionExit = new QAction(Board);
@@ -58,7 +58,7 @@ public:
         Board->setCentralWidget(centralwidget);
         menubar = new QMenuBar(Board);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1000, 31));
+        menubar->setGeometry(QRect(0, 0, 910, 31));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName(QString::fromUtf8("menuFile"));
         menuTheme = new QMenu(menubar);

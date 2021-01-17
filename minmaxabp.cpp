@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, EvaluationScheme _evalSchema)
+MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema)
 {
     game = game->getInstance();
     grid = _grid;
@@ -10,9 +10,10 @@ MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piec
     blackPieces = _blackPieces;
     color = _color;
     evalSchema = _evalSchema;
+    maxingColor = _maxingColor;
 }
 
-int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool maxingColor, Move *bestMove)
+int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, Move *bestMove)
 {
     if (depth == 0 || game->hasGameEnded(maxingColor))
     {
@@ -24,19 +25,19 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
     game->getMoves(moves);
 
     // select a random move as the best move first
-    //    srand(time(NULL));
+    srand(time(NULL));
     int randChoice = rand() % moves->size();
     Move bm = (*moves)[randChoice];
 
     if (maximizing)
     {
-        int maxEval = 0;
+        int maxEval = INT_MIN;
         for (auto mve : *moves)
         {
             backUpEPValue();
             makeMove(mve);
-            currEval = minMax(depth - 1, alpha, beta, false, maxingColor, bestMove);
-            unmakeMove(mve, maximizing);
+            currEval = minMax(depth - 1, alpha, beta, false, bestMove);
+            unmakeMove(mve);
             restoreEPValue();
             if (currEval > maxEval)
             {
@@ -44,9 +45,9 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
                 bm = mve;
             }
             // alpha-beta pruning
-            alpha = std::max(alpha, maxEval);
-            if (alpha >= beta)
-                break;
+//            alpha = std::max(alpha, maxEval);
+//            if (alpha >= beta)
+//                break;
         }
         // if loop has ended then depth is about to change
         // so reset the possible enpassant value
@@ -60,13 +61,13 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
     }
     else
     {
-        int minEval = 0;
+        int minEval = INT_MAX;
         for (auto mve : *moves)
         {
             backUpEPValue();
             makeMove(mve);
-            currEval = minMax(depth - 1, alpha, beta, true, maxingColor, bestMove);
-            unmakeMove(mve, maximizing);
+            currEval = minMax(depth - 1, alpha, beta, true, bestMove);
+            unmakeMove(mve);
             restoreEPValue();
             if (currEval < minEval)
             {
@@ -74,9 +75,9 @@ int MinMaxABP::minMax(int depth, int &alpha, int &beta, bool maximizing, bool ma
                 bm = mve;
             }
             // alpha-beta pruning
-            beta = std::min(beta, minEval);
-            if (beta <= alpha)
-                break;
+//            beta = std::min(beta, minEval);
+//            if (beta <= alpha)
+//                break;
         }
         // if loop has ended then depth is about to change
         // so reset the possible enpassant value
@@ -104,6 +105,7 @@ int MinMaxABP::evaluate()
         eval = staticEvaluate();
         break;
     }
+
     return eval;
 }
 
@@ -146,7 +148,7 @@ void MinMaxABP::makeMove(Move m)
     simulateMove(m);
 }
 
-void MinMaxABP::unmakeMove(Move m, bool turn)
+void MinMaxABP::unmakeMove(Move m)
 {
     // TODO: use backup pieces to restore the gird/board to the state before
     //          the move performed by the makeMove function.
@@ -193,9 +195,26 @@ void MinMaxABP::unmakeMove(Move m, bool turn)
 
     if (bUpM->backUpAdditionalPiece != nullptr)
     {
+        index = bUpM->backUpAdditionalPiece->getIndex();
         row = bUpM->backUpAdditionalPiece->getRow();
         col = bUpM->backUpAdditionalPiece->getCol();
         whiteTurn = bUpM->backUpAdditionalPiece->isWhite();
+
+        // if the additional piece is a rook then a castle was performed
+        // based on the rook index determine if it was a queen side
+        // or king side castle. Reset d1/d8 or f1/f8.
+        if(bUpM->backUpAdditionalPiece->getPieceSymbol() == rookID)
+        {
+            if(bUpM->backUpAdditionalPiece->getIndex() == 8)
+            {
+                (*grid)[row][col+3]->setPiece();
+            }
+            else if(bUpM->backUpAdditionalPiece->getIndex() == 16)
+            {
+                (*grid)[row][col-2]->setPiece();
+            }
+        }
+
         delete (*grid)[row][col]->getPiece();
         (*grid)[row][col]->setPiece(bUpM->backUpAdditionalPiece);
         if (whiteTurn)
