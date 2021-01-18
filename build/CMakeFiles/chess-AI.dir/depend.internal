@@ -960,8 +960,11 @@ CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o
  ../board.h
  ../boardtile.h
  ../debugwindow.h
+ ../minmaxabp.h
  ../piece.h
+ ../rules.h
  ../theme.h
+ ../utils.h
  /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/EWIEGA46WW/moc_board.cpp
  /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/EWIEGA46WW/moc_debugwindow.cpp
  /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp
@@ -1295,6 +1298,7 @@ CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLayout
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMessageBox
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QScrollerProperties
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QWidget
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgets
@@ -1575,8 +1579,11 @@ CMakeFiles/chess-AI.dir/main.cpp.o
  /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.h
  /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.h
  /home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp
+ /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.h
  /home/nachiket/Documents/qt5-workspace/chess-AI/piece.h
+ /home/nachiket/Documents/qt5-workspace/chess-AI/rules.h
  /home/nachiket/Documents/qt5-workspace/chess-AI/theme.h
+ /home/nachiket/Documents/qt5-workspace/chess-AI/utils.h
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QEvent
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QList
  /usr/include/x86_64-linux-gnu/qt5/QtCore/QMargins
@@ -1908,6 +1915,7 @@ CMakeFiles/chess-AI.dir/main.cpp.o
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLayout
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow
+ /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMessageBox
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QScrollerProperties
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QWidget
  /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgets

@@ -878,6 +878,7 @@ void Rules::getMoves(std::vector<Move> *moves)
         pcs = whitePieces;
     }
     int backUpVmIdx = vmIdx;
+    vmIdx = 0;
     // go through all the pieces
     for (int i = 0; i < 16; i++)
     {

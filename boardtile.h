@@ -164,7 +164,7 @@ public:
      * @brief Used to call the AI min-max alpha-beta pruning algorithm.
      * 
      */
-    static void aiMove();
+    static void aiMove(bool maximizing);
 };
 
 #endif // BOARDTILE_H

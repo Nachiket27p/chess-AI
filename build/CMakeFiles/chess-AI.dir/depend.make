@@ -959,8 +959,11 @@ CMakeFiles/chess-AI.dir/boardtile.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWid
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../board.h
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../boardtile.h
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../debugwindow.h
+CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../minmaxabp.h
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../piece.h
+CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../rules.h
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../theme.h
+CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: ../utils.h
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: chess-AI_autogen/EWIEGA46WW/moc_board.cpp
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: chess-AI_autogen/EWIEGA46WW/moc_debugwindow.cpp
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: chess-AI_autogen/mocs_compilation.cpp
@@ -1294,6 +1297,7 @@ CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x8
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLayout
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow
+CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMessageBox
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QScrollerProperties
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QWidget
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgets
@@ -1574,8 +1578,11 @@ CMakeFiles/chess-AI.dir/main.cpp.o: ../board.h
 CMakeFiles/chess-AI.dir/main.cpp.o: ../boardtile.h
 CMakeFiles/chess-AI.dir/main.cpp.o: ../debugwindow.h
 CMakeFiles/chess-AI.dir/main.cpp.o: ../main.cpp
+CMakeFiles/chess-AI.dir/main.cpp.o: ../minmaxabp.h
 CMakeFiles/chess-AI.dir/main.cpp.o: ../piece.h
+CMakeFiles/chess-AI.dir/main.cpp.o: ../rules.h
 CMakeFiles/chess-AI.dir/main.cpp.o: ../theme.h
+CMakeFiles/chess-AI.dir/main.cpp.o: ../utils.h
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtCore/QEvent
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtCore/QList
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtCore/QMargins
@@ -1907,6 +1914,7 @@ CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLabel
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QLayout
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMainWindow
+CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QMessageBox
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QScrollerProperties
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QWidget
 CMakeFiles/chess-AI.dir/main.cpp.o: /usr/include/x86_64-linux-gnu/qt5/QtWidgets/QtWidgets

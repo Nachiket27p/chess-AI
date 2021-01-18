@@ -130,12 +130,11 @@ void BoardTile::setMoved()
         piece->setMoved();
 }
 
-void BoardTile::aiMove()
+void BoardTile::aiMove(bool maximizing)
 {
     int depth = 4;
     int alpha = INT_MIN;
     int beta = INT_MAX;
-    bool maximizing = false;
     Move bestMove{0, 0};
     mmabp->minMax(depth, alpha, beta, maximizing, &bestMove);
     // TODO: make move
@@ -150,9 +149,6 @@ void BoardTile::aiMove()
     game->selectedTile = grid[rowStart][colStart];
     // set the selected to 2 to indicate the piece has already been selected
     game->selected = 2;
-
-    // force the app to update before calling the AI
-    qApp->processEvents();
 
     // call the enforce rules function to perform the move
     grid[rowEnd][colEnd]->enforceRules(false);
@@ -414,9 +410,8 @@ void BoardTile::enforceRules(bool playerMove)
         // call AI
         if (playerMove)
         {
-            aiMove();
-            // force the app to update before calling the AI
-            qApp->processEvents();
+            aiMove(mmabp->getMaxingColor());
         }
+
     }
 }

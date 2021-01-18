@@ -6,6 +6,7 @@
 #include "boardtile.h"
 #include "piece.h"
 #include "debugwindow.h"
+#include "minmaxabp.h"
 
 /**
  * @brief This class is used to construct the border around the board.
@@ -109,6 +110,8 @@ private:
      */
     bool saveGame(BoardTile *tiles);
 
+    void aiPlay(bool maximizing, int depth, MinMaxABP* ai);
+
 public slots:
     /**
      * @brief This slot is public as it is used to reset the game when a check or stale mate is detected.
@@ -133,6 +136,7 @@ private slots:
      * @brief This slot is triggered when the green theme is selected.
      */
     void on_actionGreen_triggered();
+    void on_actionAI_vs_AI_triggered();
 };
 
 #endif // BOARD_H

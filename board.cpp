@@ -2,7 +2,6 @@
 #include "ui_board.h"
 #include "utils.h"
 #include "rules.h"
-#include "minmaxabp.h"
 
 // keeps track of the black and white pieces on the board
 Piece *whitePieces[16];
@@ -37,7 +36,7 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 
     game = game->getInstance();
     bool maximizingColor = false;
-    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, false, EvaluationScheme::basic);
+    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, EvaluationScheme::def);
 }
 
 Board::~Board()
@@ -262,4 +261,50 @@ void Board::on_actionWood_triggered()
 void Board::on_actionGreen_triggered()
 {
     updateTheme(Theme::green);
+}
+
+void Board::aiPlay(bool maximizing, int depth, MinMaxABP* ai)
+{
+    int alpha = INT_MIN;
+    int beta = INT_MAX;
+    Move bestMove{0, 0};
+    ai->minMax(depth, alpha, beta, maximizing, &bestMove);
+    // TODO: make move
+    int rowStart = bestMove.startTileNumb / 8;
+    int colStart = bestMove.startTileNumb % 8;
+    int rowEnd = bestMove.endTileNumb / 8;
+    int colEnd = bestMove.endTileNumb % 8;
+
+    // call the canMove to populate the valid moves in validMoves array
+    game->canMove(grid[rowStart][colStart]);
+    // set the selected tile in the game object
+    game->selectedTile = grid[rowStart][colStart];
+    // set the selected to 2 to indicate the piece has already been selected
+    game->selected = 2;
+
+    // call the enforce rules function to perform the move
+    grid[rowEnd][colEnd]->enforceRules(false);
+
+    // reset the atttack boards
+    game->updateAttackBoard();
+    game->rotateTurn();
+    game->updateAttackBoard();
+    game->rotateTurn();
+}
+
+void Board::on_actionAI_vs_AI_triggered()
+{
+    bool ai1Color = true;
+    bool ai2Color = !ai1Color;
+    int ai1Depth = 3;
+    int ai2Depth = 3;
+
+    MinMaxABP* ai1 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai1Color, EvaluationScheme::basic);
+    MinMaxABP* ai2 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai2Color, EvaluationScheme::def);
+
+    while(true)
+    {
+        aiPlay(ai1Color, ai1Depth, ai1);
+        aiPlay(ai2Color, ai2Depth, ai2);
+    }
 }

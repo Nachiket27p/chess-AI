@@ -29,6 +29,7 @@
     </property>
     <addaction name="actionNew_Game"/>
     <addaction name="actionExit"/>
+    <addaction name="actionAI_vs_AI"/>
    </widget>
    <widget class="QMenu" name="menuTheme">
     <property name="title">
@@ -77,6 +78,11 @@
   <action name="actionGreen">
    <property name="text">
     <string>Green</string>
+   </property>
+  </action>
+  <action name="actionAI_vs_AI">
+   <property name="text">
+    <string>AI vs. AI</string>
    </property>
   </action>
  </widget>

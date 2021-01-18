@@ -2,24 +2,25 @@
 #include <stdlib.h>
 #include <time.h>
 
-MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema)
+//MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema)
+MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, EvaluationScheme _evalSchema)
 {
     game = game->getInstance();
     grid = _grid;
     whitePieces = _whitePieces;
     blackPieces = _blackPieces;
-    color = _color;
+//    color = _color;
     evalSchema = _evalSchema;
     maxingColor = _maxingColor;
 }
 
 int MinMaxABP::minMax(int depth, int alpha, int beta, bool maximizing, Move *bestMove)
 {
-    if (depth == 0 || game->hasGameEnded(maxingColor))
-    {
+//    debugCount++;
+//    if(debugCount == 158564)
+//        int d = 0;
+    if (depth == 0 || game->hasGameEnded(maximizing))
         return evaluate();
-    }
-
     int currEval;
     std::vector<Move> *moves = new std::vector<Move>();
     game->getMoves(moves);
@@ -144,15 +145,18 @@ int MinMaxABP::basicEvaluate()
         if (!currPiece->isCaptured())
         {
             whiteScore += currPiece->getBasePowerValue();
-            r = currPiece->getRow();
-            c = currPiece->getCol();
+            if (i != 12)
+            {
+                r = currPiece->getRow();
+                c = currPiece->getCol();
 
-            if (game->blackAttacks[r][c] == SINGLE_DEFENDER)
-                whiteScore -= (currPiece->getBasePowerValue() / 2);
-            else if (game->blackAttacks[r][c] > SINGLE_DEFENDER)
-                whiteScore += game->whiteAttacks[r][c];
-            else
-                whiteScore += (game->whiteAttacks[r][c] - game->blackAttacks[r][c]);
+                if (game->blackAttacks[r][c] == SINGLE_DEFENDER)
+                    whiteScore -= (currPiece->getBasePowerValue() / 2);
+                else if (game->blackAttacks[r][c] > SINGLE_DEFENDER)
+                    whiteScore += game->whiteAttacks[r][c];
+                else
+                    whiteScore += (game->whiteAttacks[r][c] - game->blackAttacks[r][c]);
+            }
         }
 
         // accumulate the black score if the piece has not been captured
@@ -160,15 +164,18 @@ int MinMaxABP::basicEvaluate()
         if (!currPiece->isCaptured())
         {
             blackScore += currPiece->getBasePowerValue();
-            r = currPiece->getRow();
-            c = currPiece->getCol();
+            if (i != 12)
+            {
+                r = currPiece->getRow();
+                c = currPiece->getCol();
 
-            if (game->whiteAttacks[r][c] == SINGLE_DEFENDER)
-                blackScore -= (currPiece->getBasePowerValue() / 2);
-            else if (game->whiteAttacks[r][c] > SINGLE_DEFENDER)
-                blackScore += game->blackAttacks[r][c];
-            else
-                blackScore += (game->blackAttacks[r][c] - game->whiteAttacks[r][c]);
+                if (game->whiteAttacks[r][c] == SINGLE_DEFENDER)
+                    blackScore -= (currPiece->getBasePowerValue() / 2);
+                else if (game->whiteAttacks[r][c] > SINGLE_DEFENDER)
+                    blackScore += game->blackAttacks[r][c];
+                else
+                    blackScore += (game->blackAttacks[r][c] - game->whiteAttacks[r][c]);
+            }
         }
     }
     return (whiteScore - blackScore);

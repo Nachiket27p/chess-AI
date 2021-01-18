@@ -27,11 +27,12 @@ typedef struct backUpMove
 class MinMaxABP
 {
 private:
+//    int debugCount = 0;
     BoardTile *(*grid)[8][8];
     Piece *(*whitePieces)[16];
     Piece *(*blackPieces)[16];
     Rules *game;
-    bool color;
+//    bool color;
     int blackScore;
     int whiteScore;
     std::stack<backUpMove *> backUpMoves;
@@ -40,9 +41,10 @@ private:
     bool maxingColor;
 
 public:
-    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema = EvaluationScheme::def);
+//    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema = EvaluationScheme::def);
+    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, EvaluationScheme _evalSchema = EvaluationScheme::def);
     int minMax(int depth, int alpha, int beta, bool maximizing, Move *bestMove);
-
+    bool getMaxingColor() { return maxingColor; }
 private:
     /**
      * @brief Used to evaluate the board state to determine
