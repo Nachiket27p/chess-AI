@@ -1,0 +1,4 @@
+Before any optimizations.
+real    5m22.208s
+user    3m45.708s
+sys     1m19.647s

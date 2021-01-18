@@ -36,7 +36,7 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 
     game = game->getInstance();
     bool maximizingColor = false;
-    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, EvaluationScheme::def);
+    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, EvaluationScheme::basic);
 }
 
 Board::~Board()
@@ -263,7 +263,7 @@ void Board::on_actionGreen_triggered()
     updateTheme(Theme::green);
 }
 
-void Board::aiPlay(bool maximizing, int depth, MinMaxABP* ai)
+void Board::aiPlay(bool maximizing, int depth, MinMaxABP *ai)
 {
     int alpha = INT_MIN;
     int beta = INT_MAX;
@@ -299,10 +299,10 @@ void Board::on_actionAI_vs_AI_triggered()
     int ai1Depth = 3;
     int ai2Depth = 3;
 
-    MinMaxABP* ai1 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai1Color, EvaluationScheme::basic);
-    MinMaxABP* ai2 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai2Color, EvaluationScheme::def);
+    MinMaxABP *ai1 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai1Color, EvaluationScheme::basic);
+    MinMaxABP *ai2 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai2Color, EvaluationScheme::def);
 
-    while(true)
+    while (true)
     {
         aiPlay(ai1Color, ai1Depth, ai1);
         aiPlay(ai2Color, ai2Depth, ai2);

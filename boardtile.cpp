@@ -132,7 +132,7 @@ void BoardTile::setMoved()
 
 void BoardTile::aiMove(bool maximizing)
 {
-    int depth = 4;
+    int depth = 5;
     int alpha = INT_MIN;
     int beta = INT_MAX;
     Move bestMove{0, 0};
@@ -412,6 +412,5 @@ void BoardTile::enforceRules(bool playerMove)
         {
             aiMove(mmabp->getMaxingColor());
         }
-
     }
 }
