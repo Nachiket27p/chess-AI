@@ -27,7 +27,7 @@
 
 // the 2d array of BoardTiles which represents the chess board.
 // Declared and defined in board.cpp
-extern BoardTile *grid[8][8];
+extern BoardTile *grid[8 * 8];
 
 // used to keep track of pieces whcih are causing a check.
 typedef struct checkPos
@@ -78,8 +78,8 @@ private:
 
 public:
     // two boards white and black
-    int whiteAttacks[8][8] = {};
-    int blackAttacks[8][8] = {};
+    int whiteAttacks[8 * 8] = {};
+    int blackAttacks[8 * 8] = {};
 
     // used to keep track which tile is selected
     int selected;
@@ -100,18 +100,18 @@ private:
         {
             // the only places the pieces can attack at the beginning
             // is the 1 row beyond the pawns
-            whiteAttacks[5][col] = 1;
-            blackAttacks[2][col] = 1;
+            whiteAttacks[idx(5, col)] = 1;
+            blackAttacks[idx(2, col)] = 1;
         }
         // knight attack positions
-        whiteAttacks[5][0]++;
-        whiteAttacks[5][2]++;
-        whiteAttacks[5][5]++;
-        whiteAttacks[5][7]++;
-        blackAttacks[2][0]++;
-        blackAttacks[2][2]++;
-        blackAttacks[2][5]++;
-        blackAttacks[2][7]++;
+        whiteAttacks[idx(5, 0)]++;
+        whiteAttacks[idx(5, 2)]++;
+        whiteAttacks[idx(5, 5)]++;
+        whiteAttacks[idx(5, 7)]++;
+        blackAttacks[idx(2, 0)]++;
+        blackAttacks[idx(2, 2)]++;
+        blackAttacks[idx(2, 5)]++;
+        blackAttacks[idx(2, 7)]++;
 
         whiteEP = 0;
         blackEP = 0;
@@ -332,7 +332,7 @@ private:
      * @param tileNumber The unique tile id which gets added to the valid list of moves.
      * @param ok Only gets set to 'true' if a valid move is added to the list of valid moves.
      */
-    inline void addValidMoveKing(uint row, uint col, uint tileNumber, int attackBoard[8][8], bool *ok);
+    inline void addValidMoveKing(uint row, uint col, uint tileNumber, int attackBoard[8 * 8], bool *ok);
 
     /**
      * @brief This helper function is used to update the corresponding attack board
@@ -342,7 +342,7 @@ private:
      * @param attackBoard The 8x8 grid on which a true value is set if a piece can attack that spot.
      * @param pieceColor The color to indicate which sides board to update.
      */
-    inline void updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], bool pieceColor);
+    inline void updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8 * 8], bool pieceColor);
 
     /**
      * @brief Helper function used to computer the attack tile for rook, bishop, and queen.
@@ -354,7 +354,7 @@ private:
      * @param pieceColor If the piece is black or white.
      * @param attackGrid The grid which is being updated.
      */
-    inline void attackeRBQHelper(uint row, uint col, int dr, int dc, bool pieceColor, int attackGrid[8][8]);
+    inline void attackeRBQHelper(uint row, uint col, int dr, int dc, bool pieceColor, int attackGrid[8 * 8]);
 
     /**
      * @brief  Used to find the check source if a check is detected using the arrack grid.

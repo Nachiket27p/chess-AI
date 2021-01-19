@@ -55,12 +55,6 @@ public:
     void checkGameEnd();
 
     /**
-     * @brief Copy constructor.
-     * @param b2 BoardTile which is being copied into this one.
-     */
-    BoardTile(const BoardTile &b);
-
-    /**
      * @brief Set the Piece object.
      * 
      * @param piece The piece object to be placed on this tile.

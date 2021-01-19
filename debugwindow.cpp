@@ -18,15 +18,13 @@ void DebugWindow::updateWhiteValues()
 {
     Rules *rules = Rules::getInstance();
     QString s = "";
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 64; i++)
     {
-        for (int j = 0; j < 8; j++)
-        {
-            int x = rules->whiteAttacks[i][j];
-            s += QString::number(x);
-            s += "         ";
-        }
-        s += "\n\n";
+        int x = rules->whiteAttacks[i];
+        s += QString::number(x);
+        s += "         ";
+        if (!((i + 1) % 8))
+            s += "\n\n";
     }
     ui->whiteAttackTable->setText(s);
 }
@@ -35,15 +33,13 @@ void DebugWindow::updateBlackValues()
 {
     Rules *rules = Rules::getInstance();
     QString s = "";
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 64; i++)
     {
-        for (int j = 0; j < 8; j++)
-        {
-            int x = rules->blackAttacks[i][j];
-            s += QString::number(x);
-            s += "         ";
-        }
-        s += "\n\n";
+        int x = rules->blackAttacks[i];
+        s += QString::number(x);
+        s += "         ";
+        if (!((i + 1) % 8))
+            s += "\n\n";
     }
     ui->blackAttackTable->setText(s);
 }

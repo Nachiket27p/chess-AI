@@ -94,4 +94,6 @@ static std::unordered_map<char, uint> basePowerValues = {{pawnID, 10},
                                                          {queenID, 90},
                                                          {kingID, 900}};
 
+#define idx(row, col) (((row)*8) + (col))
+
 #endif // UTILS_H

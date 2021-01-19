@@ -88,7 +88,7 @@ private:
      * @param grid The grid of tiles representing the board.
      * @param _parent The parent widget to this board.
      */
-    void initializeGrid(BoardTile *grid[8][8], Board *_parent);
+    void initializeGrid(BoardTile *grid[8 * 8], Board *_parent);
 
     /**
      * @brief Initializes the pieces on the board. This function sould be called after
@@ -96,7 +96,7 @@ private:
      *
      * @param grid The grid of tiles representing the board.
      */
-    void initializePiecesOnGrid(BoardTile *grid[8][8], Piece *whitePieces[16], Piece *blackPieces[16]);
+    void initializePiecesOnGrid(BoardTile *grid[8 * 8], Piece *whitePieces[16], Piece *blackPieces[16]);
 
     /**
      * @brief Used to reset the pieces back to their original positions on the board.
@@ -110,7 +110,7 @@ private:
      */
     bool saveGame(BoardTile *tiles);
 
-    void aiPlay(bool maximizing, uint depth, MinMaxABP *ai);
+    void aiPlay(bool maximizing, MinMaxABP *ai);
 
 public slots:
     /**

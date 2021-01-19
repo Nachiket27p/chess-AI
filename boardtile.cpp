@@ -134,21 +134,16 @@ void BoardTile::aiMove(bool maximizing)
 {
     Move bestMove{0, 0};
     mmabp->minMax(maximizing, &bestMove);
-    // TODO: make move
-    uint rowStart = bestMove.startTileNumb / 8;
-    uint colStart = bestMove.startTileNumb % 8;
-    uint rowEnd = bestMove.endTileNumb / 8;
-    uint colEnd = bestMove.endTileNumb % 8;
 
     // call the canMove to populate the valid moves in validMoves array
-    game->canMove(grid[rowStart][colStart]);
+    game->canMove(grid[bestMove.startTileNumb]);
     // set the selected tile in the game object
-    game->selectedTile = grid[rowStart][colStart];
+    game->selectedTile = grid[bestMove.endTileNumb];
     // set the selected to 2 to indicate the piece has already been selected
     game->selected = 2;
 
     // call the enforce rules function to perform the move
-    grid[rowEnd][colEnd]->enforceRules(false);
+    grid[bestMove.endTileNumb]->enforceRules(false);
 
     // reset the atttack boards
     game->updateAttackBoard();
@@ -179,15 +174,6 @@ void BoardTile::checkGameEnd()
         // reset game
         b->on_actionNew_Game_triggered();
     }
-}
-
-BoardTile::BoardTile(const BoardTile &b)
-{
-    this->row = b.row;
-    this->col = b.col;
-    this->tileNumber = b.tileNumber;
-    this->isDarkTile = b.isDarkTile;
-    this->piece = b.piece;
 }
 
 void BoardTile::enforceRules(bool playerMove)
@@ -309,20 +295,20 @@ void BoardTile::enforceRules(bool playerMove)
             // Queen side castle
             if ((kingTNBefore - tileNumber) == 2)
             {
-                grid[row][col - 2]->setMoved();
-                grid[row][col + 1]->setPiece(grid[row][col - 2]->getPiece());
-                grid[row][col - 2]->removePiece();
-                grid[row][col - 2]->displayTile();
-                grid[row][col + 1]->displayTile();
+                grid[tileNumber - 2]->setMoved();
+                grid[tileNumber + 1]->setPiece(grid[tileNumber - 2]->getPiece());
+                grid[tileNumber - 2]->removePiece();
+                grid[tileNumber - 2]->displayTile();
+                grid[tileNumber + 1]->displayTile();
             }
             // king side castle
             else if ((tileNumber - kingTNBefore) == 2)
             {
-                grid[row][col + 1]->setMoved();
-                grid[row][col - 1]->setPiece(grid[row][col + 1]->getPiece());
-                grid[row][col + 1]->removePiece();
-                grid[row][col + 1]->displayTile();
-                grid[row][col - 1]->displayTile();
+                grid[tileNumber + 1]->setMoved();
+                grid[tileNumber - 1]->setPiece(grid[tileNumber + 1]->getPiece());
+                grid[tileNumber + 1]->removePiece();
+                grid[tileNumber + 1]->displayTile();
+                grid[tileNumber - 1]->displayTile();
             }
         }
 
@@ -335,11 +321,9 @@ void BoardTile::enforceRules(bool playerMove)
             if (ep)
             {
                 uint tn = game->getEPTileNumber(!game->isWhiteTurn());
-                uint r = tn / 8;
-                uint c = tn % 8;
-                grid[r][c]->getPiece()->setCaptured();
-                grid[r][c]->removePiece();
-                grid[r][c]->displayTile();
+                grid[tn]->getPiece()->setCaptured();
+                grid[tn]->removePiece();
+                grid[tn]->displayTile();
             }
         }
 

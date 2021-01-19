@@ -28,7 +28,7 @@ class MinMaxABP
 {
 private:
     //    int debugCount = 0;
-    BoardTile *(*grid)[8][8];
+    BoardTile *(*grid)[8*8];
     Piece *(*whitePieces)[16];
     Piece *(*blackPieces)[16];
     Rules *game;
@@ -43,7 +43,7 @@ private:
 
 public:
     //    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema = EvaluationScheme::def);
-    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema);
+    MinMaxABP(BoardTile *(*_grid)[8*8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema);
     void minMax(bool maximizing, Move *bestMove);
     bool getMaxingColor() { return maxingColor; }
     ~MinMaxABP();

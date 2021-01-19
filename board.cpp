@@ -8,7 +8,7 @@ Piece *whitePieces[16];
 Piece *blackPieces[16];
 
 // 2d array of BoadrTile objects which represent the board
-BoardTile *grid[8][8];
+BoardTile *grid[8 * 8];
 
 Theme *currentTheme;
 Rules *game;
@@ -129,7 +129,7 @@ void Border::setOutline(int x, int y, bool vertical)
     setStyleSheet(QString("QLabel {background-color: rgb(45, 45, 45); color: black;}"));
 }
 
-void Board::initializeGrid(BoardTile *grid[8][8], Board *_parent)
+void Board::initializeGrid(BoardTile *grid[8 * 8], Board *_parent)
 {
     // create the theme object and set it to the default.
     currentTheme = new Theme();
@@ -148,35 +148,35 @@ void Board::initializeGrid(BoardTile *grid[8][8], Board *_parent)
     // create the board tiles which will represent the board and hold the pieces.
     int tnum = 0;
     int y = 92;
+    int gridIdx = 0;
     for (int row = 0; row < 8; row++) // set up tiles
     {
         int x = 55;
         for (int col = 0; col < 8; col++)
         {
-            grid[row][col] = new BoardTile(row, col, tnum++, ((row + col) & 1), _parent);
-            grid[row][col]->setGeometry(x, y, 100, 100);
-            grid[row][col]->displayTileColor();
+            grid[gridIdx] = new BoardTile(row, col, tnum++, ((row + col) & 1), _parent);
+            grid[gridIdx]->setGeometry(x, y, 100, 100);
+            grid[gridIdx]->displayTileColor();
             x += 100;
+            gridIdx++;
         }
         y += 100;
     }
 }
 
-void Board::initializePiecesOnGrid(BoardTile *grid[8][8], Piece *whitePieces[16], Piece *blackPieces[16])
+void Board::initializePiecesOnGrid(BoardTile *grid[8 * 8], Piece *whitePieces[16], Piece *blackPieces[16])
 {
-    int wr, wc, br, bc;
+    int blackGridIdx, whiteGridIdx;
     // use the pieces to initialize the grid.
     for (int i = 0; i < 16; i++)
     {
-        wr = whitePieces[i]->getRow();
-        wc = whitePieces[i]->getCol();
-        br = blackPieces[i]->getRow();
-        bc = blackPieces[i]->getCol();
+        blackGridIdx = blackPieces[i]->getTileNumber();
+        whiteGridIdx = whitePieces[i]->getTileNumber();
 
-        grid[wr][wc]->setPiece(whitePieces[i]);
-        grid[wr][wc]->displayTile();
-        grid[br][bc]->setPiece(blackPieces[i]);
-        grid[br][bc]->displayTile();
+        grid[whiteGridIdx]->setPiece(whitePieces[i]);
+        grid[whiteGridIdx]->displayTile();
+        grid[blackGridIdx]->setPiece(blackPieces[i]);
+        grid[blackGridIdx]->displayTile();
     }
 }
 
@@ -219,13 +219,10 @@ void Board::on_actionNew_Game_triggered()
         //        isWhiteTurn = true;
         game->setTurn(true);
 
-        for (uint i = 0; i < 8; i++)
+        for (uint gridIdx = 0; gridIdx < 64; gridIdx++)
         {
-            for (uint j = 0; j < 8; j++)
-            {
-                grid[i][j]->removePiece();
-                grid[i][j]->displayTile();
-            }
+            grid[gridIdx]->removePiece();
+            grid[gridIdx]->displayTile();
         }
         resetPieces();
         initializePiecesOnGrid(grid, whitePieces, blackPieces);
@@ -238,9 +235,8 @@ void Board::updateTheme(Theme::themes selection)
     currentTheme->setTheme(selection);
 
     // update all the tiles on the board by going through the 8x8 BoardTile array
-    for (uint i = 0; i < 8; i++)
-        for (uint j = 0; j < 8; j++)
-            grid[i][j]->displayTile();
+    for (uint gridIdx = 0; gridIdx < 64; gridIdx++)
+        grid[gridIdx]->displayTile();
 }
 
 void Board::on_actionExit_triggered()
@@ -264,24 +260,18 @@ void Board::on_actionGreen_triggered()
     updateTheme(Theme::green);
 }
 
-void Board::aiPlay(bool maximizing, uint depth, MinMaxABP *ai)
+void Board::aiPlay(bool maximizing, MinMaxABP *ai)
 {
 
     Move bestMove{0, 0};
     ai->minMax(maximizing, &bestMove);
-    // TODO: make move
-    uint rowStart = bestMove.startTileNumb / 8;
-    uint colStart = bestMove.startTileNumb % 8;
-    uint rowEnd = bestMove.endTileNumb / 8;
-    uint colEnd = bestMove.endTileNumb % 8;
-
     // set the selected tile in the game object
-    game->selectedTile = grid[rowStart][colStart];
+    game->selectedTile = grid[bestMove.startTileNumb];
     // set the selected to 2 to indicate the piece has already been selected
     game->selected = 2;
 
     // call the enforce rules function to perform the move
-    grid[rowEnd][colEnd]->enforceRules(false);
+    grid[bestMove.endTileNumb]->enforceRules(false);
 
     // reset the atttack boards
     game->updateAttackBoard();
@@ -302,7 +292,7 @@ void Board::on_actionAI_vs_AI_triggered()
 
     while (true)
     {
-        aiPlay(ai1Color, ai1Depth, ai1);
-        aiPlay(ai2Color, ai2Depth, ai2);
+        aiPlay(ai1Color, ai1);
+        aiPlay(ai2Color, ai2);
     }
 }

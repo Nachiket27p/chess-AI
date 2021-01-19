@@ -1,22 +1,9 @@
-Before any optimizations
-    AI vs AI
-    AI1 - default heuristic depth 4
-    AI2 - default heuristic depth 4
-real    0m32.201s
-user    0m23.037s
-sys     0m7.642s
+2d array
+real    0m39.121s
+user    0m27.414s
+sys     0m9.755s
 
-After changing ints to unsigned int for faster bound checking
-    AI vs AI
-    AI1 - default heuristic depth 4
-    AI2 - default heuristic depth 4
-real    0m30.973s
-user    0m21.404s
-sys     0m8.035s
-
-After modifying the order in which moves placed in the moves array
-    AI vs AI
-    AI1 - default heuristic depth 4
-    AI2 - default heuristic depth 4
-
-
+1d array as 2d array
+real    0m32.387s
+user    0m23.016s
+sys     0m7.912s

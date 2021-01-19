@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-//MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema)
-MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema)
+MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8*8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema)
 {
     game = game->getInstance();
     grid = _grid;
@@ -153,27 +152,24 @@ int MinMaxABP::basicEvaluate()
     whiteScore = 0;
     blackScore = 0;
 
-    Piece *currPiece;
-    int r, c;
-
+    Piece* currPiece;
+    uint attackIdx;
     for (int i = 0; i < 16; i++)
     {
         // accumulate the white score if the piece has not been captured
         currPiece = (*whitePieces)[i];
         if (!currPiece->isCaptured())
         {
+            attackIdx = currPiece->getTileNumber();
             whiteScore += currPiece->getBasePowerValue();
             if (i != 12)
             {
-                r = currPiece->getRow();
-                c = currPiece->getCol();
-
-                if (game->blackAttacks[r][c] == SINGLE_DEFENDER)
+                if (game->blackAttacks[attackIdx] == SINGLE_DEFENDER)
                     whiteScore -= (currPiece->getBasePowerValue() / 2);
-                else if (game->blackAttacks[r][c] > SINGLE_DEFENDER)
-                    whiteScore += game->whiteAttacks[r][c];
+                else if (game->blackAttacks[attackIdx] > SINGLE_DEFENDER)
+                    whiteScore += game->whiteAttacks[attackIdx];
                 else
-                    whiteScore += (game->whiteAttacks[r][c] - game->blackAttacks[r][c]);
+                    whiteScore += (game->whiteAttacks[attackIdx] - game->blackAttacks[attackIdx]);
             }
         }
 
@@ -181,18 +177,16 @@ int MinMaxABP::basicEvaluate()
         currPiece = (*blackPieces)[i];
         if (!currPiece->isCaptured())
         {
+            attackIdx = currPiece->getTileNumber();
             blackScore += currPiece->getBasePowerValue();
             if (i != 12)
             {
-                r = currPiece->getRow();
-                c = currPiece->getCol();
-
-                if (game->whiteAttacks[r][c] == SINGLE_DEFENDER)
+                if (game->whiteAttacks[attackIdx] == SINGLE_DEFENDER)
                     blackScore -= (currPiece->getBasePowerValue() / 2);
-                else if (game->whiteAttacks[r][c] > SINGLE_DEFENDER)
-                    blackScore += game->blackAttacks[r][c];
+                else if (game->whiteAttacks[attackIdx] > SINGLE_DEFENDER)
+                    blackScore += game->blackAttacks[attackIdx];
                 else
-                    blackScore += (game->blackAttacks[r][c] - game->whiteAttacks[r][c]);
+                    blackScore += (game->blackAttacks[attackIdx] - game->whiteAttacks[attackIdx]);
             }
         }
     }
@@ -224,49 +218,48 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
     BackUpMove *bUpM = backUpMoves.top();
     backUpMoves.pop();
 
-    uint row = bUpM->backUpStartPiece->getRow();
-    uint col = bUpM->backUpStartPiece->getCol();
-    uint index = bUpM->backUpStartPiece->getIndex();
+    uint gridIdx = bUpM->backUpStartPiece->getTileNumber();
+
+    uint pieceIdx = bUpM->backUpStartPiece->getIndex();
+
     bool whiteTurn = bUpM->backUpStartPiece->isWhite();
-    delete (*grid)[row][col]->getPiece();
-    (*grid)[row][col]->setPiece(bUpM->backUpStartPiece);
+
+    delete (*grid)[gridIdx]->getPiece();
+
+    (*grid)[gridIdx]->setPiece(bUpM->backUpStartPiece);
 
     if (whiteTurn)
     {
-        (*whitePieces)[index] = bUpM->backUpStartPiece;
+        (*whitePieces)[pieceIdx] = bUpM->backUpStartPiece;
     }
     else
     {
-        (*blackPieces)[index] = bUpM->backUpStartPiece;
+        (*blackPieces)[pieceIdx] = bUpM->backUpStartPiece;
     }
 
     if (bUpM->backUpEndPiece == nullptr)
     {
-        row = m.endTileNumb / 8;
-        col = m.endTileNumb % 8;
-        (*grid)[row][col]->setPiece();
+        (*grid)[m.endTileNumb]->setPiece();
     }
     else
     {
-        index = bUpM->backUpEndPiece->getIndex();
-        row = bUpM->backUpEndPiece->getRow();
-        col = bUpM->backUpEndPiece->getCol();
+        pieceIdx = bUpM->backUpEndPiece->getIndex();
+        gridIdx = bUpM->backUpEndPiece->getTileNumber();
         whiteTurn = bUpM->backUpEndPiece->isWhite();
-        delete (*grid)[row][col]->getPiece();
-        (*grid)[row][col]->setPiece(bUpM->backUpEndPiece);
+        delete (*grid)[gridIdx]->getPiece();
+        (*grid)[gridIdx]->setPiece(bUpM->backUpEndPiece);
 
         // restore the piece in piece arrays
         if (whiteTurn)
-            (*whitePieces)[index] = bUpM->backUpEndPiece;
+            (*whitePieces)[pieceIdx] = bUpM->backUpEndPiece;
         else
-            (*blackPieces)[index] = bUpM->backUpEndPiece;
+            (*blackPieces)[pieceIdx] = bUpM->backUpEndPiece;
     }
 
     if (bUpM->backUpAdditionalPiece != nullptr)
     {
-        index = bUpM->backUpAdditionalPiece->getIndex();
-        row = bUpM->backUpAdditionalPiece->getRow();
-        col = bUpM->backUpAdditionalPiece->getCol();
+        pieceIdx = bUpM->backUpAdditionalPiece->getIndex();
+        gridIdx = bUpM->backUpAdditionalPiece->getTileNumber();
         whiteTurn = bUpM->backUpAdditionalPiece->isWhite();
 
         // if the additional piece is a rook then a castle was performed
@@ -276,20 +269,20 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
         {
             if (bUpM->backUpAdditionalPiece->getIndex() == 8)
             {
-                (*grid)[row][col + 3]->setPiece();
+                (*grid)[gridIdx + 3]->setPiece();
             }
             else if (bUpM->backUpAdditionalPiece->getIndex() == 15)
             {
-                (*grid)[row][col - 2]->setPiece();
+                (*grid)[gridIdx - 2]->setPiece();
             }
         }
 
-        delete (*grid)[row][col]->getPiece();
-        (*grid)[row][col]->setPiece(bUpM->backUpAdditionalPiece);
+        delete (*grid)[gridIdx]->getPiece();
+        (*grid)[gridIdx]->setPiece(bUpM->backUpAdditionalPiece);
         if (whiteTurn)
-            (*whitePieces)[index] = bUpM->backUpAdditionalPiece;
+            (*whitePieces)[pieceIdx] = bUpM->backUpAdditionalPiece;
         else
-            (*blackPieces)[index] = bUpM->backUpAdditionalPiece;
+            (*blackPieces)[pieceIdx] = bUpM->backUpAdditionalPiece;
     }
 
     // rotate turn
@@ -304,13 +297,13 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
 
 void MinMaxABP::simulateMove(Move m)
 {
-    uint rowStart, colStart, rowEnd, colEnd;
-    rowStart = m.startTileNumb / 8;
-    colStart = m.startTileNumb % 8;
-    rowEnd = m.endTileNumb / 8;
-    colEnd = m.endTileNumb % 8;
-    BoardTile *startTile = (*grid)[rowStart][colStart];
-    BoardTile *endTile = (*grid)[rowEnd][colEnd];
+    uint startGridIdx, endGridIdx;
+
+    startGridIdx = m.startTileNumb;
+    endGridIdx = m.endTileNumb;
+
+    BoardTile *startTile = (*grid)[startGridIdx];
+    BoardTile *endTile = (*grid)[endGridIdx];
 
     // back up the start and end tiles for when the move is undone
     BackUpMove *bUpM = new BackUpMove();
@@ -362,21 +355,21 @@ void MinMaxABP::simulateMove(Move m)
         if ((kingTNBefore - endTile->getTileNumber()) == 2)
         {
             // save the rook when the move is undone
-            bUpM->backUpAdditionalPiece = new Piece(*((*grid)[rowEnd][colEnd - 2]->getPiece()));
+            bUpM->backUpAdditionalPiece = new Piece(*((*grid)[endGridIdx - 2]->getPiece()));
             // perform rook movement
-            (*grid)[rowEnd][colEnd - 2]->setMoved();
-            (*grid)[rowEnd][colEnd + 1]->setPiece((*grid)[rowEnd][colEnd - 2]->getPiece());
-            (*grid)[rowEnd][colEnd - 2]->removePiece();
+            (*grid)[endGridIdx - 2]->setMoved();
+            (*grid)[endGridIdx + 1]->setPiece((*grid)[endGridIdx - 2]->getPiece());
+            (*grid)[endGridIdx - 2]->removePiece();
         }
         // king side castle
         else if ((endTile->getTileNumber() - kingTNBefore) == 2)
         {
             // save the rook for when the move is undone
-            bUpM->backUpAdditionalPiece = new Piece(*((*grid)[rowEnd][colEnd + 1]->getPiece()));
+            bUpM->backUpAdditionalPiece = new Piece(*((*grid)[endGridIdx + 1]->getPiece()));
             // perform rook movement
-            (*grid)[rowEnd][colEnd + 1]->setMoved();
-            (*grid)[rowEnd][colEnd - 1]->setPiece((*grid)[rowEnd][colEnd + 1]->getPiece());
-            (*grid)[rowEnd][colEnd + 1]->removePiece();
+            (*grid)[endGridIdx + 1]->setMoved();
+            (*grid)[endGridIdx - 1]->setPiece((*grid)[endGridIdx + 1]->getPiece());
+            (*grid)[endGridIdx + 1]->removePiece();
         }
     }
 
@@ -390,13 +383,11 @@ void MinMaxABP::simulateMove(Move m)
         if (ep)
         {
             uint tn = game->getEPTileNumber(!game->isWhiteTurn());
-            uint r = tn / 8;
-            uint c = tn % 8;
             // save the pawn
-            bUpM->backUpAdditionalPiece = new Piece(*(*grid)[r][c]->getPiece());
+            bUpM->backUpAdditionalPiece = new Piece(*(*grid)[tn]->getPiece());
             // remove the captured pawn
-            (*grid)[r][c]->getPiece()->setCaptured();
-            (*grid)[r][c]->removePiece();
+            (*grid)[tn]->getPiece()->setCaptured();
+            (*grid)[tn]->removePiece();
         }
     }
 
@@ -407,25 +398,25 @@ void MinMaxABP::simulateMove(Move m)
         if (game->isWhiteTurn())
         {
             // if a black pawn has reached the opposite end conver to queen
-            if (rowEnd == 7)
+            if ((endGridIdx/8) == 7)
             {
                 // At the moment just select the queen
                 uint pIndex = endTile->getPiece()->getIndex();
                 delete endTile->getPiece();
                 // TODO: Some heuristic of selectin most powerful pawn conversion
-                endTile->setPiece(new Piece(false, queenID, endTile->getTileNumber(), rowEnd, colEnd, pIndex, blackPath + queenIconName));
+                endTile->setPiece(new Piece(false, queenID, endTile->getTileNumber(), (endGridIdx/8), (endGridIdx%8), pIndex, blackPath + queenIconName));
             }
         }
         else
         {
             // if a white pawn has reached the opposite end conver to queen
-            if (rowEnd == 0)
+            if ((endGridIdx/8) == 0)
             {
                 // At the moment just select the queen
                 uint pIndex = endTile->getPiece()->getIndex();
                 delete endTile->getPiece();
                 // TODO: Some heuristic of selectin most powerful pawn conversion
-                endTile->setPiece(new Piece(true, queenID, endTile->getTileNumber(), rowEnd, colEnd, pIndex, whitePath + queenIconName));
+                endTile->setPiece(new Piece(true, queenID, endTile->getTileNumber(), (endGridIdx/8), (endGridIdx%8), pIndex, whitePath + queenIconName));
             }
         }
     }
