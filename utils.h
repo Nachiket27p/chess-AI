@@ -77,21 +77,21 @@ static const QString noPiecesDirMsg = "Could not locate \"resources\" directory.
     }
 
 // checks if the variable is in bound
-#define WITHIN_BOUNDS(var) (((var) >= 0) && ((var) < 8))
+#define WITHIN_BOUNDS(var) (((var) < 8))
 
 // used to obtain moves from the rules class
 typedef struct move
 {
-    int startTileNumb;
-    int endTileNumb;
+    uint startTileNumb;
+    uint endTileNumb;
 } Move;
 
 // used to set default power values for the pieces
-static std::unordered_map<char, int> basePowerValues = {{pawnID, 10},
-                                                        {rookID, 50},
-                                                        {knightID, 30},
-                                                        {bishopID, 30},
-                                                        {queenID, 90},
-                                                        {kingID, 900}};
+static std::unordered_map<char, uint> basePowerValues = {{pawnID, 10},
+                                                         {rookID, 50},
+                                                         {knightID, 30},
+                                                         {bishopID, 30},
+                                                         {queenID, 90},
+                                                         {kingID, 900}};
 
 #endif // UTILS_H

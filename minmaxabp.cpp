@@ -3,31 +3,49 @@
 #include <time.h>
 
 //MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema)
-MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, EvaluationScheme _evalSchema)
+MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema)
 {
     game = game->getInstance();
     grid = _grid;
     whitePieces = _whitePieces;
     blackPieces = _blackPieces;
-//    color = _color;
+    //    color = _color;
     evalSchema = _evalSchema;
+    searchDepth = depth;
     maxingColor = _maxingColor;
 }
 
-int MinMaxABP::minMax(int depth, int alpha, int beta, bool maximizing, Move *bestMove)
+void MinMaxABP::minMax(bool maximizing, Move *bestMove)
 {
-//    debugCount++;
-//    if(debugCount == 158564)
-//        int d = 0;
+    int alpha = INT_MIN;
+    int beta = INT_MAX;
+    minMaxHelper(searchDepth, alpha, beta, maximizing, bestMove);
+}
+
+MinMaxABP::~MinMaxABP()
+{
+
+
+}
+
+int MinMaxABP::minMaxHelper(uint depth, int alpha, int beta, bool maximizing, Move *bestMove)
+{
+    //    debugCount++;
+    //    if(debugCount == 158564)
+    //        int d = 0;
     if (depth == 0 || game->hasGameEnded(maximizing))
         return evaluate();
+
     int currEval;
     std::vector<Move> *moves = new std::vector<Move>();
     game->getMoves(moves);
 
+    if (moves->size() == 0)
+        return evaluate();
+
     // select a random move as the best move first
     srand(time(NULL));
-    int randChoice = rand() % moves->size();
+    uint randChoice = rand() % moves->size();
     Move bm = (*moves)[randChoice];
 
     if (maximizing)
@@ -36,9 +54,9 @@ int MinMaxABP::minMax(int depth, int alpha, int beta, bool maximizing, Move *bes
         for (auto mve : *moves)
         {
             backUpEPValue();
-            makeMove(mve);
-            currEval = minMax(depth - 1, alpha, beta, false, bestMove);
-            unmakeMove(mve);
+            makeMove(mve, depth, maximizing);
+            currEval = minMaxHelper(depth - 1, alpha, beta, false, bestMove);
+            unmakeMove(mve, depth, maximizing);
             restoreEPValue();
             if (currEval > maxEval)
             {
@@ -66,9 +84,9 @@ int MinMaxABP::minMax(int depth, int alpha, int beta, bool maximizing, Move *bes
         for (auto mve : *moves)
         {
             backUpEPValue();
-            makeMove(mve);
-            currEval = minMax(depth - 1, alpha, beta, true, bestMove);
-            unmakeMove(mve);
+            makeMove(mve, depth, maximizing);
+            currEval = minMaxHelper(depth - 1, alpha, beta, true, bestMove);
+            unmakeMove(mve, depth, maximizing);
             restoreEPValue();
             if (currEval < minEval)
             {
@@ -187,22 +205,28 @@ int MinMaxABP::complexEbaluate()
     return 0;
 }
 
-void MinMaxABP::makeMove(Move m)
+void MinMaxABP::makeMove(Move m, int depth, bool maximizing)
 {
+//    // save the attack grid
+//    if (maximizing)
+//        memcpy(backUPAttackGrids[depth], game->blackAttacks, 8 * 8 * sizeof(int));
+//    else
+//        memcpy(backUPAttackGrids[depth], game->whiteAttacks, 8 * 8 * sizeof(int));
+
     // TODO: potential additional steps to ensre move can be undone correctly
     simulateMove(m);
 }
 
-void MinMaxABP::unmakeMove(Move m)
+void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
 {
     // TODO: use backup pieces to restore the gird/board to the state before
     //          the move performed by the makeMove function.
     BackUpMove *bUpM = backUpMoves.top();
     backUpMoves.pop();
 
-    int row = bUpM->backUpStartPiece->getRow();
-    int col = bUpM->backUpStartPiece->getCol();
-    int index = bUpM->backUpStartPiece->getIndex();
+    uint row = bUpM->backUpStartPiece->getRow();
+    uint col = bUpM->backUpStartPiece->getCol();
+    uint index = bUpM->backUpStartPiece->getIndex();
     bool whiteTurn = bUpM->backUpStartPiece->isWhite();
     delete (*grid)[row][col]->getPiece();
     (*grid)[row][col]->setPiece(bUpM->backUpStartPiece);
@@ -270,11 +294,17 @@ void MinMaxABP::unmakeMove(Move m)
 
     // rotate turn
     game->rotateTurn();
+
+//    // restore attack grid
+//    if (maximizing)
+//        memcpy(game->blackAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
+//    else
+//        memcpy(game->whiteAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
 }
 
 void MinMaxABP::simulateMove(Move m)
 {
-    int rowStart, colStart, rowEnd, colEnd;
+    uint rowStart, colStart, rowEnd, colEnd;
     rowStart = m.startTileNumb / 8;
     colStart = m.startTileNumb % 8;
     rowEnd = m.endTileNumb / 8;
@@ -292,7 +322,7 @@ void MinMaxABP::simulateMove(Move m)
     // used to determine which side to castle and
     // which rook to move.
     char movingPieceSymbol = startTile->getPieceSymbol();
-    int kingTNBefore;
+    uint kingTNBefore;
     // if the piece being moved is the the king the update the king pointer
     if (movingPieceSymbol == kingID)
     {
@@ -339,7 +369,7 @@ void MinMaxABP::simulateMove(Move m)
             (*grid)[rowEnd][colEnd - 2]->removePiece();
         }
         // king side castle
-        else if ((kingTNBefore - endTile->getTileNumber()) == -2)
+        else if ((endTile->getTileNumber() - kingTNBefore) == 2)
         {
             // save the rook for when the move is undone
             bUpM->backUpAdditionalPiece = new Piece(*((*grid)[rowEnd][colEnd + 1]->getPiece()));
@@ -359,9 +389,9 @@ void MinMaxABP::simulateMove(Move m)
         // removing the opposings pawn.
         if (ep)
         {
-            int tn = game->getEPTileNumber(!game->isWhiteTurn());
-            int r = tn / 8;
-            int c = tn % 8;
+            uint tn = game->getEPTileNumber(!game->isWhiteTurn());
+            uint r = tn / 8;
+            uint c = tn % 8;
             // save the pawn
             bUpM->backUpAdditionalPiece = new Piece(*(*grid)[r][c]->getPiece());
             // remove the captured pawn
@@ -380,7 +410,7 @@ void MinMaxABP::simulateMove(Move m)
             if (rowEnd == 7)
             {
                 // At the moment just select the queen
-                int pIndex = endTile->getPiece()->getIndex();
+                uint pIndex = endTile->getPiece()->getIndex();
                 delete endTile->getPiece();
                 // TODO: Some heuristic of selectin most powerful pawn conversion
                 endTile->setPiece(new Piece(false, queenID, endTile->getTileNumber(), rowEnd, colEnd, pIndex, blackPath + queenIconName));
@@ -392,7 +422,7 @@ void MinMaxABP::simulateMove(Move m)
             if (rowEnd == 0)
             {
                 // At the moment just select the queen
-                int pIndex = endTile->getPiece()->getIndex();
+                uint pIndex = endTile->getPiece()->getIndex();
                 delete endTile->getPiece();
                 // TODO: Some heuristic of selectin most powerful pawn conversion
                 endTile->setPiece(new Piece(true, queenID, endTile->getTileNumber(), rowEnd, colEnd, pIndex, whitePath + queenIconName));

@@ -110,7 +110,7 @@ private:
      */
     bool saveGame(BoardTile *tiles);
 
-    void aiPlay(bool maximizing, int depth, MinMaxABP* ai);
+    void aiPlay(bool maximizing, uint depth, MinMaxABP *ai);
 
 public slots:
     /**

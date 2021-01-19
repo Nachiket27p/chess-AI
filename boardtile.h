@@ -9,9 +9,9 @@ class BoardTile : public QLabel
 {
 private:
     // Coordinated on the board.
-    int row, col;
+    uint row, col;
     // Unique grid spot number.
-    int tileNumber;
+    uint tileNumber;
     // Identifies if this tile is a dark tile.
     bool isDarkTile;
     // Pointer to the piece currently on this tile.
@@ -34,7 +34,7 @@ public:
      * @param _isDarkTile Set 'true' if the tile is black, 'false' if tile is light.
      * @param _parent The QWidget object on which this tile will be rendered.
      */
-    BoardTile(int _row, int _col, int _tileNumber, bool _isDarkTile, QWidget *_parent)
+    BoardTile(uint _row, uint _col, uint _tileNumber, bool _isDarkTile, QWidget *_parent)
         : QLabel(_parent), row(_row), col(_col), tileNumber(_tileNumber), isDarkTile(_isDarkTile)
     {
         piece = nullptr;
@@ -97,23 +97,23 @@ public:
     /**
      * @brief Returns the row on which this tile is located (Zero based index).
      * 
-     * @return int Row on the board (Zero based index)
+     * @return uint Row on the board (Zero based index)
      */
-    int getRow() { return row; }
+    uint getRow() { return row; }
 
     /**
      * @brief Returns the column on which this tile is located (Zero based index).
      * 
-     * @return int Column on the board (Zero based index)
+     * @return uint Column on the board (Zero based index)
      */
-    int getCol() { return col; }
+    uint getCol() { return col; }
 
     /**
      * @brief Return the tile number on of this tile.
      * 
-     * @return int Tile number.
+     * @return uint Tile number.
      */
-    int getTileNumber() { return tileNumber; }
+    uint getTileNumber() { return tileNumber; }
 
     /**
      * @brief Determines if the piece on the board is white or black. Note false is
@@ -150,9 +150,9 @@ public:
      * @brief Returns the number of times the piece on this tile has moved,
      * if no piece is on the tile then 0 is returned.
      * 
-     * @return int Number of moved the piece on this tile has made in total.
+     * @return uint Number of moved the piece on this tile has made in total.
      */
-    int hasMoved();
+    uint hasMoved();
 
     /**
      * @brief Set the piece on this tile to moved by calling the setMoved function

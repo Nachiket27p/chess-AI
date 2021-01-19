@@ -111,7 +111,7 @@ void BoardTile::mousePressEvent(QMouseEvent *)
     enforceRules();
 }
 
-int BoardTile::hasMoved()
+uint BoardTile::hasMoved()
 {
     // if there is a piece on this tile call the hasMoved function
     // on the piece object and return the number of moves this piece
@@ -132,16 +132,13 @@ void BoardTile::setMoved()
 
 void BoardTile::aiMove(bool maximizing)
 {
-    int depth = 5;
-    int alpha = INT_MIN;
-    int beta = INT_MAX;
     Move bestMove{0, 0};
-    mmabp->minMax(depth, alpha, beta, maximizing, &bestMove);
+    mmabp->minMax(maximizing, &bestMove);
     // TODO: make move
-    int rowStart = bestMove.startTileNumb / 8;
-    int colStart = bestMove.startTileNumb % 8;
-    int rowEnd = bestMove.endTileNumb / 8;
-    int colEnd = bestMove.endTileNumb % 8;
+    uint rowStart = bestMove.startTileNumb / 8;
+    uint colStart = bestMove.startTileNumb % 8;
+    uint rowEnd = bestMove.endTileNumb / 8;
+    uint colEnd = bestMove.endTileNumb % 8;
 
     // call the canMove to populate the valid moves in validMoves array
     game->canMove(grid[rowStart][colStart]);
@@ -256,7 +253,7 @@ void BoardTile::enforceRules(bool playerMove)
         // used to determine which side to castle and
         // which rook to move.
         char movingPieceSymbol = game->selectedTile->getPieceSymbol();
-        int kingTNBefore;
+        uint kingTNBefore;
         // if the piece being moved is the the king the update the king pointer
         if (movingPieceSymbol == kingID)
         {
@@ -270,7 +267,7 @@ void BoardTile::enforceRules(bool playerMove)
         {
             ep = true;
         }
-        if (game->isValidMove(tileNumber))
+        if (!playerMove || game->isValidMove(tileNumber))
         {
             // if the tile to which this piece is being moved is
             // occupied by the opponents piece then set the piece as
@@ -319,7 +316,7 @@ void BoardTile::enforceRules(bool playerMove)
                 grid[row][col + 1]->displayTile();
             }
             // king side castle
-            else if ((kingTNBefore - tileNumber) == -2)
+            else if ((tileNumber - kingTNBefore) == 2)
             {
                 grid[row][col + 1]->setMoved();
                 grid[row][col - 1]->setPiece(grid[row][col + 1]->getPiece());
@@ -337,9 +334,9 @@ void BoardTile::enforceRules(bool playerMove)
             // removing the opposings pawn.
             if (ep)
             {
-                int tn = game->getEPTileNumber(!game->isWhiteTurn());
-                int r = tn / 8;
-                int c = tn % 8;
+                uint tn = game->getEPTileNumber(!game->isWhiteTurn());
+                uint r = tn / 8;
+                uint c = tn % 8;
                 grid[r][c]->getPiece()->setCaptured();
                 grid[r][c]->removePiece();
                 grid[r][c]->displayTile();
@@ -355,7 +352,7 @@ void BoardTile::enforceRules(bool playerMove)
                 // if a black pawn has reached the opposite end conver to queen
                 if (row == 7)
                 {
-                    int pIndex = this->getPiece()->getIndex();
+                    uint pIndex = this->getPiece()->getIndex();
                     delete piece;
                     QString pp = "";
                     // if it is a player move let them choose otherwise, auto select the queen
@@ -377,7 +374,7 @@ void BoardTile::enforceRules(bool playerMove)
                 // if a white pawn has reached the opposite end conver to queen
                 if (row == 0)
                 {
-                    int pIndex = this->getPiece()->getIndex();
+                    uint pIndex = this->getPiece()->getIndex();
                     delete piece;
                     QString pp = "";
                     // if it is a player move let them choose otherwise, auto select the queen
@@ -407,10 +404,10 @@ void BoardTile::enforceRules(bool playerMove)
         // force the app to update before calling the AI
         qApp->processEvents();
 
-        // call AI
-        if (playerMove)
-        {
-            aiMove(mmabp->getMaxingColor());
-        }
+        // // call AI
+        // if (playerMove)
+        // {
+        //     aiMove(mmabp->getMaxingColor());
+        // }
     }
 }

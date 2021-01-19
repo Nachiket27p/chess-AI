@@ -1,7 +1,7 @@
 #include "piece.h"
 #include "utils.h"
 
-Piece::Piece(bool _white, char _pieceSymbol, int _tileNumber, int _row, int _col, int _index, QString iconPath)
+Piece::Piece(bool _white, char _pieceSymbol, uint _tileNumber, uint _row, uint _col, uint _index, QString iconPath)
 {
     moved = 0;
     captured = false;
@@ -55,7 +55,7 @@ Piece::Piece(const Piece &p)
     this->icon = new QPixmap(subPath + iconImgName);
 }
 
-int Piece::hasMoved()
+uint Piece::hasMoved()
 {
     return moved;
 }
@@ -75,12 +75,12 @@ void Piece::setCaptured()
     captured = true;
 }
 
-int Piece::getRow()
+uint Piece::getRow()
 {
     return row;
 }
 
-int Piece::getCol()
+uint Piece::getCol()
 {
     return col;
 }
@@ -100,35 +100,32 @@ QPixmap *Piece::getIcon()
     return icon;
 }
 
-int Piece::getBasePowerValue()
+uint Piece::getBasePowerValue()
 {
     return basePowerValue;
 }
 
-int Piece::getIndex()
+uint Piece::getIndex()
 {
     return index;
 }
 
-void Piece::updatePosition(int _row, int _col, int _tileNumber)
+void Piece::updatePosition(uint _row, uint _col, uint _tileNumber)
 {
     row = _row;
     col = _col;
     tileNumber = _tileNumber;
 }
 
-int Piece::getTileNumber()
+uint Piece::getTileNumber()
 {
     return tileNumber;
 }
 
-void Piece::resetPiece(int _row, int _col)
+void Piece::resetPiece(uint _row, uint _col)
 {
-    if (_row != -1)
-        row = _row;
-
-    if (_col != -1)
-        col = _col;
+    row = _row;
+    col = _col;
 
     captured = false;
     moved = 0;

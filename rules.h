@@ -20,7 +20,6 @@
 //#define ATTACK_QUEEN 81
 //#define ATTACK_KING 241
 
-
 // used to indicate if there is a check mate
 // or a stale mate.
 #define CHECK_MATE 100
@@ -31,11 +30,11 @@
 extern BoardTile *grid[8][8];
 
 // used to keep track of pieces whcih are causing a check.
-typedef struct CheckPos
+typedef struct checkPos
 {
-    int row;
-    int col;
-} checkPos;
+    uint row;
+    uint col;
+} CheckPos;
 
 /**
  * @brief The Rules class is a singleton class which is responsible for
@@ -53,26 +52,29 @@ private:
     static Rules *instance;
 
     // vairables used to keep track of the valid moves
-    int validMoves[64];
-    int vmIdx = 0;
+    uint validMoves[64];
+    uint vmIdx = 0;
 
     // Used internally to determine if a requested tile can move.
     bool okToMove;
 
     // used to keep track of if there is a check.
     bool isCheck;
-    std::vector<checkPos> checkPieces;
+    CheckPos checkPieces[8];
+    uint checkPiecesSize = 0;
 
     // used to keep track the tile number of the pawn
     // which is vulnerable to the en passant attack
     // If value is zero then there is no en passant, even
     // theough there is a tilenumber 0, it is impossible
     // for there to be an en passant with tile number 0.
-    int whiteEP;
-    int blackEP;
+    uint whiteEP;
+    uint blackEP;
 
-    std::vector<Piece *> blackKingDefenders;
-    std::vector<Piece *> whiteKingDefenders;
+    Piece *blackKingDefenders[8];
+    uint blackKingDefendersSize = 0;
+    Piece *whiteKingDefenders[8];
+    uint whiteKingDefendersSize = 0;
 
 public:
     // two boards white and black
@@ -101,12 +103,16 @@ private:
             whiteAttacks[5][col] = 1;
             blackAttacks[2][col] = 1;
         }
+        // knight attack positions
+        whiteAttacks[5][0]++;
+        whiteAttacks[5][2]++;
+        whiteAttacks[5][5]++;
+        whiteAttacks[5][7]++;
+        blackAttacks[2][0]++;
+        blackAttacks[2][2]++;
+        blackAttacks[2][5]++;
+        blackAttacks[2][7]++;
 
-        // initialize the flags for en passant
-        //        whiteEPL = 0;
-        //        whiteEPR = 0;
-        //        blackEPL = 0;
-        //        blackEPR = 0;
         whiteEP = 0;
         blackEP = 0;
 
@@ -122,7 +128,7 @@ public:
 
     void rotateTurn();
 
-    void setEPTileNumber(int ep, bool whiteTurn);
+    void setEPTileNumber(uint ep, bool whiteTurn);
 
     /**
      * @brief Returns the instance of the class. If an instance does not exist
@@ -189,10 +195,10 @@ public:
      * en passant. If no en passant is available then returns -1.
      * 
      * @param white True if it is white turn, false if it is black turn.
-     * @return int Tile number of piece which can be captured if possible,
+     * @return uint Tile number of piece which can be captured if possible,
      *              otherwise -1.
      */
-    int getEPTileNumber(bool whiteTurn);
+    uint getEPTileNumber(bool whiteTurn);
 
     /**
      * @brief This function is used to determine if the game has
@@ -221,7 +227,7 @@ public:
      * @return true If the move is valid.
      * @return false If the move is invalid.
      */
-    bool isValidMove(int tileNumb);
+    bool isValidMove(uint tileNumb);
 
     /**
      * @brief Rests the vmIdx which keeps track of the index
@@ -295,7 +301,7 @@ private:
      * @param ok Only gets set to 'true' if a valid move is added to the list of valid moves.
      * @param tile The tile which is being checked.
      */
-    inline void enforceRBQHelper(int row, int col, int dr, int dc, bool *ok, BoardTile *tile);
+    inline void enforceRBQHelper(uint row, uint col, int dr, int dc, bool *ok, BoardTile *tile);
 
     /**
      * @brief Private function which determines if the king can move.
@@ -315,7 +321,7 @@ private:
      * unique id add to the valid move array.
      * @param ok Only gets set to 'true' if a valid move is added to the list of valid moves.
      */
-    inline void addValidMove(int tileNumber, bool *ok);
+    inline void addValidMove(uint tileNumber, bool *ok);
 
     /**
      * @brief This is a special helper function used for the king, as it has special
@@ -326,7 +332,7 @@ private:
      * @param tileNumber The unique tile id which gets added to the valid list of moves.
      * @param ok Only gets set to 'true' if a valid move is added to the list of valid moves.
      */
-    inline void addValidMoveKing(int row, int col, int tileNumber, bool *ok);
+    inline void addValidMoveKing(uint row, uint col, uint tileNumber, int attackBoard[8][8], bool *ok);
 
     /**
      * @brief This helper function is used to update the corresponding attack board
@@ -336,7 +342,7 @@ private:
      * @param attackBoard The 8x8 grid on which a true value is set if a piece can attack that spot.
      * @param pieceColor The color to indicate which sides board to update.
      */
-    inline void updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], int pieceColor);
+    inline void updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], bool pieceColor);
 
     /**
      * @brief Helper function used to computer the attack tile for rook, bishop, and queen.
@@ -348,7 +354,7 @@ private:
      * @param pieceColor If the piece is black or white.
      * @param attackGrid The grid which is being updated.
      */
-    inline void attackeRBQHelper(int row, int col, int dr, int dc, bool pieceColor, int attackGrid[8][8]);
+    inline void attackeRBQHelper(uint row, uint col, int dr, int dc, bool pieceColor, int attackGrid[8][8]);
 
     /**
      * @brief  Used to find the check source if a check is detected using the arrack grid.
@@ -367,7 +373,7 @@ private:
      * @return true If a check was located.
      * @return false If a check was not located.
      */
-    inline bool scanCheckHelper(int row, int col, int dr, int dc, char *checkPiece);
+    inline bool scanCheckHelper(uint row, uint col, int dr, int dc, char *checkPiece);
 
     /**
      * @brief Used to check if the knight is causing a check.
@@ -377,7 +383,7 @@ private:
      * @return true If a check is caused.
      * @return false If no check is caused.
      */
-    bool checkKnight(int row, int col);
+    bool checkKnight(uint row, uint col);
 
     /**
      * @brief called by scanCheckHelper to determine if the piece
@@ -389,7 +395,7 @@ private:
      * @return true If the piece at the position is causing a check.
      * @return false If the piece at the position if not causing a check.
      */
-    inline bool checkKnightHelper(int row, int col, char pieceType);
+    inline bool checkKnightHelper(uint row, uint col, char pieceType);
 
     /**
      * @brief setCheck Private helper function to set check.
@@ -441,7 +447,7 @@ private:
      * @return true If the capture can be performed.
      * @return false If the capture cannot be performed.
      */
-    bool enPassant(int tileNumb);
+    bool enPassant(uint tileNumb);
 };
 
 #endif // RULES_H

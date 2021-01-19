@@ -6,9 +6,9 @@
 // debug window
 extern DebugWindow *dbw;
 
-extern Theme *currentTheme;
-extern Piece *whitePieces[16];
-extern Piece *blackPieces[16];
+extern Theme* currentTheme;
+extern Piece* whitePieces[16];
+extern Piece* blackPieces[16];
 
 Rules *Rules::instance = nullptr;
 
@@ -27,7 +27,7 @@ void Rules::rotateTurn()
     turn = (turn + 1) & 1;
 }
 
-void Rules::setEPTileNumber(int ep, bool whiteTurn)
+void Rules::setEPTileNumber(uint ep, bool whiteTurn)
 {
     if (whiteTurn)
         whiteEP = ep;
@@ -78,7 +78,7 @@ void Rules::scanForCheck()
 {
     // use the attack grid to determine a potential for a check
     isCheck = false;
-    int row, col;
+    uint row, col;
 
     if (turn)
     {
@@ -108,12 +108,12 @@ bool Rules::enforcePawn(BoardTile *tile)
     // check en passant
     bool ok = enPassant(tile->getTileNumber());
 
-    int row = tile->getRow();
-    int col = tile->getCol();
+    uint row = tile->getRow();
+    uint col = tile->getCol();
 
     // If this piece is a king defender
     bool defender = isKingDefender(tile->getPiece());
-    int kcol = blackPieces[12]->getCol();
+    uint kcol = blackPieces[12]->getCol();
     // get value from white attack board for black move
     int attackBoardVal = whiteAttacks[row][col];
     // if it is white turn then the black attack board needs to be checked
@@ -130,72 +130,83 @@ bool Rules::enforcePawn(BoardTile *tile)
     if (attackBoardVal > SINGLE_DEFENDER)
         multiDefenders = true;
 
+    // based on if it is a defender and what type of defender compute its ability to move
+    bool defMovAttack = (!defender || (defender && (kcol != col)) || multiDefenders);
+    bool defMov = (!defender || (defender && (kcol == col)) || multiDefenders);
+
     // based on the tile color move the pawn in the correct direction.
     if (tile->getPieceColor())
     {
-        if ((defender && (kcol == col)) || !defender || multiDefenders)
+        if (defMov)
         {
-            if (row - 1 >= 0 && !grid[row - 1][col]->isOccupied())
+            if (WITHIN_BOUNDS(row - 1) && !grid[row - 1][col]->isOccupied())
             {
                 // call helper function to see if this move is valid.
                 addValidMove(grid[row - 1][col]->getTileNumber(), &ok);
             }
-            if (row == 6 && !grid[5][col]->isOccupied() && !grid[4][col]->isOccupied())
+            if ((row == 6) && !grid[5][col]->isOccupied() && !grid[4][col]->isOccupied())
             {
                 // call helper function to see if this move is valid.
                 addValidMove(grid[row - 2][col]->getTileNumber(), &ok);
             }
         }
-        if ((row - 1 >= 0) && (col - 1 >= 0) && (!defender || (defender && (kcol != col)) || multiDefenders))
+
+        if (defMovAttack)
         {
-            if (grid[row - 1][col - 1]->isOccupied() &&
-                grid[row - 1][col - 1]->getPieceColor() != tile->getPieceColor())
+            if (WITHIN_BOUNDS(row - 1) && WITHIN_BOUNDS(col - 1))
             {
-                // call helper function to see if this move is valid.
-                addValidMove(grid[row - 1][col - 1]->getTileNumber(), &ok);
+                if (grid[row - 1][col - 1]->isOccupied() &&
+                    grid[row - 1][col - 1]->getPieceColor() != tile->getPieceColor())
+                {
+                    // call helper function to see if this move is valid.
+                    addValidMove(grid[row - 1][col - 1]->getTileNumber(), &ok);
+                }
             }
-        }
-        if ((row - 1 >= 0) && (col + 1 <= 7) && (!defender || (defender && (kcol != col)) || multiDefenders))
-        {
-            if (grid[row - 1][col + 1]->isOccupied() &&
-                grid[row - 1][col + 1]->getPieceColor() != tile->getPieceColor())
+            if (WITHIN_BOUNDS(row - 1) && WITHIN_BOUNDS(col + 1))
             {
-                // call helper function to see if this move is valid.
-                addValidMove(grid[row - 1][col + 1]->getTileNumber(), &ok);
+                if (grid[row - 1][col + 1]->isOccupied() &&
+                    grid[row - 1][col + 1]->getPieceColor() != tile->getPieceColor())
+                {
+                    // call helper function to see if this move is valid.
+                    addValidMove(grid[row - 1][col + 1]->getTileNumber(), &ok);
+                }
             }
         }
     }
     else
     {
-        if ((defender && (kcol == col)) || !defender || multiDefenders)
+        if (defMov)
         {
-            if (row + 1 <= 7 && !grid[row + 1][col]->isOccupied())
+            if (WITHIN_BOUNDS(row + 1) && !grid[row + 1][col]->isOccupied())
             {
                 // call helper function to see if this move is valid.
                 addValidMove(grid[row + 1][col]->getTileNumber(), &ok);
             }
-            if (row == 1 && !grid[2][col]->isOccupied() && !grid[3][col]->isOccupied())
+            if ((row == 1) && !grid[2][col]->isOccupied() && !grid[3][col]->isOccupied())
             {
                 // call helper function to see if this move is valid.
                 addValidMove(grid[row + 2][col]->getTileNumber(), &ok);
             }
         }
-        if ((row + 1 <= 7) && (col - 1 >= 0) && (!defender || (defender && (kcol != col)) || multiDefenders))
+        if (defMovAttack)
         {
-            if (grid[row + 1][col - 1]->isOccupied() &&
-                grid[row + 1][col - 1]->getPieceColor() != tile->getPieceColor())
+            if (WITHIN_BOUNDS(row + 1) && WITHIN_BOUNDS(col - 1))
             {
-                // call helper function to see if this move is valid.
-                addValidMove(grid[row + 1][col - 1]->getTileNumber(), &ok);
+                if (grid[row + 1][col - 1]->isOccupied() &&
+                    grid[row + 1][col - 1]->getPieceColor() != tile->getPieceColor())
+                {
+                    // call helper function to see if this move is valid.
+                    addValidMove(grid[row + 1][col - 1]->getTileNumber(), &ok);
+                }
             }
-        }
-        if ((row + 1 <= 7) && (col + 1 <= 7) && (!defender || (defender && (kcol != col)) || multiDefenders))
-        {
-            if (grid[row + 1][col + 1]->isOccupied() &&
-                grid[row + 1][col + 1]->getPieceColor() != tile->getPieceColor())
+            if (WITHIN_BOUNDS(row + 1) && WITHIN_BOUNDS(col + 1))
             {
-                // call helper function to see if this move is valid.
-                addValidMove(grid[row + 1][col + 1]->getTileNumber(), &ok);
+                if (grid[row + 1][col + 1]->isOccupied() &&
+                    grid[row + 1][col + 1]->getPieceColor() != tile->getPieceColor())
+                {
+                    // call helper function to see if this move is valid.
+                    addValidMove(grid[row + 1][col + 1]->getTileNumber(), &ok);
+                }
             }
         }
     }
@@ -205,10 +216,10 @@ bool Rules::enforcePawn(BoardTile *tile)
 bool Rules::enforceRook(BoardTile *tile)
 {
     bool ok = false;
-    int origRow = tile->getRow();
-    int origCol = tile->getCol();
-    int row = origRow;
-    int col = origCol;
+    uint origRow = tile->getRow();
+    uint origCol = tile->getCol();
+    uint row = origRow;
+    uint col = origCol;
 
     // based on which turn it is select the appropriate king
     // and attack board.
@@ -251,8 +262,8 @@ bool Rules::enforceKnight(BoardTile *tile)
 {
     bool ok = false;
 
-    int row = tile->getRow();
-    int col = tile->getCol();
+    uint row = tile->getRow();
+    uint col = tile->getCol();
 
     // If this piece is a king defender
     if (isKingDefender(tile->getPiece()))
@@ -268,8 +279,8 @@ bool Rules::enforceKnight(BoardTile *tile)
             return ok;
     }
 
-    int rowOrig = tile->getRow();
-    int colOrig = tile->getCol();
+    uint rowOrig = tile->getRow();
+    uint colOrig = tile->getCol();
     // 2d array representing the offsets to check.
     int pos[8][2] = {{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}};
     int dr, dc;
@@ -300,8 +311,8 @@ bool Rules::enforceKnight(BoardTile *tile)
 bool Rules::enforceBishop(BoardTile *tile)
 {
     bool ok = false;
-    int row = tile->getRow();
-    int col = tile->getCol();
+    uint row = tile->getRow();
+    uint col = tile->getCol();
     // based on whose turn it is select the appropriate king
     // and attack board.
     BoardTile *king = grid[blackPieces[12]->getRow()][blackPieces[12]->getCol()];
@@ -342,8 +353,8 @@ bool Rules::enforceBishop(BoardTile *tile)
 bool Rules::enforceQueen(BoardTile *tile)
 {
     bool ok = false;
-    int row = tile->getRow();
-    int col = tile->getCol();
+    uint row = tile->getRow();
+    uint col = tile->getCol();
     // based whose turn it is select the appropriate king
     // and attack board.
     BoardTile *king = grid[blackPieces[12]->getRow()][blackPieces[12]->getCol()];
@@ -371,7 +382,7 @@ bool Rules::enforceQueen(BoardTile *tile)
     return ok;
 }
 
-inline void Rules::enforceRBQHelper(int row, int col, int dr, int dc, bool *ok, BoardTile *tile)
+inline void Rules::enforceRBQHelper(uint row, uint col, int dr, int dc, bool *ok, BoardTile *tile)
 {
     // check the row and column are within the bounds
     while (WITHIN_BOUNDS(row) && WITHIN_BOUNDS(col))
@@ -406,10 +417,14 @@ bool Rules::enforceKing(BoardTile *tile)
     // check casteling
     canCastle(tile);
 
+    int(*attackBoard)[8][8] = &whiteAttacks;
+    if (turn)
+        attackBoard = &blackAttacks;
+
     bool ok = false;
-    int rowOrig = tile->getRow();
-    int colOrig = tile->getCol();
-    int row, col;
+    uint rowOrig = tile->getRow();
+    uint colOrig = tile->getCol();
+    uint row, col;
     for (int dr = -1; dr <= 1; dr++)
     {
         // if the row with the offset dr is within bounds
@@ -429,7 +444,7 @@ bool Rules::enforceKing(BoardTile *tile)
                     if (!grid[row][col]->isOccupied() ||
                         grid[row][col]->getPieceColor() != tile->getPieceColor())
                     {
-                        addValidMoveKing(row, col, grid[row][col]->getTileNumber(), &ok);
+                        addValidMoveKing(row, col, grid[row][col]->getTileNumber(), *attackBoard, &ok);
                     }
                 }
             }
@@ -438,14 +453,14 @@ bool Rules::enforceKing(BoardTile *tile)
     return ok;
 }
 
-inline void Rules::addValidMove(int tileNumber, bool *ok)
+inline void Rules::addValidMove(uint tileNumber, bool *ok)
 {
-    int vmIdxbefore = vmIdx;
+    uint vmIdxbefore = vmIdx;
     if (isCheck)
     {
         // if there are more than pieces causing check then
         // nothing except the king can move
-        if (checkPieces.size() > 1)
+        if (checkPiecesSize > 1)
         {
             *ok = false;
             return;
@@ -453,8 +468,8 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
 
         // if ther is only one piece causing check
         // get the row and col position.
-        int checkRow = checkPieces[0].row;
-        int checkCol = checkPieces[0].col;
+        uint checkRow = checkPieces[0].row;
+        uint checkCol = checkPieces[0].col;
 
         // the knight can only move if it is able to attack the
         if (grid[checkRow][checkCol]->getPieceSymbol() == knightID)
@@ -492,18 +507,21 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
                 dc = diffCol / abs(diffCol);
             }
 
-            int r = checkRow;
-            int c = checkCol;
-            BoardTile *curr = grid[r][c];
-            while ((!curr->isOccupied()) || (curr->getPieceSymbol() != kingID))
+            uint r = checkRow;
+            uint c = checkCol;
+            BoardTile *curr;
+            while ((WITHIN_BOUNDS(r) && WITHIN_BOUNDS(c)))
             {
-                if (curr->getTileNumber() == tileNumber)
+                curr = grid[r][c];
+                if (!curr->isOccupied() || (curr->getPieceSymbol() != kingID))
                 {
-                    validMoves[vmIdx++] = tileNumber;
+                    if (curr->getTileNumber() == tileNumber)
+                    {
+                        validMoves[vmIdx++] = tileNumber;
+                    }
                 }
                 r += dr;
                 c += dc;
-                curr = grid[r][c];
             }
         }
         // } // commented out for loop
@@ -519,19 +537,12 @@ inline void Rules::addValidMove(int tileNumber, bool *ok)
     }
 }
 
-inline void Rules::addValidMoveKing(int row, int col, int tileNumber, bool *ok)
+inline void Rules::addValidMoveKing(uint row, uint col, uint tileNumber, int attackBoard[8][8], bool *ok)
 {
-    int vmIdxbefore = vmIdx;
-    if (turn)
-    {
-        if (blackAttacks[row][col] <= 0)
-            validMoves[vmIdx++] = tileNumber;
-    }
-    else
-    {
-        if (whiteAttacks[row][col] <= 0)
-            validMoves[vmIdx++] = tileNumber;
-    }
+    uint vmIdxbefore = vmIdx;
+
+    if (attackBoard[row][col] <= 0)
+        validMoves[vmIdx++] = tileNumber;
 
     // if a valid move was added return true otherwise return false
     if (vmIdxbefore != vmIdx)
@@ -545,18 +556,18 @@ bool Rules::canCastle(BoardTile *tile)
     bool ok = false;
     Piece *rookQ = blackPieces[8];
     Piece *rookK = blackPieces[15];
-    int(*attackBoard)[8] = whiteAttacks;
+    int(*attackBoard)[8][8] = &whiteAttacks;
 
     // get the correct rooks based on whose turn it is.
     if (turn)
     {
         rookQ = whitePieces[8];
         rookK = whitePieces[15];
-        attackBoard = blackAttacks;
+        attackBoard = &blackAttacks;
     }
 
-    int kRow = tile->getRow();
-    int kCol = tile->getCol();
+    uint kRow = tile->getRow();
+    uint kCol = tile->getCol();
 
     // the king must have not moved.
     if (!tile->hasMoved() && !isCheck)
@@ -568,7 +579,7 @@ bool Rules::canCastle(BoardTile *tile)
             for (int dc = 1; dc <= 2; dc++)
             {
                 if (grid[kRow][kCol + dc]->isOccupied() ||
-                    (attackBoard[kRow][kCol + dc] == 1))
+                    ((*attackBoard)[kRow][kCol + dc] == 1))
                 {
                     cc = false;
                     break;
@@ -588,7 +599,7 @@ bool Rules::canCastle(BoardTile *tile)
             for (int dc = -1; dc >= -3; dc--)
             {
                 if (grid[kRow][kCol + dc]->isOccupied() ||
-                    (attackBoard[kRow][kCol + dc] == 1))
+                    ((*attackBoard)[kRow][kCol + dc] == 1))
                 {
                     cc = false;
                     break;
@@ -604,7 +615,7 @@ bool Rules::canCastle(BoardTile *tile)
     return ok;
 }
 
-bool Rules::enPassant(int tileNumb)
+bool Rules::enPassant(uint tileNumb)
 {
     bool ok = false;
     // if it's white turn then check the white enpassant flags
@@ -648,7 +659,7 @@ void Rules::updateAttackBoard()
     if (turn)
     {
         // reset white defenders
-        whiteKingDefenders.clear();
+        whiteKingDefendersSize = 0;
         // reset all values to zero
         memset(blackAttacks, 0, (8 * 8) * sizeof(int));
         // update black attack board
@@ -658,7 +669,7 @@ void Rules::updateAttackBoard()
     else
     {
         // reset king defenders
-        blackKingDefenders.clear();
+        blackKingDefendersSize = 0;
         // reset all values to zero
         memset(whiteAttacks, 0, (8 * 8) * sizeof(int));
         // update white attack board
@@ -671,56 +682,63 @@ void Rules::resetKingDefenders()
 {
     if (turn)
     {
-        whiteKingDefenders.clear();
+        whiteKingDefendersSize = 0;
     }
     else
     {
-        blackKingDefenders.clear();
+        blackKingDefendersSize = 0;
     }
 }
 
 void Rules::canEnPassant(BoardTile *tile)
 {
-    int row = tile->getRow();
-    int col = tile->getCol();
+    uint row = tile->getRow();
+    uint col = tile->getCol();
     bool wasEPSet = false;
 
     if ((turn && (row == 3)) || (!turn && (row == 4)))
     {
-        BoardTile *otherPawn = grid[row][col + 1];
+        BoardTile *otherPawn;
         // Left en passant
         // should check to see if the pawn is of the opponent but
         // it is impossible to have the same side pawn move there in 1 move.
-        if (((col + 1) < 8) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
-            (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
+        if (WITHIN_BOUNDS(col + 1))
         {
-            if (turn)
+            otherPawn = grid[row][col + 1];
+            if (otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
+                (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
             {
-                whiteEP = tile->getTileNumber();
+                if (turn)
+                {
+                    whiteEP = tile->getTileNumber();
+                }
+                else
+                {
+                    blackEP = tile->getTileNumber();
+                }
+                wasEPSet = true;
             }
-            else
-            {
-                blackEP = tile->getTileNumber();
-            }
-            wasEPSet = true;
         }
 
         // Right en passant
         // should check to see if the pawn is of the opponent but
         // it is impossible to have the same side pawn move there in 1 move.
-        otherPawn = grid[row][col - 1];
-        if (((col - 1) >= 0) && otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
-            (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
+        if (WITHIN_BOUNDS(col - 1))
         {
-            if (turn)
+            otherPawn = grid[row][col - 1];
+            if (otherPawn->isOccupied() && (turn == otherPawn->getPieceColor()) &&
+                (otherPawn->getPieceSymbol() == pawnID) && tile->hasMoved() == 1)
             {
-                whiteEP = tile->getTileNumber();
+                if (turn)
+                {
+                    whiteEP = tile->getTileNumber();
+                }
+                else
+                {
+                    blackEP = tile->getTileNumber();
+                }
+                wasEPSet = true;
             }
-            else
-            {
-                blackEP = tile->getTileNumber();
-            }
-            wasEPSet = true;
         }
     }
 
@@ -749,7 +767,7 @@ void Rules::resetEnPassant(bool whiteTurn)
     }
 }
 
-int Rules::getEPTileNumber(bool whiteTurn)
+uint Rules::getEPTileNumber(bool whiteTurn)
 {
     if (whiteTurn)
     {
@@ -761,7 +779,7 @@ int Rules::getEPTileNumber(bool whiteTurn)
         if (blackEP > 0)
             return blackEP;
     }
-    return -1;
+    return 0;
 }
 
 int Rules::hasGameEnded(bool whiteTurn)
@@ -777,9 +795,9 @@ int Rules::hasGameEnded(bool whiteTurn)
     // save the current value of vmidx as it will be modified
     // when determining if any piece can move in the for loop below.
     // it will be restored beforning returning from this function.
-    int oldVmidx = vmIdx;
+    uint oldVmidx = vmIdx;
     vmIdx = 0;
-    int row, col;
+    uint row, col;
     // initially set the game state to stale mate.
     // if there is a check then it must be a check mate.
     int gameEnded = STALE_MATE;
@@ -818,7 +836,7 @@ void Rules::highlightTiles()
 {
     BoardTile *tile;
     // iterate through the validMoves array upt to the index 'vmIdx'
-    for (int i = 0; i < vmIdx; i++)
+    for (uint i = 0; i < vmIdx; i++)
     {
         tile = grid[validMoves[i] / 8][validMoves[i] & 7];
 
@@ -851,13 +869,13 @@ void Rules::highlightTiles()
 void Rules::unhighlightTiles()
 {
     // unhilight all the tiles on the board using the validMoves array
-    for (int i = 0; i < vmIdx; i++)
+    for (uint i = 0; i < vmIdx; i++)
         grid[validMoves[i] / 8][validMoves[i] & 7]->displayTileColor();
 }
 
-bool Rules::isValidMove(int tileNumb)
+bool Rules::isValidMove(uint tileNumb)
 {
-    for (int i = 0; i < vmIdx; i++)
+    for (uint i = 0; i < vmIdx; i++)
     {
         if (tileNumb == validMoves[i])
             return true;
@@ -877,9 +895,13 @@ void Rules::getMoves(std::vector<Move> *moves)
     {
         pcs = whitePieces;
     }
-    int backUpVmIdx = vmIdx;
+    uint backUpVmIdx = vmIdx;
     vmIdx = 0;
-    // go through all the pieces
+    // srand(time(NULL));
+    // int i = rand() % 16;
+    // int counter = 16;
+    // // go through all the pieces
+    // while (counter)
     for (int i = 0; i < 16; i++)
     {
         // if the piece is not captured compute its valid moves
@@ -888,7 +910,7 @@ void Rules::getMoves(std::vector<Move> *moves)
             // compute its moves by calling the canMove function to populate
             // the validMoves array.
             this->canMove(grid[pcs[i]->getRow()][pcs[i]->getCol()]);
-            for (int j = 0; j < vmIdx; j++)
+            for (uint j = 0; j < vmIdx; j++)
             {
                 // save all the valid moves into the moves vector
                 // passed in as the parameter
@@ -897,12 +919,16 @@ void Rules::getMoves(std::vector<Move> *moves)
             // reset the index for validMoves to simulate clearing the array
             vmIdx = 0;
         }
+        // // update index and counter
+        // i = (i + 1) % 16;
+        // counter--;
     }
+
     // restore the original vmIdx
     vmIdx = backUpVmIdx;
 }
 
-inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], int pieceColor)
+inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8][8], bool pieceColor)
 {
     for (int x = 0; x < 16; x++)
     {
@@ -912,8 +938,8 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
         if (p->isCaptured())
             continue;
 
-        int pr = p->getRow();
-        int pc = p->getCol();
+        uint pr = p->getRow();
+        uint pc = p->getCol();
 
         // used to indexing pawns
         int pawndr = 1;
@@ -979,6 +1005,11 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
             break;
         case kingID:
         {
+            // the king can only attack in positions where no opponent piece
+            // is attacking
+            int(*attackBoard)[8][8] = &whiteAttacks;
+            if (turn)
+                attackBoard = &blackAttacks;
             // double loop to iterate through the 8 tiles around the king
             // because these are the directions the king can move in.
             for (int i = -1; i <= 1; i++)
@@ -987,11 +1018,14 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
                 {
                     for (int j = -1; j <= 1; j++)
                     {
-                        if (!(i == 0 && j == 0) && WITHIN_BOUNDS(pc + j) &&
-                            grid[pr + i][pc + j]->isOccupied() &&
-                            grid[pr + i][pc + j]->getPieceColor() != pieceColor)
+                        if (!(i == 0 && j == 0) && WITHIN_BOUNDS(pc + j))
                         {
-                            attackBoard[pr + i][pc + j]++;
+                            if ((*attackBoard)[pr + i][pc + j] == 0 &&
+                                (!grid[pr + i][pc + j]->isOccupied() ||
+                                 (grid[pr + i][pc + j]->getPieceColor() != pieceColor)))
+                            {
+                                (*attackBoard)[pr + i][pc + j]++;
+                            }
                         }
                     }
                 }
@@ -1004,7 +1038,7 @@ inline void Rules::updateAttackBoardHelper(Piece *pieces[16], int attackBoard[8]
     }
 }
 
-inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool pieceColor, int attackGrid[8][8])
+inline void Rules::attackeRBQHelper(uint row, uint col, int dr, int dc, bool pieceColor, int attackGrid[8][8])
 {
     // this stack is used to keep track of the previous values on
     // the attack board in the case that there was a previous
@@ -1077,11 +1111,11 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
                     // save the piece in the list of kings defenders
                     if (pieceColor)
                     {
-                        blackKingDefenders.push_back(grid[nrow][ncol]->getPiece());
+                        blackKingDefenders[blackKingDefendersSize++] = grid[nrow][ncol]->getPiece();
                     }
                     else
                     {
-                        whiteKingDefenders.push_back(grid[nrow][ncol]->getPiece());
+                        whiteKingDefenders[whiteKingDefendersSize++] = grid[nrow][ncol]->getPiece();
                     }
                     return;
                 }
@@ -1161,9 +1195,9 @@ inline void Rules::attackeRBQHelper(int row, int col, int dr, int dc, bool piece
 inline void Rules::locateCheckSource()
 {
     isCheck = false;
-    checkPieces.clear();
+    checkPiecesSize = 0;
 
-    int row, col;
+    uint row, col;
 
     // based on the turn get the appropriate king position.
     if (turn)
@@ -1251,7 +1285,7 @@ inline void Rules::locateCheckSource()
     }
 }
 
-inline bool Rules::scanCheckHelper(int row, int col, int dr, int dc, char *checkPiece)
+inline bool Rules::scanCheckHelper(uint row, uint col, int dr, int dc, char *checkPiece)
 {
     BoardTile *curr;
     int distanceFromKing = 1;
@@ -1289,7 +1323,7 @@ inline bool Rules::scanCheckHelper(int row, int col, int dr, int dc, char *check
                     if (correctPawnDir && (distanceFromKing == 1))
                     {
                         *checkPiece = curr->getPieceSymbol();
-                        checkPieces.push_back(checkPos{row, col});
+                        checkPieces[checkPiecesSize++] = checkPos{row, col};
                         return true;
                     }
 
@@ -1299,7 +1333,7 @@ inline bool Rules::scanCheckHelper(int row, int col, int dr, int dc, char *check
                 else
                 {
                     *checkPiece = curr->getPieceSymbol();
-                    checkPieces.push_back(checkPos{row, col});
+                    checkPieces[checkPiecesSize++] = checkPos{row, col};
                     return true;
                 }
             }
@@ -1321,7 +1355,7 @@ inline bool Rules::scanCheckHelper(int row, int col, int dr, int dc, char *check
     return false;
 }
 
-bool Rules::checkKnight(int row, int col)
+bool Rules::checkKnight(uint row, uint col)
 {
     // the row and column is the position of the king on the board
     // so checking all the knight attack positions around the king
@@ -1339,7 +1373,7 @@ bool Rules::checkKnight(int row, int col)
     }
 }
 
-inline bool Rules::checkKnightHelper(int row, int col, char pieceType)
+inline bool Rules::checkKnightHelper(uint row, uint col, char pieceType)
 {
     // if the position (row,col) is within bounds then
     // check if the position contains a piece type
@@ -1349,7 +1383,7 @@ inline bool Rules::checkKnightHelper(int row, int col, char pieceType)
         BoardTile *curr = grid[row][col];
         if ((curr->getPieceSymbol() == pieceType) && (curr->getPieceColor() != turn))
         {
-            checkPieces.push_back(checkPos{row, col});
+            checkPieces[checkPiecesSize++] = checkPos{row, col};
             return true;
         }
     }
@@ -1365,20 +1399,17 @@ bool Rules::isKingDefender(Piece *p)
 {
     // get the appropriate king defender vector
     // based on the turn
-    std::vector<Piece *> kd;
+    Piece *(*kd) = blackKingDefenders;
+    uint kSize = blackKingDefendersSize;
     if (turn)
     {
         kd = whiteKingDefenders;
-    }
-    else
-    {
-        kd = blackKingDefenders;
+        kSize = whiteKingDefendersSize;
     }
 
     // if the piece passed in is also in the vector then
     // it is potentially preventing a check.
-    int kSize = kd.size();
-    for (int i = 0; i < kSize; i++)
+    for (uint i = 0; i < kSize; i++)
     {
         if (p == kd[i])
         {
@@ -1388,13 +1419,13 @@ bool Rules::isKingDefender(Piece *p)
     return false;
 }
 
-bool Rules::canKingDefenderMove(int dr, int dc, BoardTile *tile, BoardTile *king, int attackBoardVal)
+inline bool Rules::canKingDefenderMove(int dr, int dc, BoardTile *tile, BoardTile *king, int attackBoardVal)
 {
     int kdr;
     int kdc;
 
-    int tr = tile->getRow();
-    int tc = tile->getCol();
+    uint tr = tile->getRow();
+    uint tc = tile->getCol();
 
     // if this piece is a defender
     if (isKingDefender(tile->getPiece()) && (attackBoardVal == SINGLE_DEFENDER))

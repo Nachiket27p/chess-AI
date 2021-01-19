@@ -36,7 +36,8 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 
     game = game->getInstance();
     bool maximizingColor = false;
-    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, EvaluationScheme::basic);
+    int aiDepth = 4;
+    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, aiDepth, EvaluationScheme::basic);
 }
 
 Board::~Board()
@@ -46,10 +47,10 @@ Board::~Board()
 
 void Board::createPieces(Piece *whitePieces[16], Piece *blackPieces[16])
 {
-    int col = 0;
-    int pidx = 0;
-    int blackTileNumb = 8;
-    int whiteTileNumb = 48;
+    uint col = 0;
+    uint pidx = 0;
+    uint blackTileNumb = 8;
+    uint whiteTileNumb = 48;
     // create the pawns
     while (col < 8)
     {
@@ -181,8 +182,8 @@ void Board::initializePiecesOnGrid(BoardTile *grid[8][8], Piece *whitePieces[16]
 
 void Board::resetPieces()
 {
-    int sr = 8;
-    for (int col = 0; col < 8; col++)
+    uint sr = 8;
+    for (uint col = 0; col < 8; col++)
     {
         // black pieces
         blackPieces[col]->resetPiece(1, col);
@@ -218,9 +219,9 @@ void Board::on_actionNew_Game_triggered()
         //        isWhiteTurn = true;
         game->setTurn(true);
 
-        for (int i = 0; i < 8; i++)
+        for (uint i = 0; i < 8; i++)
         {
-            for (int j = 0; j < 8; j++)
+            for (uint j = 0; j < 8; j++)
             {
                 grid[i][j]->removePiece();
                 grid[i][j]->displayTile();
@@ -237,8 +238,8 @@ void Board::updateTheme(Theme::themes selection)
     currentTheme->setTheme(selection);
 
     // update all the tiles on the board by going through the 8x8 BoardTile array
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
+    for (uint i = 0; i < 8; i++)
+        for (uint j = 0; j < 8; j++)
             grid[i][j]->displayTile();
 }
 
@@ -263,20 +264,17 @@ void Board::on_actionGreen_triggered()
     updateTheme(Theme::green);
 }
 
-void Board::aiPlay(bool maximizing, int depth, MinMaxABP *ai)
+void Board::aiPlay(bool maximizing, uint depth, MinMaxABP *ai)
 {
-    int alpha = INT_MIN;
-    int beta = INT_MAX;
-    Move bestMove{0, 0};
-    ai->minMax(depth, alpha, beta, maximizing, &bestMove);
-    // TODO: make move
-    int rowStart = bestMove.startTileNumb / 8;
-    int colStart = bestMove.startTileNumb % 8;
-    int rowEnd = bestMove.endTileNumb / 8;
-    int colEnd = bestMove.endTileNumb % 8;
 
-    // call the canMove to populate the valid moves in validMoves array
-    game->canMove(grid[rowStart][colStart]);
+    Move bestMove{0, 0};
+    ai->minMax(maximizing, &bestMove);
+    // TODO: make move
+    uint rowStart = bestMove.startTileNumb / 8;
+    uint colStart = bestMove.startTileNumb % 8;
+    uint rowEnd = bestMove.endTileNumb / 8;
+    uint colEnd = bestMove.endTileNumb % 8;
+
     // set the selected tile in the game object
     game->selectedTile = grid[rowStart][colStart];
     // set the selected to 2 to indicate the piece has already been selected
@@ -296,11 +294,11 @@ void Board::on_actionAI_vs_AI_triggered()
 {
     bool ai1Color = true;
     bool ai2Color = !ai1Color;
-    int ai1Depth = 3;
-    int ai2Depth = 3;
+    uint ai1Depth = 4;
+    uint ai2Depth = 4;
 
-    MinMaxABP *ai1 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai1Color, EvaluationScheme::basic);
-    MinMaxABP *ai2 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai2Color, EvaluationScheme::def);
+    MinMaxABP *ai1 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai1Color, ai1Depth, EvaluationScheme::def);
+    MinMaxABP *ai2 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai2Color, ai2Depth, EvaluationScheme::def);
 
     while (true)
     {

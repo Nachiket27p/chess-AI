@@ -6,15 +6,15 @@
 class Piece
 {
 private:
-    int moved;
+    uint moved;
     bool white;
     char pieceSymbol;
-    int tileNumber;
-    int row;
-    int col;
+    uint tileNumber;
+    uint row;
+    uint col;
     bool captured;
-    int basePowerValue;
-    int index;
+    uint basePowerValue;
+    uint index;
     QPixmap *icon;
 
 public:
@@ -28,7 +28,7 @@ public:
      * @param _col The column location on the grid.
      * @param iconPath The filepath to the piece symbol.
      */
-    Piece(bool _white, char _pieceSymbol, int _tileNumber, int _row, int _col, int _index, QString iconPath);
+    Piece(bool _white, char _pieceSymbol, uint _tileNumber, uint _row, uint _col, uint _index, QString iconPath);
 
     /**
      * @brief Copy constructor for Piece.
@@ -39,9 +39,9 @@ public:
     /**
      * @brief Return the number of moves this piece has made in total.
      * 
-     * @return int Number of moves.
+     * @return uint Number of moves.
      */
-    int hasMoved();
+    uint hasMoved();
 
     /**
      * @brief Increment the move counter.
@@ -66,16 +66,16 @@ public:
     /**
      * @brief Get row on which this piece is located on the grid.
      * 
-     * @return int Row location.
+     * @return uint Row location.
      */
-    int getRow();
+    uint getRow();
 
     /**
      * @brief Get the column on which this piece is located on the grid.
      * 
-     * @return int Column location.
+     * @return uint Column location.
      */
-    int getCol();
+    uint getCol();
 
     /**
      * @brief If the piece is white or black.
@@ -105,14 +105,14 @@ public:
      * @param _row Row position on board.
      * @param _col Column position on board.
      */
-    void updatePosition(int _row, int _col, int _tileNumber);
+    void updatePosition(uint _row, uint _col, uint _tileNumber);
 
     /**
      * @brief Get the index of this piece in the array of pieces.
      * 
-     * @return int Index in piece array.
+     * @return uint Index in piece array.
      */
-    int getTileNumber();
+    uint getTileNumber();
 
     /**
      * @brief Reset this piece to the row and column specified,
@@ -123,21 +123,21 @@ public:
      * @param _row Row to which this piece will be moved.
      * @param _col Column to which this piece will be moved.
      */
-    void resetPiece(int _row = -1, int _col = -1);
+    void resetPiece(uint _row, uint _col);
 
     /**
      * @brief Returns the base power for this piece.
      * 
-     * @return int The base power value for this piece.
+     * @return uint The base power value for this piece.
      */
-    int getBasePowerValue();
+    uint getBasePowerValue();
 
     /**
      * @brief Get the index of this piece in the pieces array.
      * 
-     * @return int The index at which position this piece is located.
+     * @return uint The index at which position this piece is located.
      */
-    int getIndex();
+    uint getIndex();
 };
 
 #endif // PIECE_H
