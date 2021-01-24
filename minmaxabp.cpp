@@ -286,6 +286,7 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
 
     // rotate turn
     game->rotateTurn();
+    delete bUpM;
 }
 
 void MinMaxABP::makeMove(Move m)
