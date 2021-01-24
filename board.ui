@@ -29,6 +29,8 @@
     </property>
     <addaction name="actionNew_Game"/>
     <addaction name="actionExit"/>
+    <addaction name="actionPlay_AI"/>
+    <addaction name="action2_Player"/>
     <addaction name="actionAI_vs_AI"/>
    </widget>
    <widget class="QMenu" name="menuTheme">
@@ -83,6 +85,16 @@
   <action name="actionAI_vs_AI">
    <property name="text">
     <string>AI vs. AI</string>
+   </property>
+  </action>
+  <action name="action2_Player">
+   <property name="text">
+    <string>2-Player</string>
+   </property>
+  </action>
+  <action name="actionPlay_AI">
+   <property name="text">
+    <string>Vs. AI</string>
    </property>
   </action>
  </widget>

@@ -13,6 +13,7 @@ BoardTile *grid[8 * 8];
 Theme *currentTheme;
 Rules *game;
 MinMaxABP *mmabp;
+bool twoPlayer = false;
 
 Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 {
@@ -36,8 +37,8 @@ Board::Board(QWidget *parent) : QMainWindow(parent), ui(new Ui::Board)
 
     game = game->getInstance();
     bool maximizingColor = false;
-    int aiDepth = 5;
-    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, aiDepth, EvaluationScheme::basic);
+    int aiDepth = 7;
+    mmabp = new MinMaxABP(&grid, &whitePieces, &blackPieces, maximizingColor, aiDepth, EvaluationScheme::def);
 }
 
 Board::~Board()
@@ -182,29 +183,12 @@ void Board::initializePiecesOnGrid(BoardTile *grid[8 * 8], Piece *whitePieces[16
 
 void Board::resetPieces()
 {
-    uint sr = 8;
-    for (uint col = 0; col < 8; col++)
+    for (int i = 0; i < 16; i++)
     {
-        // black pieces
-        blackPieces[col]->resetPiece(1, col);
-        blackPieces[sr + col]->resetPiece(0, col);
-
-        // white pieces
-        whitePieces[col]->resetPiece(6, col);
-        whitePieces[sr + col]->resetPiece(7, col);
+        delete whitePieces[i];
+        delete blackPieces[i];
     }
-}
-
-bool Board::saveGame(BoardTile *tiles)
-{
-    std::ofstream file;
-    file.open("savefile");
-
-    // save state of board
-
-    file.close();
-
-    return true;
+    createPieces(whitePieces, blackPieces);
 }
 
 void Board::on_actionNew_Game_triggered()
@@ -227,6 +211,10 @@ void Board::on_actionNew_Game_triggered()
         resetPieces();
         initializePiecesOnGrid(grid, whitePieces, blackPieces);
     }
+    game->updateAttackBoard();
+    game->rotateTurn();
+    game->updateAttackBoard();
+    game->setTurn(true);
 }
 
 void Board::updateTheme(Theme::themes selection)
@@ -260,31 +248,25 @@ void Board::on_actionGreen_triggered()
     updateTheme(Theme::green);
 }
 
-void Board::aiPlay(bool maximizing, MinMaxABP *ai)
+bool Board::aiPlay(bool maximizing, MinMaxABP *ai)
 {
-
     Move bestMove{0, 0};
     ai->minMax(maximizing, &bestMove);
     // set the selected tile in the game object
     game->selectedTile = grid[bestMove.startTileNumb];
     // set the selected to 2 to indicate the piece has already been selected
     game->selected = 2;
-
     // call the enforce rules function to perform the move
-    grid[bestMove.endTileNumb]->enforceRules(false);
+    bool gameEndDetected = grid[bestMove.endTileNumb]->enforceRules(false);
 
-    // reset the atttack boards
-    game->updateAttackBoard();
-    game->rotateTurn();
-    game->updateAttackBoard();
-    game->rotateTurn();
+    return gameEndDetected;
 }
 
 void Board::on_actionAI_vs_AI_triggered()
 {
     bool ai1Color = true;
     bool ai2Color = !ai1Color;
-    uint ai1Depth = 5;
+    uint ai1Depth = 4;
     uint ai2Depth = 4;
 
     MinMaxABP *ai1 = new MinMaxABP(&grid, &whitePieces, &blackPieces, ai1Color, ai1Depth, EvaluationScheme::def);
@@ -292,7 +274,19 @@ void Board::on_actionAI_vs_AI_triggered()
 
     while (true)
     {
-        aiPlay(ai1Color, ai1);
-        aiPlay(ai2Color, ai2);
+        if (aiPlay(ai1Color, ai1))
+            break;
+        if (aiPlay(ai2Color, ai2))
+            break;
     }
+}
+
+void Board::on_actionPlay_AI_triggered()
+{
+    twoPlayer = false;
+}
+
+void Board::on_action2_Player_triggered()
+{
+    twoPlayer = true;
 }

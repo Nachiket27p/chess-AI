@@ -1,18 +1,24 @@
 #include <QApplication>
 #include "utils.h"
 #include "board.h"
-#include "debugwindow.h"
 
+#ifdef DEBUGGING_WINDOW
+#include "debugwindow.h"
 DebugWindow *dbw;
+#endif
+
+// map which keeps track of the pointers to all the QPixmap objects
 std::unordered_map<int, QPixmap *> pieceIconPointers;
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+#ifdef DEBUGGING_WINDOW
     dbw = new DebugWindow();
     // DebugWindow db;
     dbw->show();
+#endif
 
     // initialize the QPixmap pointers
     pieceIconPointers.emplace(pawnIDW, new QPixmap(whitePath + pawnIconName));

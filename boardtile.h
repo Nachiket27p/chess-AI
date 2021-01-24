@@ -17,13 +17,6 @@ private:
     // Pointer to the piece currently on this tile.
     Piece *piece;
 
-private:
-    //    /**
-    //     * @brief Used to check if the piece selected can move and if so which
-    //     * direction it can move in, calls the canMove function from the Rules class.
-    //     */
-    //    void enforceRules(bool playerMove = true);
-
 public:
     /**
      * @brief Construct a new Board Tile object. This class inherites the QLabel class.
@@ -43,16 +36,23 @@ public:
     /**
      * @brief Used to check if the piece selected can move and if so which
      * direction it can move in, calls the canMove function from the Rules class.
+     * 
+     * @param playerMove Used to determine if the player or the AI made the move.
+     * @return true If the game has ended.
+     * @return false If the game has not ended.
      */
-    void enforceRules(bool playerMove = true);
+    bool enforceRules(bool playerMove = true);
 
     /**
      * @brief Used to check if the game has ended via a check/stale mate. This function
      * calls 'hasGameEnded' function in the Rules class to help determine if game has ended.
      * If the game has ended a dialog is displayed with a message informing the player
-     * how the game has ended.
+     * how the game has ended. 
+     * 
+     * @return true If the game has ended.
+     * @return false If the game has not ended.
      */
-    void checkGameEnd();
+    bool checkGameEnd();
 
     /**
      * @brief Set the Piece object.

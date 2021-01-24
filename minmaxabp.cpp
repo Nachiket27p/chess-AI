@@ -8,7 +8,6 @@ MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8 * 8], Piece *(*_whitePieces)[16], Pie
     grid = _grid;
     whitePieces = _whitePieces;
     blackPieces = _blackPieces;
-    //    color = _color;
     evalSchema = _evalSchema;
     searchDepth = depth;
     maxingColor = _maxingColor;
@@ -18,11 +17,9 @@ void MinMaxABP::minMax(bool maximizing, Move *bestMove)
 {
     int alpha = INT_MIN;
     int beta = INT_MAX;
+    backUpEPValue();
     minMaxHelper(searchDepth, alpha, beta, maximizing, bestMove);
-}
-
-MinMaxABP::~MinMaxABP()
-{
+    restoreEPValue();
 }
 
 int MinMaxABP::minMaxHelper(uint depth, int alpha, int beta, bool maximizing, Move *bestMove)
@@ -34,24 +31,24 @@ int MinMaxABP::minMaxHelper(uint depth, int alpha, int beta, bool maximizing, Mo
         return evaluate();
 
     int currEval;
-    std::vector<Move> *moves = new std::vector<Move>();
-    game->getMoves(moves);
+    std::vector<Move> moves;
+    game->getMoves(&moves);
 
-    if (moves->size() == 0)
+    if (moves.size() == 0)
         return evaluate();
 
     // select a random move as the best move first
     srand(time(NULL));
-    uint randChoice = rand() % moves->size();
-    Move bm = (*moves)[randChoice];
+    uint randChoice = rand() % moves.size();
+    Move bm = moves[randChoice];
 
     if (maximizing)
     {
         int maxEval = INT_MIN;
-        for (auto mve : *moves)
+        for (auto mve : moves)
         {
             backUpEPValue();
-            makeMove(mve, depth, maximizing);
+            makeMove(mve);
             currEval = minMaxHelper(depth - 1, alpha, beta, false, bestMove);
             unmakeMove(mve, depth, maximizing);
             restoreEPValue();
@@ -72,18 +69,19 @@ int MinMaxABP::minMaxHelper(uint depth, int alpha, int beta, bool maximizing, Mo
         // save the best move
         bestMove->startTileNumb = bm.startTileNumb;
         bestMove->endTileNumb = bm.endTileNumb;
-
         return maxEval;
     }
     else
     {
         int minEval = INT_MAX;
-        for (auto mve : *moves)
+        for (auto mve : moves)
         {
             backUpEPValue();
-            makeMove(mve, depth, maximizing);
+            makeMove(mve);
             currEval = minMaxHelper(depth - 1, alpha, beta, true, bestMove);
             unmakeMove(mve, depth, maximizing);
+            if (depth == 3)
+                int x = 0;
             restoreEPValue();
             if (currEval < minEval)
             {
@@ -101,7 +99,6 @@ int MinMaxABP::minMaxHelper(uint depth, int alpha, int beta, bool maximizing, Mo
         // save the best move
         bestMove->startTileNumb = bm.startTileNumb;
         bestMove->endTileNumb = bm.endTileNumb;
-
         return minEval;
     }
 }
@@ -152,18 +149,20 @@ int MinMaxABP::basicEvaluate()
 
     Piece *currPiece;
     uint attackIdx;
+    uint currBasePwr;
     for (int i = 0; i < 16; i++)
     {
         // accumulate the white score if the piece has not been captured
         currPiece = (*whitePieces)[i];
+        currBasePwr = currPiece->getBasePowerValue();
         if (!currPiece->isCaptured())
         {
             attackIdx = currPiece->getTileNumber();
-            whiteScore += currPiece->getBasePowerValue();
+            whiteScore += currBasePwr;
             if (i != 12)
             {
                 if (game->blackAttacks[attackIdx] == SINGLE_DEFENDER)
-                    whiteScore -= (currPiece->getBasePowerValue() / 2);
+                    whiteScore -= singleDefenderPenalty;
                 else if (game->blackAttacks[attackIdx] > SINGLE_DEFENDER)
                     whiteScore += game->whiteAttacks[attackIdx];
                 else
@@ -173,14 +172,15 @@ int MinMaxABP::basicEvaluate()
 
         // accumulate the black score if the piece has not been captured
         currPiece = (*blackPieces)[i];
+        currBasePwr = currPiece->getBasePowerValue();
         if (!currPiece->isCaptured())
         {
             attackIdx = currPiece->getTileNumber();
-            blackScore += currPiece->getBasePowerValue();
+            blackScore += currBasePwr;
             if (i != 12)
             {
                 if (game->whiteAttacks[attackIdx] == SINGLE_DEFENDER)
-                    blackScore -= (currPiece->getBasePowerValue() / 2);
+                    blackScore -= singleDefenderPenalty;
                 else if (game->whiteAttacks[attackIdx] > SINGLE_DEFENDER)
                     blackScore += game->blackAttacks[attackIdx];
                 else
@@ -197,18 +197,6 @@ int MinMaxABP::complexEbaluate()
     return 0;
 }
 
-void MinMaxABP::makeMove(Move m, int depth, bool maximizing)
-{
-    //    // save the attack grid
-    //    if (maximizing)
-    //        memcpy(backUPAttackGrids[depth], game->blackAttacks, 8 * 8 * sizeof(int));
-    //    else
-    //        memcpy(backUPAttackGrids[depth], game->whiteAttacks, 8 * 8 * sizeof(int));
-
-    // TODO: potential additional steps to ensre move can be undone correctly
-    simulateMove(m);
-}
-
 void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
 {
     // TODO: use backup pieces to restore the gird/board to the state before
@@ -222,6 +210,7 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
 
     bool whiteTurn = bUpM->backUpStartPiece->isWhite();
 
+    // delete the old piece
     delete (*grid)[gridIdx]->getPiece();
 
     (*grid)[gridIdx]->setPiece(bUpM->backUpStartPiece);
@@ -235,6 +224,9 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
         (*blackPieces)[pieceIdx] = bUpM->backUpStartPiece;
     }
 
+    //    // delete the back up piece
+    //    delete (bUpM->backUpStartPiece);
+
     if (bUpM->backUpEndPiece == nullptr)
     {
         (*grid)[m.endTileNumb]->setPiece();
@@ -244,6 +236,7 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
         pieceIdx = bUpM->backUpEndPiece->getIndex();
         gridIdx = bUpM->backUpEndPiece->getTileNumber();
         whiteTurn = bUpM->backUpEndPiece->isWhite();
+        // delete the old piece from grid
         delete (*grid)[gridIdx]->getPiece();
         (*grid)[gridIdx]->setPiece(bUpM->backUpEndPiece);
 
@@ -252,6 +245,9 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
             (*whitePieces)[pieceIdx] = bUpM->backUpEndPiece;
         else
             (*blackPieces)[pieceIdx] = bUpM->backUpEndPiece;
+
+        //        // delete the back piece
+        //        delete (bUpM->backUpEndPiece);
     }
 
     if (bUpM->backUpAdditionalPiece != nullptr)
@@ -275,25 +271,24 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
             }
         }
 
+        // delete the old piece
         delete (*grid)[gridIdx]->getPiece();
+
         (*grid)[gridIdx]->setPiece(bUpM->backUpAdditionalPiece);
         if (whiteTurn)
             (*whitePieces)[pieceIdx] = bUpM->backUpAdditionalPiece;
         else
             (*blackPieces)[pieceIdx] = bUpM->backUpAdditionalPiece;
+
+        //        // delete the back piece
+        //        delete (bUpM->backUpAdditionalPiece);
     }
 
     // rotate turn
     game->rotateTurn();
-
-    //    // restore attack grid
-    //    if (maximizing)
-    //        memcpy(game->blackAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
-    //    else
-    //        memcpy(game->whiteAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
 }
 
-void MinMaxABP::simulateMove(Move m)
+void MinMaxABP::makeMove(Move m)
 {
     uint startGridIdx, endGridIdx;
 
@@ -424,8 +419,6 @@ void MinMaxABP::simulateMove(Move m)
     game->updateAttackBoard();
     // scan for check after a piece has moved
     game->scanForCheck();
-    // check if the game is over
-    //    endTile->checkGameEnd();
     // save the move to the stack
     backUpMoves.push(bUpM);
 }
@@ -439,4 +432,11 @@ void MinMaxABP::restoreEPValue()
 {
     game->setEPTileNumber(backUpEP.top(), game->isWhiteTurn());
     backUpEP.pop();
+}
+
+inline void MinMaxABP::restoreAttackBoard()
+{
+    game->rotateTurn();
+    game->updateAttackBoard();
+    game->rotateTurn();
 }

@@ -30,6 +30,8 @@ public:
     QAction *actionAbout;
     QAction *actionGreen;
     QAction *actionAI_vs_AI;
+    QAction *action2_Player;
+    QAction *actionPlay_AI;
     QWidget *centralwidget;
     QMenuBar *menubar;
     QMenu *menuFile;
@@ -56,6 +58,10 @@ public:
         actionGreen->setObjectName(QString::fromUtf8("actionGreen"));
         actionAI_vs_AI = new QAction(Board);
         actionAI_vs_AI->setObjectName(QString::fromUtf8("actionAI_vs_AI"));
+        action2_Player = new QAction(Board);
+        action2_Player->setObjectName(QString::fromUtf8("action2_Player"));
+        actionPlay_AI = new QAction(Board);
+        actionPlay_AI->setObjectName(QString::fromUtf8("actionPlay_AI"));
         centralwidget = new QWidget(Board);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         Board->setCentralWidget(centralwidget);
@@ -78,6 +84,8 @@ public:
         menubar->addAction(menuHelp->menuAction());
         menuFile->addAction(actionNew_Game);
         menuFile->addAction(actionExit);
+        menuFile->addAction(actionPlay_AI);
+        menuFile->addAction(action2_Player);
         menuFile->addAction(actionAI_vs_AI);
         menuTheme->addAction(actionDefault);
         menuTheme->addAction(actionWood);
@@ -99,6 +107,8 @@ public:
         actionAbout->setText(QApplication::translate("Board", "About", nullptr));
         actionGreen->setText(QApplication::translate("Board", "Green", nullptr));
         actionAI_vs_AI->setText(QApplication::translate("Board", "AI vs. AI", nullptr));
+        action2_Player->setText(QApplication::translate("Board", "2-Player", nullptr));
+        actionPlay_AI->setText(QApplication::translate("Board", "Vs. AI", nullptr));
         menuFile->setTitle(QApplication::translate("Board", "File", nullptr));
         menuTheme->setTitle(QApplication::translate("Board", "Theme", nullptr));
         menuHelp->setTitle(QApplication::translate("Board", "Help", nullptr));

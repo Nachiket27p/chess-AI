@@ -8,8 +8,13 @@ real    0m32.387s
 user    0m23.016s
 sys     0m7.912s
 
-instead of creating new QPixmap in Piece copy constructor
+Instead of creating new QPixmap in Piece copy constructor
 using a map of preexisting pointer values.
 real    0m16.288s
 user    0m14.512s
 sys     0m0.104s
+
+Disabling Debug window
+real    0m3.935s
+user    0m2.520s
+sys     0m0.091s

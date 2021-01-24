@@ -50,3 +50,6 @@ The algorithm is encapsulted within the MinMaxABP class, it can be initialized w
 * To aid in detecting a check, two grids are kept for each side, the grid keeps track of all the positions each side can attack/move to. If the (row,col) position which the king is located on has a positive value on the opponents attack grid then the king is in check.
 * Check mate and stale mate is detected by requesting valid moves for all the remaining pieces of black/white side and if there is a move then neither is true. If ther are no moves available and ther is a check then it is a checkmate, if there are no moves and there is no check then it is a stalemate.
 * Fore a detailed overview please refer to the rules.cpp file which contains all the code which determines valid moves.
+
+> ## Performance
+

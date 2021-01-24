@@ -3,8 +3,10 @@
 #include "utils.h"
 #include "piece.h"
 
+#ifdef DEBUGGING_WINDOW
 // debug window
 extern DebugWindow *dbw;
+#endif
 
 extern Theme *currentTheme;
 extern Piece *whitePieces[16];
@@ -413,6 +415,8 @@ inline void Rules::enforceRBQHelper(uint row, uint col, int dr, int dc, bool *ok
 
 bool Rules::enforceKing(BoardTile *tile)
 {
+    if (tile->getTileNumber() == 12)
+        int x = 4;
     // check casteling
     canCastle(tile);
 
@@ -514,13 +518,17 @@ inline void Rules::addValidMove(uint tileNumber, bool *ok)
             while ((WITHIN_BOUNDS(r) && WITHIN_BOUNDS(c)))
             {
                 curr = grid[idx(r, c)];
-                if (!curr->isOccupied() || (curr->getPieceSymbol() != kingID))
+                // if the king is reached then break because we
+                // dont need to check for valid moves behind
+                // the direction from where the check is coming from.
+                if (curr->getPieceSymbol() == kingID)
+                    break;
+
+                if (curr->getTileNumber() == tileNumber)
                 {
-                    if (curr->getTileNumber() == tileNumber)
-                    {
-                        validMoves[vmIdx++] = tileNumber;
-                    }
+                    validMoves[vmIdx++] = tileNumber;
                 }
+
                 r += dr;
                 c += dc;
             }
@@ -666,7 +674,10 @@ void Rules::updateAttackBoard()
         memset(blackAttacks, 0, (8 * 8) * sizeof(int));
         // update black attack board
         updateAttackBoardHelper(blackPieces, blackAttacks, false);
+#ifdef DEBUGGING_WINDOW
+        // update the debugging window
         dbw->updateBlackValues();
+#endif
     }
     else
     {
@@ -676,7 +687,10 @@ void Rules::updateAttackBoard()
         memset(whiteAttacks, 0, (8 * 8) * sizeof(int));
         // update white attack board
         updateAttackBoardHelper(whitePieces, whiteAttacks, true);
+#ifdef DEBUGGING_WINDOW
+        // update the debugging
         dbw->updateWhiteValues();
+#endif
     }
 }
 
@@ -898,12 +912,12 @@ void Rules::getMoves(std::vector<Move> *moves)
     }
     uint backUpVmIdx = vmIdx;
     vmIdx = 0;
-    // srand(time(NULL));
-    // int i = rand() % 16;
-    // int counter = 16;
-    // // go through all the pieces
-    // while (counter)
-    for (int i = 0; i < 16; i++)
+    srand(time(NULL));
+    int i = rand() % 16;
+    int counter = 16;
+    // go through all the pieces
+    while (counter)
+    // for (int i = 0; i < 16; i++)
     {
         // if the piece is not captured compute its valid moves
         if (!pcs[i]->isCaptured())
@@ -920,9 +934,9 @@ void Rules::getMoves(std::vector<Move> *moves)
             // reset the index for validMoves to simulate clearing the array
             vmIdx = 0;
         }
-        // // update index and counter
-        // i = (i + 1) % 16;
-        // counter--;
+        // update index and counter
+        i = (i + 1) % 16;
+        counter--;
     }
 
     // restore the original vmIdx
@@ -1323,7 +1337,8 @@ inline bool Rules::scanCheckHelper(uint row, uint col, int dr, int dc, char *che
             // if the color of the piece located on the
             // tile being examined is different to the turn
             // then save this piece as one causing check.
-            if (curr->getPieceColor() != turn)
+            if ((curr->getPieceColor() != turn) &&
+                ((curr->getPieceSymbol() != kingID) && ((curr->getPieceSymbol() != knightID))))
             {
                 // if the piece detected is a pawn then it must
                 // be only one tile away and has to be facing the

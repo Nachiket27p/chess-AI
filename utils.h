@@ -10,6 +10,8 @@
 #include <QMessageBox>
 #include <QPixmap>
 
+// #define DEBUGGING_WINDOW
+
 // unique character identifiers for pieces
 const char pawnID = 'p';
 const char rookID = 'r';
@@ -93,6 +95,8 @@ const std::unordered_map<char, uint> basePowerValues = {{pawnID, 10},
                                                         {bishopID, 30},
                                                         {queenID, 90},
                                                         {kingID, 900}};
+
+const int singleDefenderPenalty = basePowerValues.at(pawnID) / 5;
 
 #define idx(row, col) (((row)*8) + (col))
 

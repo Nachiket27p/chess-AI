@@ -80,6 +80,12 @@ private:
      */
     void updateTheme(Theme::themes);
 
+    /**
+     * @brief Create the pieces to place on the board.
+     * 
+     * @param whitePieces Array in which to populate the white pieces.
+     * @param blackPieces Array on which to populate the black pieces.
+     */
     void createPieces(Piece *whitePieces[16], Piece *blackPieces[16]);
 
     /**
@@ -104,13 +110,14 @@ private:
     void resetPieces();
 
     /**
-     * @brief Saves the game state. TODO
-     * @param tiles
-     * @return
+     * @brief Used to make two AI play agains each other.
+     * 
+     * @param maximizing True for white, false for black.
+     * @param ai The pointer to the AI to use.
+     * @return true If the game has ended.
+     * @return false If the game has not ended.
      */
-    bool saveGame(BoardTile *tiles);
-
-    void aiPlay(bool maximizing, MinMaxABP *ai);
+    bool aiPlay(bool maximizing, MinMaxABP *ai);
 
 public slots:
     /**
@@ -124,19 +131,39 @@ private slots:
      * @brief This private slot is triggered when the application is quit.
      */
     void on_actionExit_triggered();
+
     /**
      * @brief This slot is triggered when the theme is set to default.
      */
     void on_actionDefault_triggered();
+
     /**
      * @brief This slot is triggered when the wood theme is selected.
      */
     void on_actionWood_triggered();
+
     /**
      * @brief This slot is triggered when the green theme is selected.
      */
     void on_actionGreen_triggered();
+
+    /**
+     * @brief This slot triggers two AI to play against each other.
+     * 
+     */
     void on_actionAI_vs_AI_triggered();
+
+    /**
+     * @brief This slot changes the game mode to Player vs. AI.
+     * 
+     */
+    void on_actionPlay_AI_triggered();
+
+    /**
+     * @brief This slot changes the game mode to Player vs. Player.
+     * 
+     */
+    void on_action2_Player_triggered();
 };
 
 #endif // BOARD_H

@@ -5,8 +5,10 @@
 #include "board.h"
 #include "minmaxabp.h"
 
+#ifdef DEBUGGING_WINDOW
 // debug window
 extern DebugWindow *dbw;
+#endif
 
 // Get an instance of the rules class.
 extern Rules *game;
@@ -14,6 +16,8 @@ extern Rules *game;
 extern Theme *currentTheme;
 // min-max alpha-beta AI
 extern MinMaxABP *mmabp;
+// used to determine if the game mode is 2-player or vs AI
+extern bool twoPlayer;
 
 void BoardTile::setPiece(Piece *_piece)
 {
@@ -142,14 +146,17 @@ void BoardTile::aiMove(bool maximizing)
     // call the enforce rules function to perform the move
     grid[bestMove.endTileNumb]->enforceRules(false);
 
-    // reset the atttack boards
-    game->updateAttackBoard();
     game->rotateTurn();
     game->updateAttackBoard();
     game->rotateTurn();
+#ifdef DEBUGGING_WINDOW
+    dbw->updateBlackValues();
+    dbw->updateWhiteValues();
+#endif
+    qApp->processEvents();
 }
 
-void BoardTile::checkGameEnd()
+bool BoardTile::checkGameEnd()
 {
     // call the hasGameEnded function from the Rules class to determine
     // if there is a check/stale mate.
@@ -165,15 +172,21 @@ void BoardTile::checkGameEnd()
         CONFIRM_DIALOG(this->parentWidget(), rtnVal, "Stale Mate.");
     }
     // ask user if they want to reset the game
-    if (rtnVal)
+    if (rtnVal == QMessageBox::Ok)
     {
         Board *b = (Board *)this->parentWidget();
         // reset game
         b->on_actionNew_Game_triggered();
     }
+
+    // if check/stale mate was detected return true.
+    if (rtnVal)
+        return true;
+    else
+        return false;
 }
 
-void BoardTile::enforceRules(bool playerMove)
+bool BoardTile::enforceRules(bool playerMove)
 {
     // if a piece is selected then determine the valid moves for the selected
     // piece.
@@ -229,7 +242,7 @@ void BoardTile::enforceRules(bool playerMove)
             game->unhighlightTiles();
             game->resetVmIdx();
             game->selected = 0;
-            return;
+            return false;
         }
 
         // the king tile number before moving
@@ -250,7 +263,8 @@ void BoardTile::enforceRules(bool playerMove)
         {
             ep = true;
         }
-        if (!playerMove || game->isValidMove(tileNumber))
+
+        if ((!twoPlayer && !playerMove) || game->isValidMove(tileNumber))
         {
             // if the tile to which this piece is being moved is
             // occupied by the opponents piece then set the piece as
@@ -283,7 +297,7 @@ void BoardTile::enforceRules(bool playerMove)
             // to indicate that game state has returned to a position where the player has
             // selected a piece.
             game->selected = 1;
-            return;
+            return false;
         }
 
         // Casteling
@@ -408,15 +422,21 @@ void BoardTile::enforceRules(bool playerMove)
         // scan for check after a piece has moved
         game->scanForCheck();
         // check if the game is over
-        this->checkGameEnd();
+        bool gameEndDetected = this->checkGameEnd();
 
         // force the app to update before calling the AI
         qApp->processEvents();
 
+        // if game end was detected.
+        if (gameEndDetected)
+            return true;
+
         // call AI
-        if (playerMove)
+        if (!twoPlayer && playerMove)
         {
             aiMove(mmabp->getMaxingColor());
         }
     }
+
+    return false;
 }

@@ -28,7 +28,7 @@ class MinMaxABP
 {
 private:
     //    int debugCount = 0;
-    BoardTile *(*grid)[8*8];
+    BoardTile *(*grid)[8 * 8];
     Piece *(*whitePieces)[16];
     Piece *(*blackPieces)[16];
     Rules *game;
@@ -42,11 +42,32 @@ private:
     int searchDepth;
 
 public:
-    //    MinMaxABP(BoardTile *(*_grid)[8][8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _color, bool _maxingColor, EvaluationScheme _evalSchema = EvaluationScheme::def);
-    MinMaxABP(BoardTile *(*_grid)[8*8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema);
+    /**
+     * @brief Construct a new Min Max alpha beta pruning AI.
+     * 
+     * @param _whitePieces Pointer to the list of white pieces array.
+     * @param _blackPieces Pointer to the list of black pieces array.
+     * @param _maxingColor The color which is being maximized by this AI.
+     * @param depth The depth this min-max algorithm will search until.
+     * @param _evalSchema The Evaluation scheme being used to find the best move.
+     */
+    MinMaxABP(BoardTile *(*_grid)[8 * 8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema);
+
+    /**
+     * @brief Called when truing to determine the best move for the current game board.
+     * 
+     * @param maximizing The color being maximized.
+     * @param bestMove Pointer to the best move.
+     */
     void minMax(bool maximizing, Move *bestMove);
+
+    /**
+     * @brief Get the Maxing Color for this min-max AI.
+     * 
+     * @return true Indicating white.
+     * @return false Indicating black.
+     */
     bool getMaxingColor() { return maxingColor; }
-    ~MinMaxABP();
 
 private:
     int minMaxHelper(uint depth, int alpha, int beta, bool maximizing, Move *bestMove);
@@ -92,15 +113,6 @@ private:
     int complexEbaluate();
 
     /**
-     * @brief Calls the cimulate method to perform a move. Once this
-     * method has been called the unmake move has to be called
-     * otherwise the gameboard will be left in aunexpected state.
-     * 
-     * @param m The move being performed.
-     */
-    void makeMove(Move m, int depth, bool maximizing);
-
-    /**
      * @brief Undoes the move previously made by using the stack
      * which keeps track of all the moves made in a LIFO fashion.
      * 
@@ -117,7 +129,7 @@ private:
      * 
      * @param m The move being simulated.
      */
-    void simulateMove(Move m);
+    void makeMove(Move m);
 
     /**
      * @brief Used to keep track of enpassant values such
@@ -131,6 +143,8 @@ private:
      * 
      */
     void restoreEPValue();
+
+    inline void restoreAttackBoard();
 };
 
 #endif // MINMAXABP_H
