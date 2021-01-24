@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8*8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema)
+MinMaxABP::MinMaxABP(BoardTile *(*_grid)[8 * 8], Piece *(*_whitePieces)[16], Piece *(*_blackPieces)[16], bool _maxingColor, int depth, EvaluationScheme _evalSchema)
 {
     game = game->getInstance();
     grid = _grid;
@@ -23,8 +23,6 @@ void MinMaxABP::minMax(bool maximizing, Move *bestMove)
 
 MinMaxABP::~MinMaxABP()
 {
-
-
 }
 
 int MinMaxABP::minMaxHelper(uint depth, int alpha, int beta, bool maximizing, Move *bestMove)
@@ -152,7 +150,7 @@ int MinMaxABP::basicEvaluate()
     whiteScore = 0;
     blackScore = 0;
 
-    Piece* currPiece;
+    Piece *currPiece;
     uint attackIdx;
     for (int i = 0; i < 16; i++)
     {
@@ -201,11 +199,11 @@ int MinMaxABP::complexEbaluate()
 
 void MinMaxABP::makeMove(Move m, int depth, bool maximizing)
 {
-//    // save the attack grid
-//    if (maximizing)
-//        memcpy(backUPAttackGrids[depth], game->blackAttacks, 8 * 8 * sizeof(int));
-//    else
-//        memcpy(backUPAttackGrids[depth], game->whiteAttacks, 8 * 8 * sizeof(int));
+    //    // save the attack grid
+    //    if (maximizing)
+    //        memcpy(backUPAttackGrids[depth], game->blackAttacks, 8 * 8 * sizeof(int));
+    //    else
+    //        memcpy(backUPAttackGrids[depth], game->whiteAttacks, 8 * 8 * sizeof(int));
 
     // TODO: potential additional steps to ensre move can be undone correctly
     simulateMove(m);
@@ -288,11 +286,11 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
     // rotate turn
     game->rotateTurn();
 
-//    // restore attack grid
-//    if (maximizing)
-//        memcpy(game->blackAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
-//    else
-//        memcpy(game->whiteAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
+    //    // restore attack grid
+    //    if (maximizing)
+    //        memcpy(game->blackAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
+    //    else
+    //        memcpy(game->whiteAttacks, backUPAttackGrid, 8 * 8 * sizeof(int));
 }
 
 void MinMaxABP::simulateMove(Move m)
@@ -398,25 +396,25 @@ void MinMaxABP::simulateMove(Move m)
         if (game->isWhiteTurn())
         {
             // if a black pawn has reached the opposite end conver to queen
-            if ((endGridIdx/8) == 7)
+            if ((endGridIdx / 8) == 7)
             {
                 // At the moment just select the queen
                 uint pIndex = endTile->getPiece()->getIndex();
                 delete endTile->getPiece();
                 // TODO: Some heuristic of selectin most powerful pawn conversion
-                endTile->setPiece(new Piece(false, queenID, endTile->getTileNumber(), (endGridIdx/8), (endGridIdx%8), pIndex, blackPath + queenIconName));
+                endTile->setPiece(new Piece(false, queenID, endTile->getTileNumber(), (endGridIdx / 8), (endGridIdx % 8), pIndex, queenIDW));
             }
         }
         else
         {
             // if a white pawn has reached the opposite end conver to queen
-            if ((endGridIdx/8) == 0)
+            if ((endGridIdx / 8) == 0)
             {
                 // At the moment just select the queen
                 uint pIndex = endTile->getPiece()->getIndex();
                 delete endTile->getPiece();
                 // TODO: Some heuristic of selectin most powerful pawn conversion
-                endTile->setPiece(new Piece(true, queenID, endTile->getTileNumber(), (endGridIdx/8), (endGridIdx%8), pIndex, whitePath + queenIconName));
+                endTile->setPiece(new Piece(true, queenID, endTile->getTileNumber(), (endGridIdx / 8), (endGridIdx % 8), pIndex, queenIDB));
             }
         }
     }

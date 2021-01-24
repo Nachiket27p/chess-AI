@@ -108,7 +108,7 @@ void BoardTile::mousePressEvent(QMouseEvent *)
     ++game->selected;
     // call the function to determine the valid moves and if the
     // selected move is valid.
-    enforceRules();
+    enforceRules(true);
 }
 
 uint BoardTile::hasMoved()
@@ -134,11 +134,8 @@ void BoardTile::aiMove(bool maximizing)
 {
     Move bestMove{0, 0};
     mmabp->minMax(maximizing, &bestMove);
-
-    // call the canMove to populate the valid moves in validMoves array
-    game->canMove(grid[bestMove.startTileNumb]);
     // set the selected tile in the game object
-    game->selectedTile = grid[bestMove.endTileNumb];
+    game->selectedTile = grid[bestMove.startTileNumb];
     // set the selected to 2 to indicate the piece has already been selected
     game->selected = 2;
 
@@ -337,19 +334,32 @@ void BoardTile::enforceRules(bool playerMove)
                 if (row == 7)
                 {
                     uint pIndex = this->getPiece()->getIndex();
-                    delete piece;
-                    QString pp = "";
+                    int rtnVal = 0;
+                    int pieceKey = queenIDB;
+                    char promoPieceID = queenID;
                     // if it is a player move let them choose otherwise, auto select the queen
                     if (playerMove)
                     {
-                        PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
+                        PAWN_PROMOTION_DIALOG(this->parentWidget(), rtnVal);
                     }
-                    else
+                    switch (rtnVal)
                     {
-                        pp = queenIconName;
+                    case QMessageBox::AcceptRole:
+                        pieceKey = bishopIDB;
+                        promoPieceID = bishopID;
+                        break;
+                    case QMessageBox::RejectRole:
+                        pieceKey = knightIDB;
+                        promoPieceID = knightID;
+                        break;
+                    case QMessageBox::DestructiveRole:
+                        pieceKey = rookIDB;
+                        promoPieceID = rookID;
+                        break;
                     }
 
-                    this->piece = new Piece(false, queenID, this->tileNumber, row, col, pIndex, blackPath + pp);
+                    delete (this->piece);
+                    this->piece = new Piece(false, promoPieceID, this->tileNumber, row, col, pIndex, pieceKey);
                     this->displayTile();
                 }
             }
@@ -359,18 +369,33 @@ void BoardTile::enforceRules(bool playerMove)
                 if (row == 0)
                 {
                     uint pIndex = this->getPiece()->getIndex();
-                    delete piece;
-                    QString pp = "";
+                    int rtnVal = 0;
+                    int pieceKey = queenIDW;
+                    int promoPieceID = queenID;
                     // if it is a player move let them choose otherwise, auto select the queen
                     if (playerMove)
                     {
-                        PAWN_PROMOTION_DIALOG(this->parentWidget(), pp);
+                        PAWN_PROMOTION_DIALOG(this->parentWidget(), rtnVal);
                     }
-                    else
+
+                    switch (rtnVal)
                     {
-                        pp = queenIconName;
+                    case QMessageBox::AcceptRole:
+                        pieceKey = bishopIDW;
+                        promoPieceID = bishopID;
+                        break;
+                    case QMessageBox::RejectRole:
+                        pieceKey = knightIDW;
+                        promoPieceID = knightID;
+                        break;
+                    case QMessageBox::DestructiveRole:
+                        pieceKey = rookIDW;
+                        promoPieceID = rookID;
+                        break;
                     }
-                    this->piece = new Piece(true, queenID, this->tileNumber, row, col, pIndex, whitePath + pp);
+
+                    delete (this->piece);
+                    this->piece = new Piece(true, promoPieceID, this->tileNumber, row, col, pIndex, pieceKey);
                     this->displayTile();
                 }
             }
@@ -388,10 +413,10 @@ void BoardTile::enforceRules(bool playerMove)
         // force the app to update before calling the AI
         qApp->processEvents();
 
-        // // call AI
-        // if (playerMove)
-        // {
-        //     aiMove(mmabp->getMaxingColor());
-        // }
+        // call AI
+        if (playerMove)
+        {
+            aiMove(mmabp->getMaxingColor());
+        }
     }
 }

@@ -1,7 +1,9 @@
 #include "piece.h"
 #include "utils.h"
 
-Piece::Piece(bool _white, char _pieceSymbol, uint _tileNumber, uint _row, uint _col, uint _index, QString iconPath)
+extern std::unordered_map<int, QPixmap *> pieceIconPointers;
+
+Piece::Piece(bool _white, char _pieceSymbol, uint _tileNumber, uint _row, uint _col, uint _index, int iconMapKey)
 {
     moved = 0;
     captured = false;
@@ -10,9 +12,9 @@ Piece::Piece(bool _white, char _pieceSymbol, uint _tileNumber, uint _row, uint _
     tileNumber = _tileNumber;
     row = _row;
     col = _col;
-    basePowerValue = basePowerValues[_pieceSymbol];
+    basePowerValue = basePowerValues.at(pieceSymbol);
     index = _index;
-    icon = new QPixmap(iconPath);
+    icon = pieceIconPointers.at(iconMapKey);
 }
 
 Piece::Piece(const Piece &p)
@@ -26,33 +28,7 @@ Piece::Piece(const Piece &p)
     this->captured = p.captured;
     this->index = p.index;
     this->basePowerValue = p.basePowerValue;
-
-    // determine correct path
-    QString subPath = blackPath;
-    if (this->white)
-        subPath = whitePath;
-
-    QString iconImgName = pawnIconName;
-    switch (this->pieceSymbol)
-    {
-    case rookID:
-        iconImgName = rookIconName;
-        break;
-    case knightID:
-        iconImgName = knightIconName;
-        break;
-    case bishopID:
-        iconImgName = bishopIconName;
-        break;
-    case queenID:
-        iconImgName = queenIconName;
-        break;
-    case kingID:
-        iconImgName = kingIconName;
-        break;
-    };
-
-    this->icon = new QPixmap(subPath + iconImgName);
+    this->icon = p.icon;
 }
 
 uint Piece::hasMoved()

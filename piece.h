@@ -28,7 +28,7 @@ public:
      * @param _col The column location on the grid.
      * @param iconPath The filepath to the piece symbol.
      */
-    Piece(bool _white, char _pieceSymbol, uint _tileNumber, uint _row, uint _col, uint _index, QString iconPath);
+    Piece(bool _white, char _pieceSymbol, uint _tileNumber, uint _row, uint _col, uint _index, int iconMapKey);
 
     /**
      * @brief Copy constructor for Piece.
