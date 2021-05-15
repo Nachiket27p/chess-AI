@@ -1,0 +1,4 @@
+/home/nachiket/Documents/qt5-workspace/chess-AI/CMakeFiles/rebuild_cache.dir
+/home/nachiket/Documents/qt5-workspace/chess-AI/CMakeFiles/edit_cache.dir
+/home/nachiket/Documents/qt5-workspace/chess-AI/CMakeFiles/chess-AI.dir
+/home/nachiket/Documents/qt5-workspace/chess-AI/CMakeFiles/chess-AI_autogen.dir

@@ -229,6 +229,7 @@ void MinMaxABP::unmakeMove(Move m, int depth, bool maximizing)
 
     if (bUpM->backUpEndPiece == nullptr)
     {
+        delete (*grid)[m.endTileNumb]->getPiece();
         (*grid)[m.endTileNumb]->setPiece();
     }
     else

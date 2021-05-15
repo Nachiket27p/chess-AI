@@ -60,119 +60,119 @@ include CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o: chess-AI_autogen/mocs_compilation.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp
 
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp > CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp > CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.i
 
 CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp -o CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/build/chess-AI_autogen/mocs_compilation.cpp -o CMakeFiles/chess-AI.dir/chess-AI_autogen/mocs_compilation.cpp.s
 
 CMakeFiles/chess-AI.dir/main.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/main.cpp.o: ../main.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/chess-AI.dir/main.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/main.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/main.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp
 
 CMakeFiles/chess-AI.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/main.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp > CMakeFiles/chess-AI.dir/main.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp > CMakeFiles/chess-AI.dir/main.cpp.i
 
 CMakeFiles/chess-AI.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/main.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp -o CMakeFiles/chess-AI.dir/main.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/main.cpp -o CMakeFiles/chess-AI.dir/main.cpp.s
 
 CMakeFiles/chess-AI.dir/board.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/board.cpp.o: ../board.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/chess-AI.dir/board.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/board.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/board.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp
 
 CMakeFiles/chess-AI.dir/board.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/board.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp > CMakeFiles/chess-AI.dir/board.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp > CMakeFiles/chess-AI.dir/board.cpp.i
 
 CMakeFiles/chess-AI.dir/board.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/board.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp -o CMakeFiles/chess-AI.dir/board.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/board.cpp -o CMakeFiles/chess-AI.dir/board.cpp.s
 
 CMakeFiles/chess-AI.dir/theme.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/theme.cpp.o: ../theme.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/chess-AI.dir/theme.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/theme.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/theme.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp
 
 CMakeFiles/chess-AI.dir/theme.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/theme.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp > CMakeFiles/chess-AI.dir/theme.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp > CMakeFiles/chess-AI.dir/theme.cpp.i
 
 CMakeFiles/chess-AI.dir/theme.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/theme.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp -o CMakeFiles/chess-AI.dir/theme.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/theme.cpp -o CMakeFiles/chess-AI.dir/theme.cpp.s
 
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/boardtile.cpp.o: ../boardtile.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/chess-AI.dir/boardtile.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/boardtile.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/boardtile.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp
 
 CMakeFiles/chess-AI.dir/boardtile.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/boardtile.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp > CMakeFiles/chess-AI.dir/boardtile.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp > CMakeFiles/chess-AI.dir/boardtile.cpp.i
 
 CMakeFiles/chess-AI.dir/boardtile.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/boardtile.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp -o CMakeFiles/chess-AI.dir/boardtile.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/boardtile.cpp -o CMakeFiles/chess-AI.dir/boardtile.cpp.s
 
 CMakeFiles/chess-AI.dir/rules.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/rules.cpp.o: ../rules.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/chess-AI.dir/rules.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/rules.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/rules.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp
 
 CMakeFiles/chess-AI.dir/rules.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/rules.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp > CMakeFiles/chess-AI.dir/rules.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp > CMakeFiles/chess-AI.dir/rules.cpp.i
 
 CMakeFiles/chess-AI.dir/rules.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/rules.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp -o CMakeFiles/chess-AI.dir/rules.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/rules.cpp -o CMakeFiles/chess-AI.dir/rules.cpp.s
 
 CMakeFiles/chess-AI.dir/piece.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/piece.cpp.o: ../piece.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/chess-AI.dir/piece.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/piece.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/piece.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp
 
 CMakeFiles/chess-AI.dir/piece.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/piece.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp > CMakeFiles/chess-AI.dir/piece.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp > CMakeFiles/chess-AI.dir/piece.cpp.i
 
 CMakeFiles/chess-AI.dir/piece.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/piece.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp -o CMakeFiles/chess-AI.dir/piece.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/piece.cpp -o CMakeFiles/chess-AI.dir/piece.cpp.s
 
 CMakeFiles/chess-AI.dir/debugwindow.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/debugwindow.cpp.o: ../debugwindow.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/chess-AI.dir/debugwindow.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/debugwindow.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/debugwindow.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.cpp
 
 CMakeFiles/chess-AI.dir/debugwindow.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/debugwindow.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.cpp > CMakeFiles/chess-AI.dir/debugwindow.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.cpp > CMakeFiles/chess-AI.dir/debugwindow.cpp.i
 
 CMakeFiles/chess-AI.dir/debugwindow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/debugwindow.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.cpp -o CMakeFiles/chess-AI.dir/debugwindow.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/debugwindow.cpp -o CMakeFiles/chess-AI.dir/debugwindow.cpp.s
 
 CMakeFiles/chess-AI.dir/minmaxabp.cpp.o: CMakeFiles/chess-AI.dir/flags.make
 CMakeFiles/chess-AI.dir/minmaxabp.cpp.o: ../minmaxabp.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/nachiket/Documents/qt5-workspace/chess-AI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/chess-AI.dir/minmaxabp.cpp.o"
-	/bin/g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/minmaxabp.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp
+	/bin/x86_64-linux-gnu-g++-9  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/chess-AI.dir/minmaxabp.cpp.o -c /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp
 
 CMakeFiles/chess-AI.dir/minmaxabp.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/chess-AI.dir/minmaxabp.cpp.i"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp > CMakeFiles/chess-AI.dir/minmaxabp.cpp.i
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp > CMakeFiles/chess-AI.dir/minmaxabp.cpp.i
 
 CMakeFiles/chess-AI.dir/minmaxabp.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/chess-AI.dir/minmaxabp.cpp.s"
-	/bin/g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp -o CMakeFiles/chess-AI.dir/minmaxabp.cpp.s
+	/bin/x86_64-linux-gnu-g++-9 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp -o CMakeFiles/chess-AI.dir/minmaxabp.cpp.s
 
 # Object files for target chess-AI
 chess__AI_OBJECTS = \

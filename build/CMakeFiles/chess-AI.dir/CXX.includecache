@@ -150,14 +150,6 @@ rules.h
 QMainWindow
 -
 
-/home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.cpp
-minmaxabp.h
-/home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.h
-stdlib.h
--
-time.h
--
-
 /home/nachiket/Documents/qt5-workspace/chess-AI/minmaxabp.h
 stack
 -
