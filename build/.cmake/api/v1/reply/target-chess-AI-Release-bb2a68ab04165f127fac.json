@@ -25,13 +25,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 18,
+				"line" : 19,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 40,
+				"line" : 41,
 				"parent" : 0
 			}
 		]
@@ -42,7 +42,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-O3 -DNDEBUG  "
+					"fragment" : "-O3 -DNDEBUG"
 				},
 				{
 					"backtrace" : 2,
@@ -86,27 +86,27 @@
 				{
 					"backtrace" : 2,
 					"isSystem" : true,
-					"path" : "/usr/include/x86_64-linux-gnu/qt5"
+					"path" : "/home/nachiket/Qt/5.12.11/gcc_64/include"
 				},
 				{
 					"backtrace" : 2,
 					"isSystem" : true,
-					"path" : "/usr/include/x86_64-linux-gnu/qt5/QtWidgets"
+					"path" : "/home/nachiket/Qt/5.12.11/gcc_64/include/QtWidgets"
 				},
 				{
 					"backtrace" : 2,
 					"isSystem" : true,
-					"path" : "/usr/include/x86_64-linux-gnu/qt5/QtGui"
+					"path" : "/home/nachiket/Qt/5.12.11/gcc_64/include/QtGui"
 				},
 				{
 					"backtrace" : 2,
 					"isSystem" : true,
-					"path" : "/usr/include/x86_64-linux-gnu/qt5/QtCore"
+					"path" : "/home/nachiket/Qt/5.12.11/gcc_64/include/QtCore"
 				},
 				{
 					"backtrace" : 2,
 					"isSystem" : true,
-					"path" : "/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++"
+					"path" : "/home/nachiket/Qt/5.12.11/gcc_64/./mkspecs/linux-g++"
 				}
 			],
 			"language" : "CXX",
@@ -145,16 +145,20 @@
 				"role" : "flags"
 			},
 			{
+				"fragment" : "-Wl,-rpath,/home/nachiket/Qt/5.12.11/gcc_64/lib",
+				"role" : "libraries"
+			},
+			{
 				"backtrace" : 2,
-				"fragment" : "/usr/lib/x86_64-linux-gnu/libQt5Widgets.so.5.12.8",
+				"fragment" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/libQt5Widgets.so.5.12.11",
 				"role" : "libraries"
 			},
 			{
-				"fragment" : "/usr/lib/x86_64-linux-gnu/libQt5Gui.so.5.12.8",
+				"fragment" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/libQt5Gui.so.5.12.11",
 				"role" : "libraries"
 			},
 			{
-				"fragment" : "/usr/lib/x86_64-linux-gnu/libQt5Core.so.5.12.8",
+				"fragment" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/libQt5Core.so.5.12.11",
 				"role" : "libraries"
 			}
 		],

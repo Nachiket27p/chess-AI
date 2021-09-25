@@ -79,7 +79,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "16"
+			"value" : "18"
 		},
 		{
 			"name" : "CMAKE_CACHE_PATCH_VERSION",
@@ -91,7 +91,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "3"
+			"value" : "4"
 		},
 		{
 			"name" : "CMAKE_COLOR_MAKEFILE",
@@ -159,7 +159,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/bin/x86_64-linux-gnu-g++-9"
+			"value" : "/bin/x86_64-linux-gnu-g++-10"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_AR",
@@ -283,7 +283,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/bin/x86_64-linux-gnu-gcc-9"
+			"value" : "/bin/x86_64-linux-gnu-gcc-10"
 		},
 		{
 			"name" : "CMAKE_DLLTOOL",
@@ -767,7 +767,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/usr/share/cmake-3.16"
+			"value" : "/usr/share/cmake-3.18"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1015,7 +1015,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/usr/lib/x86_64-linux-gnu/cmake/Qt5"
+			"value" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/cmake/Qt5"
 		},
 		{
 			"name" : "Qt5Core_DIR",
@@ -1027,7 +1027,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/usr/lib/x86_64-linux-gnu/cmake/Qt5Core"
+			"value" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/cmake/Qt5Core"
 		},
 		{
 			"name" : "Qt5Gui_DIR",
@@ -1039,7 +1039,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/usr/lib/x86_64-linux-gnu/cmake/Qt5Gui"
+			"value" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/cmake/Qt5Gui"
 		},
 		{
 			"name" : "Qt5Widgets_DIR",
@@ -1051,7 +1051,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets"
+			"value" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/cmake/Qt5Widgets"
 		},
 		{
 			"name" : "Qt5_DIR",
@@ -1063,7 +1063,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/usr/lib/x86_64-linux-gnu/cmake/Qt5"
+			"value" : "/home/nachiket/Qt/5.12.11/gcc_64/lib/cmake/Qt5"
 		},
 		{
 			"name" : "chess-AI_BINARY_DIR",
